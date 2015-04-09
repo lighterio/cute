@@ -18,7 +18,9 @@ Jymin.onReady = function (fn) {
   }
 
   // Bind to the document's Jymin-triggered ready event.
-  Jymin.bind(document, 'ready', fn);
+  Jymin.bind(document, 'ready', function (element, event, target) {
+    fn(target);
+  });
 };
 
 /**

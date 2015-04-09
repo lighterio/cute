@@ -1,8 +1,8 @@
-/**      _                 _                ___  _  _    _
- *      | |_   _ _ __ ___ (_)_ __   __   __/ _ \| || |  / |
- *   _  | | | | | '_ ` _ \| | '_ \  \ \ / / | | | || |_ | |
- *  | |_| | |_| | | | | | | | | | |  \ V /| |_| |__   _|| |
- *   \___/ \__, |_| |_| |_|_|_| |_|   \_/  \___(_) |_|(_)_|
+/**      _                 _               _   ___   ___
+ *      | |_   _ _ __ ___ (_)_ __   __   _/ | / _ \ / _ \
+ *   _  | | | | | '_ ` _ \| | '_ \  \ \ / / || | | | | | |
+ *  | |_| | |_| | | | | | | | | | |  \ V /| || |_| | |_| |
+ *   \___/ \__, |_| |_| |_|_|_| |_|   \_/ |_(_)___(_)___/
  *         |___/
  *
  * http://lighter.io/jymin
@@ -12,6 +12,7 @@
  * Source files:
  *   https://github.com/lighterio/jymin/blob/master/scripts/ajax.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/arrays.js
+ *   https://github.com/lighterio/jymin/blob/master/scripts/charts.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/cookies.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/crypto.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/dates.js
@@ -37,7 +38,7 @@
  */
 
 
-var Jymin = {version: '0.4.1'};
+var Jymin = {version: '1.0.0'};
 
 //+env:commonjs
 // Support CommonJS.
@@ -321,6 +322,38 @@ Jymin.padArray = function (array, padToLength, paddingValue) {
     }
   }
   return countAdded;
+};
+/**
+ * Get an XMLHttpRequest object (or ActiveX object in old IE).
+ *
+ * @return {XMLHttpRequest}   The request object.
+ */
+Jymin.getChartColors = function () {
+  var colors = Jymin.getChartColors._cache;
+  if (!colors) {
+    var map = {};
+    var string =
+      '03f290c00fc00dfb0f00605090307bf0f7409f9f7a07fdf0' +
+      'f97686f09f8074872d8a0f05a200a7633bcf230bd90b1908' +
+      '014c89f7a0ff045faf78304a9dcb9798eb80402df70fcfd6' +
+      '6000899f574be6f0f7f640536685a4a54afdfb609fe5b666';
+    colors = [];
+    for (var i = 0; i < 3; i++) {
+      for (var j = 0; j < 63; j++) {
+        var background = string.substr(j * 3 + i, 3);
+        var border = background.replace(/[1-9a-f]/g, function (n) {
+          return Math.ceil(new Number('0x' + n) / 1.7);
+        });
+        if (!map[border]) {
+          map[border] = 1;
+          colors.push({background: background, border: border});
+        }
+      }
+    }
+    Jymin.getChartColors._cache = colors;
+  }
+  console.log(colors.length);
+  return colors;
 };
 /**
  * Get all cookies from the document, and return a map.
@@ -671,11 +704,12 @@ Jymin.getElement = function (parentElement, idOrElement) {
  * @return {HTMLElement}           The parent or matching ancestor.
  */
 Jymin.getParent = function (element, selector) {
-  return Jymin.getTrail(element, selector)[1];
+  return Jymin.getTrail(element, selector)[selector ? 0 : 1];
 };
 
 /**
- * Get the trail that leads back to the root, optionally filtered by a selector.
+ * Get the trail that leads back to the root starting with a given
+ * element, optionally filtered by a selector.
  *
  * @param  {HTMLElement} element   An element to start the trail.
  * @param  {String}      selector  An optional selector to filter the trail.
@@ -686,6 +720,7 @@ Jymin.getTrail = function (element, selector) {
   while (element = element.parentNode) { // jshint ignore:line
     Jymin.push(trail, element);
   }
+  // TODO: Test ordering more thoroughly.
   if (selector) {
     var set = trail;
     trail = [];
@@ -1068,7 +1103,7 @@ Jymin.removeClass = function (element, className) {
   if (index > -1) {
     classes.splice(index, 1);
   }
-  classes.join(' ');
+  classes = classes.join(' ');
   Jymin.setClass(element, classes);
 };
 
@@ -1112,6 +1147,9 @@ Jymin.all = function (parentElement, selector, fn) {
   if (!selector || Jymin.isFunction(selector)) {
     fn = selector;
     selector = parentElement;
+    parentElement = document;
+  }
+  if (!parentElement) {
     parentElement = document;
   }
   var elements;
@@ -1613,6 +1651,7 @@ Jymin.stringify = function (data) {
 
   json = JSON.stringify(data);
 
+  return json;
 };
 
 /**
@@ -1844,7 +1883,9 @@ Jymin.onReady = function (fn) {
   }
 
   // Bind to the document's Jymin-triggered ready event.
-  Jymin.bind(document, 'ready', fn);
+  Jymin.bind(document, 'ready', function (element, event, target) {
+    fn(target);
+  });
 };
 
 /**

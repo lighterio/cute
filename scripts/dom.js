@@ -23,11 +23,12 @@ Jymin.getElement = function (parentElement, idOrElement) {
  * @return {HTMLElement}           The parent or matching ancestor.
  */
 Jymin.getParent = function (element, selector) {
-  return Jymin.getTrail(element, selector)[1];
+  return Jymin.getTrail(element, selector)[selector ? 0 : 1];
 };
 
 /**
- * Get the trail that leads back to the root, optionally filtered by a selector.
+ * Get the trail that leads back to the root starting with a given
+ * element, optionally filtered by a selector.
  *
  * @param  {HTMLElement} element   An element to start the trail.
  * @param  {String}      selector  An optional selector to filter the trail.
@@ -38,6 +39,7 @@ Jymin.getTrail = function (element, selector) {
   while (element = element.parentNode) { // jshint ignore:line
     Jymin.push(trail, element);
   }
+  // TODO: Test ordering more thoroughly.
   if (selector) {
     var set = trail;
     trail = [];
@@ -420,7 +422,7 @@ Jymin.removeClass = function (element, className) {
   if (index > -1) {
     classes.splice(index, 1);
   }
-  classes.join(' ');
+  classes = classes.join(' ');
   Jymin.setClass(element, classes);
 };
 
@@ -464,6 +466,9 @@ Jymin.all = function (parentElement, selector, fn) {
   if (!selector || Jymin.isFunction(selector)) {
     fn = selector;
     selector = parentElement;
+    parentElement = document;
+  }
+  if (!parentElement) {
     parentElement = document;
   }
   var elements;

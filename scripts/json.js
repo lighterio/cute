@@ -58,6 +58,7 @@ Jymin.stringify = function (data) {
   //+browser:ok
   json = JSON.stringify(data);
   //-browser:ok
+  return json;
 };
 
 /**

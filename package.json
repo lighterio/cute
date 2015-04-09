@@ -1,6 +1,6 @@
 {
   "name": "jymin",
-  "version": "0.4.1",
+  "version": "1.0.0",
   "description": "Minifier-friendly JavaScript built for speed and usefulness",
   "dependencies": {},
   "devDependencies": {
