@@ -19,21 +19,11 @@ require('figlet').text(title + ' Client v' + version, {font: 'Standard'}, functi
 
   source.concat(key + '.js')
     .each(function (asset) {
-      var locations = source.getLocations();
-      locations.forEach(function (location, index) {
-        locations[index] = location.replace(
-          /^.*\/(node_modules|workspace)\/(\w+)\/(.*?)$/i,
-          ' *   https://github.com/lighterio/$2/blob/master/$3');
-      });
       asset.setContent((
         "/**\n" +
         " *" + figlet + "\n" +
         " *\n" +
         " * http://lighter.io/" + key + "\n" +
-        " * MIT License\n" +
-        " *\n" +
-        " * Source files:\n" +
-        locations.join("\n") + "\n" +
         " */\n\n\n" +
         asset.getContent() + "\n").replace(/[\t ]*\n/g, '\n'));
     })

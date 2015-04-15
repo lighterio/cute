@@ -1,13 +1,13 @@
 /**
  * Create a circular-safe JSON string.
  */
-Jymin.safeStringify = function (data, stack) {
+Jymin.safeStringify = function (data, quote, stack) {
   if (Jymin.isString(data)) {
-    data = '"' + data.replace(/\n\r"/g, function (c) {
-      return c == '\n' ? '\\n' : c == '\r' ? '\\r' : '\\"';
-    }) + '"';
+    data = quote + data.replace(/\n\r"'/g, function (c) {
+      return c == '\n' ? '\\n' : c == '\r' ? '\\r' : c == quote ? '\\' + c : c == '"' ? '&quot;' : "'";
+    }) + quote;
   }
-  else if (Jymin.isFunction(data) || Jymin.isUndefined(data) || (data === null)) {
+  else if (Jymin.isFunction(data) || Jymin.isUndefined(data)) {
     return null;
   }
   else if (data && Jymin.isObject(data)) {
@@ -28,14 +28,14 @@ Jymin.safeStringify = function (data, stack) {
       before = '[';
       after = ']';
       Jymin.forEach(data, function (value) {
-        Jymin.push(parts, Jymin.stringify(value, stack));
+        Jymin.push(parts, Jymin.safeStringify(value, quote, stack));
       });
     }
     else {
       before = '{';
       after = '}';
       Jymin.forIn(data, function (key, value) {
-        Jymin.push(parts, Jymin.stringify(key) + ':' + Jymin.stringify(value, stack));
+        Jymin.push(parts, Jymin.stringify(key) + ':' + Jymin.safeStringify(value, stack));
       });
     }
     Jymin.pop(stack);
@@ -50,15 +50,18 @@ Jymin.safeStringify = function (data, stack) {
 /**
  * Create a JSON string.
  */
-Jymin.stringify = function (data) {
-  var json;
-  //+browser:old
-  json = Jymin.safeStringify(data);
-  //-browser:old
-  //+browser:ok
-  json = JSON.stringify(data);
-  //-browser:ok
-  return json;
+//+browser:old
+Jymin.stringify = Jymin.safeStringify;
+//-browser:old
+//+browser:ok
+Jymin.stringify = JSON.stringify;
+//-browser:ok
+
+/**
+ * Create a JSON-ish string.
+ */
+Jymin.attrify = function (data) {
+  return Jymin.safeStringify(data, "'");
 };
 
 /**
