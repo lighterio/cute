@@ -50,11 +50,13 @@ figlet.text('Jymin v' + pkg.version, {font: 'Standard'}, function (e, art) {
         asset.getContent());
     })
     .cull('browser', 'ok')
+    .replace(/ +\n/g, '\n')
     .write(dir, 'jymin.js')
     .replace(/Jymin\.([$_a-zA-Z0-9]+)(\s*=)?/g, function (match, name, equals) {
       return equals ? 'var ' + name + ' =' : name;
     })
     .cull('env', 'min')
+    .replace(/ +\n/g, '\n')
     .wrap()
     .minify()
     .write(dir, 'jymin.min.js', 'minified');
