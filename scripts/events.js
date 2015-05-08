@@ -128,6 +128,16 @@ Jymin.preventDefault = function (event) {
 };
 
 /**
+ * Stop an event from bubbling or performing its default action.
+ *
+ * @param  {Event} event  Event to stop.
+ */
+Jymin.stopEvent = function (event) {
+  Jymin.preventDefault(event);
+  Jymin.stopPropagation(event);
+};
+
+/**
  * Focus on a specified element.
  *
  * @param  {HTMLElement} element  The element to focus on.

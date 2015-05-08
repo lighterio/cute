@@ -28,3 +28,24 @@ Jymin.setTimer = function (objectOrString, fn, delay, isInterval) {
 Jymin.clearTimer = function (objectOrString) {
   Jymin.setTimer(objectOrString);
 };
+
+/**
+ * Throttle a function by preventing it from being called again soon.
+ *
+ * @param {Function}        fn            The function to throttle.
+ * @param {Array|Arguments} args          Arguments to pass to the function.
+ * @param {Number}          milliseconds  Number of milliseconds to throttle.
+ */
+Jymin.throttle = function (fn, args, milliseconds) {
+  if (Jymin.isNumber(args)) {
+    milliseconds = args;
+    args = [];
+  }
+  milliseconds = milliseconds || 9;
+  var now = Jymin.getTime();
+  var until = fn._throttleUntil || now;
+  if (until <= now) {
+    fn.apply(fn, args);
+  }
+  fn._throttleUntil = now + milliseconds;
+};

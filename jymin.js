@@ -21,6 +21,7 @@
  *   https://github.com/lighterio/jymin/blob/master/scripts/events.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/forms.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/functions.js
+ *   https://github.com/lighterio/jymin/blob/master/scripts/head.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/history.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/i18n.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/json.js
@@ -1425,6 +1426,16 @@ Jymin.preventDefault = function (event) {
 };
 
 /**
+ * Stop an event from bubbling or performing its default action.
+ *
+ * @param  {Event} event  Event to stop.
+ */
+Jymin.stopEvent = function (event) {
+  Jymin.preventDefault(event);
+  Jymin.stopPropagation(event);
+};
+
+/**
  * Focus on a specified element.
  *
  * @param  {HTMLElement} element  The element to focus on.
@@ -1507,6 +1518,48 @@ Jymin.setValue = function (input, value) {
  */
 Jymin.apply = function (object, methodName, args) {
   return ((object || 0)[methodName] || Jymin.doNothing).apply(object, args);
+};
+/**
+ * Get the head element from the document.
+ */
+Jymin.getHead = function () {
+  var head = Jymin.all('head')[0];
+  return head;
+};
+
+/**
+ * Get the body element from the document.
+ */
+Jymin.getBody = function () {
+  var body = Jymin.all('body')[0];
+  return body;
+};
+
+/**
+ * Insert an external JavaScript file.
+ *
+ * @param  {String}   src  A source URL of a script to insert.
+ * @param  {function} fn   An optional function to run when the script loads.
+ */
+Jymin.insertScript = function (src, fn) {
+  var head = Jymin.getHead();
+  var script = Jymin.addElement(head, 'script');
+  if (fn) {
+    Jymin.bindReady(script, fn);
+  }
+  script.async = 1;
+  script.src = src;
+};
+
+/**
+ * Insert CSS text to the page.
+ *
+ * @param  {String} css  CSS text to be inserted.
+ */
+Jymin.insertCss = function (css) {
+  var head = Jymin.getHead();
+  var style = Jymin.addElement(head, 'style?type=text/css', css);
+  (style.styleSheet || 0).cssText = css;
 };
 /**
  * Return a history object.
@@ -1912,8 +1965,20 @@ Jymin.onReady = function (fn) {
 };
 
 /**
+ * Execute a function when the document is ready.
+ * @param  {Function}  fn  A function which will receive the document.]
+ */
+Jymin.onDocumentReady = function (fn) {
+  Jymin.onReady(function (readyElement) {
+    if (readyElement == document) {
+      fn(document);
+    }
+  });
+};
+
+/**
  * Bind to the appropriate ready event for an element.
- * This works for the document as well as for scripts.
+ * This works for the document as well as for scripts and such.
  *
  * @param  {HTMLElement} element  An element to bind to.
  * @param  {Function}    fn       A function to run when the element is ready.
@@ -1929,13 +1994,11 @@ Jymin.bindReady = function (element, fn) {
     }
   };
 
-  // Bind to the document in MSIE8, or scripts in other browsers.
+  // Bind using multiple methods for a variety of browsers.
   Jymin.bind(element, 'readystatechange', onLoad);
   if (element == document) {
-    // Bind to the document in newer browsers.
     Jymin.bind(element, 'DOMContentLoaded', onLoad);
   }
-  // Fall back.
   Jymin.bind(element == document ? window : element, 'load', onLoad);
 };
 
@@ -1951,32 +2014,15 @@ Jymin.ready = function (thing) {
 
 /**
  * Check if a document, iframe, script or AJAX response is ready.
- * @param  {Object}  object [description]
- * @return {Boolean}        [description]
+ *
+ * @param  {Object}  object  The object to check for readiness.
+ * @return {Boolean}         Whether the object is currently ready.
  */
 Jymin.isReady = function (object) {
   // AJAX requests have readyState 4 when loaded.
   // All documents will reach readyState=="complete".
   // In IE, scripts can reach readyState=="loaded" or readyState=="complete".
-  // In non-IE browsers, we can bind to script.onload instead of checking script.readyState.
   return /(4|complete|scriptloaded)$/.test('' + object.tagName + object.readyState);
-};
-
-/**
- * Insert an external JavaScript file.
- *
- * @param  {HTMLElement} element  An element.
- * @param  {HTMLElement} element  An element.
- * @param  {String}      src      A source URL of a script to insert.
- * @param  {function}    fn       An optional function to run when the script loads.
- */
-Jymin.insertScript = function (src, fn) {
-  var head = Jymin.all('head')[0];
-  var script = Jymin.addElement(head, 'script');
-  if (fn) {
-    Jymin.bindReady(script, fn);
-  }
-  script.src = src;
 };
 /**
  * Get the contents of a specified type of tag within a string of HTML.
@@ -2181,6 +2227,27 @@ Jymin.setTimer = function (objectOrString, fn, delay, isInterval) {
  */
 Jymin.clearTimer = function (objectOrString) {
   Jymin.setTimer(objectOrString);
+};
+
+/**
+ * Throttle a function by preventing it from being called again soon.
+ *
+ * @param {Function}        fn            The function to throttle.
+ * @param {Array|Arguments} args          Arguments to pass to the function.
+ * @param {Number}          milliseconds  Number of milliseconds to throttle.
+ */
+Jymin.throttle = function (fn, args, milliseconds) {
+  if (Jymin.isNumber(args)) {
+    milliseconds = args;
+    args = [];
+  }
+  milliseconds = milliseconds || 9;
+  var now = Jymin.getTime();
+  var until = fn._throttleUntil || now;
+  if (until <= now) {
+    fn.apply(fn, args);
+  }
+  fn._throttleUntil = now + milliseconds;
 };
 /**
  * Check whether a value is of a given primitive type.
