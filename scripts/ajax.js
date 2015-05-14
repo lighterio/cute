@@ -88,6 +88,9 @@ Jymin.getResponse = function (url, body, onSuccess, onFailure) {
     request.open(body ? 'POST' : 'GET', url, true);
     if (body) {
       request.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+      if (Jymin.isObject(body)) {
+        body = 'json=' + Jymin.escape(Jymin.stringify(body));
+      }
     }
 
     //+env:debug
