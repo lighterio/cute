@@ -5,9 +5,13 @@ Jymin.MOUSEDOWN = 'mousedown';
 Jymin.MOUSEUP = 'mouseup';
 Jymin.MOUSEOVER = 'mouseover';
 Jymin.MOUSEOUT = 'mouseout';
+Jymin.MOUSEMOVE = 'mousemove';
 Jymin.KEYDOWN = 'keydown';
 Jymin.KEYUP = 'keyup';
 Jymin.KEYPRESS = 'keypress';
+Jymin.TOUCHSTART = 'touchstart';
+Jymin.TOUCHEND = 'touchend';
+Jymin.TOUCHMOVE = 'touchmove';
 
 Jymin.CANCEL_BUBBLE = 'cancelBubble';
 Jymin.PREVENT_DEFAULT = 'preventDefault';
@@ -15,6 +19,11 @@ Jymin.STOP_PROPAGATION = 'stopPropagation';
 Jymin.ADD_EVENT_LISTENER = 'addEventListener';
 Jymin.ATTACH_EVENT = 'attachEvent';
 Jymin.ON = 'on';
+
+Jymin.DOWN = Jymin.MOUSEDOWN + ',' + Jymin.TOUCHSTART;
+Jymin.UP = Jymin.MOUSEUP + ',' + Jymin.TOUCHEND;
+Jymin.MOVE = Jymin.MOUSEMOVE + ',' + Jymin.TOUCHMOVE;
+Jymin.DOWNUP = Jymin.DOWN + ',' + Jymin.UP;
 
 /**
  * Bind an event listener for one or more events on an element.

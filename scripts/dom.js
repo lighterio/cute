@@ -155,10 +155,10 @@ Jymin.createElement = function (elementOrString, innerHtml) {
       attributes = attributes.split('&');
       Jymin.forEach(attributes, function (attribute) {
         var keyAndValue = attribute.split('=');
-        var key = Jymin.unescape(keyAndValue[0]);
-        var value = Jymin.unescape(keyAndValue[1]);
+        var key = keyAndValue[0];
+        var value = keyAndValue[1];
         element[key] = value;
-        element.setAttribute(key, value);
+        Jymin.setAttribute(element, key, value);
       });
     }
     if (innerHtml) {
@@ -179,7 +179,7 @@ Jymin.createElement = function (elementOrString, innerHtml) {
 Jymin.addElement = function (parentElement, elementOrString, innerHtml) {
   if (Jymin.isString(parentElement)) {
     elementOrString = parentElement;
-    parentElement = document;
+    parentElement = document.body;
   }
   var element = Jymin.createElement(elementOrString, innerHtml);
   parentElement.appendChild(element);
@@ -198,7 +198,7 @@ Jymin.insertElement = function (parentElement, elementOrString, beforeSibling) {
   if (Jymin.isString(parentElement)) {
     beforeSibling = elementOrString;
     elementOrString = parentElement;
-    parentElement = document;
+    parentElement = document.body;
   }
   var element = Jymin.createElement(elementOrString);
   if (parentElement) {
@@ -329,8 +329,16 @@ Jymin.getAttribute = function (element, attributeName) {
  * @param  {String}      attributeName  An attribute name.
  * @param  {String}      value          A value to set the attribute to.
  */
-Jymin.setAttribute = function (element, attributeName, value) {
-  element.setAttribute(attributeName, value);
+Jymin.setAttribute = function (element, name, value) {
+  if (value === null) {
+    element.removeAttribute(name);
+  }
+  else {
+    var old = Jymin.getAttribute(element, name);
+    if (value != old) {
+      element.setAttribute(name, value);
+    }
+  }
 };
 
 /**
@@ -373,7 +381,8 @@ Jymin.getClass = function (element) {
  * @return {Array}                The element's class name classes.
  */
 Jymin.getClasses = function (element) {
-  return Jymin.getClass(element).split(/\s+/);
+  var classes = Jymin.getClass(element) || '';
+  return classes.split(/\s+/);
 };
 
 /**
@@ -553,7 +562,6 @@ Jymin.one = function (parentElement, selector, fn) {
   return element;
 };
 
-
 /**
  * Push new HTML into one or more selected elements.
  *
@@ -575,7 +583,7 @@ Jymin.pushHtml = function (html, selector) {
   Jymin.all(selector || 'body', function (element) {
 
     // Set the HTML of an element.
-    Jymin.setHtml(element, html);
+    Jymin.mergeHtml(element, html);
 
     // If there's a title, set it.
     if (title) {
@@ -588,4 +596,60 @@ Jymin.pushHtml = function (html, selector) {
   // Execute any scripts that are found.
   // TODO: Skip over JSX, etc.
   Jymin.getTagContents(html, 'script', Jymin.execute);
+};
+
+/**
+ * Set HTML by DOM merging.
+ *
+ * @param  {HTMLElement} element  The element to merge HTML into.
+ * @param  {String}      html     A string of HTML to merge.
+ */
+Jymin.mergeHtml = function (element, html) {
+
+  var virtualDom = Jymin.createElement('p', html);
+  mergeNodes(element, virtualDom);
+
+  function mergeNodes(domNode, newNode) {
+
+    Jymin.forEach([domNode, newNode], function (element, index) {
+      Jymin.forEach(element.attributes, function (attribute) {
+        if (attribute) {
+          var name = attribute.name;
+          var value = index ? attribute.value : null;
+          Jymin.setAttribute(domNode, name, value);
+        }
+      });
+    });
+
+    var domChild = domNode.firstChild || 0;
+    var newChild = newNode.firstChild || 0;
+    while (newChild) {
+      var domTag = domChild.tagName;
+      var newTag = newChild.tagName;
+      var domNext = domChild.nextSibling || 0;
+      var newNext = newChild.nextSibling || 0;
+      if ((domTag != newTag) || /svg/i.test(newTag)) {
+        domNode.insertBefore(newChild, domChild || null);
+        if (domChild) {
+          domNode.removeChild(domChild);
+        }
+        domChild = domNext;
+      }
+      else {
+        if (newTag) {
+          mergeNodes(domChild, newChild);
+        }
+        else {
+          domChild.textContent = newChild.textContent;
+        }
+        domChild = domNext;
+      }
+      newChild = newNext;
+    }
+    while (domChild) {
+      domNext = domChild.nextSibling;
+      domNode.removeChild(domChild);
+      domChild = domNext;
+    }
+  }
 };
