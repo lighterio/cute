@@ -4,8 +4,8 @@
  * @param  {Integer} top  A specified Y position, in pixels.
  */
 Jymin.scrollTop = function (top) {
-  document.body.scrollTop = (document.documentElement || 0).scrollTop = top;
-};
+  document.body.scrollTop = (document.documentElement || 0).scrollTop = top
+}
 
 /**
  * Scroll the top of the page to a specified named anchor.
@@ -14,24 +14,24 @@ Jymin.scrollTop = function (top) {
  * @return {String}
  */
 Jymin.scrollToAnchor = function (name) {
-  var offset = 0;
-  var element;
+  var offset = 0
+  var element
   //+browser:old
   Jymin.all('a', function (anchor) {
-    if (anchor.name == name) {
-      element = anchor;
+    if (anchor.name === name) {
+      element = anchor
     }
-  });
+  })
   //-browser:old
   //+browser:ok
-  element = Jymin.all('a[name=' + name + ']')[0];
+  element = Jymin.all('a[name=' + name + ']')[0]
   //-browser:ok
   while (element) {
-    offset += element.offsetTop || 0;
-    element = element.offsetParent || 0;
+    offset += element.offsetTop || 0
+    element = element.offsetParent || 0
   }
-  Jymin.scrollTop(offset - (Jymin.body._.offsetTop || 0));
-};
+  Jymin.scrollTop(offset - (Jymin.body._.offsetTop || 0))
+}
 
 /**
  * Set the units to be used for positioning.
@@ -39,8 +39,8 @@ Jymin.scrollToAnchor = function (name) {
  * @param {String} unit  CSS positioning unit (px/em/rem).
  */
 Jymin.setUnit = function (unit) {
-  Jymin.setUnit._unit = unit;
-};
+  Jymin.setUnit._unit = unit
+}
 
 /**
  * Move, and potentially re-size, an element.
@@ -53,5 +53,5 @@ Jymin.setUnit = function (unit) {
  * @param  {String}      unit     An optional unit (px/em/rem).
  */
 Jymin.moveElement = function (element, left, top, width, height, unit) {
-  unit = unit || Jymin.setUnit._unit || '';
-};
+  unit = unit || Jymin.setUnit._unit || ''
+}

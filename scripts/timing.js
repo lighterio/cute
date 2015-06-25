@@ -8,17 +8,17 @@
  * @param {Integer}       delay           An optional delay in milliseconds.
  */
 Jymin.setTimer = function (objectOrString, fn, delay, isInterval) {
-  var useString = Jymin.isString(objectOrString);
-  var object = useString ? Jymin.setTimer : objectOrString;
-  var key = useString ? objectOrString : '_timeout';
-  clearTimeout(object[key]);
+  var useString = Jymin.isString(objectOrString)
+  var object = useString ? Jymin.setTimer : objectOrString
+  var key = useString ? objectOrString : '_timeout'
+  clearTimeout(object[key])
   if (fn) {
     if (Jymin.isUndefined(delay)) {
-      delay = 9;
+      delay = 9
     }
-    object[key] = (isInterval ? setInterval : setTimeout)(fn, delay);
+    object[key] = (isInterval ? setInterval : setTimeout)(fn, delay)
   }
-};
+}
 
 /**
  * Remove a timer from an element or from the Jymin.setTimer method.
@@ -26,8 +26,8 @@ Jymin.setTimer = function (objectOrString, fn, delay, isInterval) {
  * @param {Object|String} objectOrString  An object or a timer name.
  */
 Jymin.clearTimer = function (objectOrString) {
-  Jymin.setTimer(objectOrString);
-};
+  Jymin.setTimer(objectOrString)
+}
 
 /**
  * Throttle a function by preventing it from being called again soon.
@@ -38,14 +38,45 @@ Jymin.clearTimer = function (objectOrString) {
  */
 Jymin.throttle = function (fn, args, milliseconds) {
   if (Jymin.isNumber(args)) {
-    milliseconds = args;
-    args = [];
+    milliseconds = args
+    args = []
   }
-  milliseconds = milliseconds || 9;
-  var now = Jymin.getTime();
-  var until = fn._throttleUntil || now;
+  milliseconds = milliseconds || 9
+  var now = Jymin.getTime()
+  var until = fn._throttleUntil || now
   if (until <= now) {
-    fn.apply(fn, args);
+    fn.apply(fn, args)
   }
-  fn._throttleUntil = now + milliseconds;
-};
+  fn._throttleUntil = now + milliseconds
+}
+
+Jymin.times = {}
+
+Jymin.now = function () {
+  var perf = window.performance
+  return perf && perf.now ? perf.now() : Date.now()
+}
+
+Jymin.startTime = function (label) {
+  Jymin.times[label] = Jymin.getTime()
+}
+
+Jymin.endTime = function (label) {
+  Jymin.times[label] = Jymin.getTime() - Jymin.times[label]
+}
+
+Jymin.beamTimes = function (label) {
+  var times = []
+  Jymin.forIn(Jymin.times, function (key, value) {
+    times.push(key + ' ' + value + 'ms')
+  })
+  Beams.log(times.join(', '))
+}
+
+Jymin.logTimes = function (label) {
+  var times = []
+  Jymin.forIn(Jymin.times, function (key, value) {
+    times.push(key + ' ' + value + 'ms')
+  })
+  console.log(times.join(', '))
+}

@@ -8,16 +8,16 @@
  */
 Jymin.forEach = function (array, fn) {
   if (array) {
-    array = Jymin.isString(array) ? Jymin.splitByCommas(array) : array;
+    array = Jymin.isString(array) ? Jymin.splitByCommas(array) : array
     for (var index = 0, length = Jymin.getLength(array); index < length; index++) {
-      var result = fn(array[index], index, array);
+      var result = fn(array[index], index, array)
       if (result === false) {
-        break;
+        break
       }
     }
-    return index;
+    return index
   }
-};
+}
 
 /**
  * Iterate over an array-like collection, and call a function on each value, with
@@ -29,16 +29,16 @@ Jymin.forEach = function (array, fn) {
  */
 Jymin.each = function (array, fn) {
   if (array) {
-    array = Jymin.isString(array) ? Jymin.splitByCommas(array) : array;
+    array = Jymin.isString(array) ? Jymin.splitByCommas(array) : array
     for (var index = 0, length = Jymin.getLength(array); index < length; index++) {
-      var result = fn(index, array[index], array);
+      var result = fn(index, array[index], array)
       if (result === false) {
-        break;
+        break
       }
     }
-    return index;
+    return index
   }
-};
+}
 
 /**
  * Get the length of an Array/Object/string/etc.
@@ -47,8 +47,8 @@ Jymin.each = function (array, fn) {
  * @return {Number}                     The length of the collection.
  */
 Jymin.getLength = function (array) {
-  return (array || 0).length || 0;
-};
+  return (array || 0).length || 0
+}
 
 /**
  * Get the first item in an Array/Object/string/etc.
@@ -56,8 +56,8 @@ Jymin.getLength = function (array) {
  * @return {Object}                     The first item in the collection.
  */
 Jymin.getFirst = function (array) {
-  return (array || 0)[0];
-};
+  return (array || 0)[0]
+}
 
 /**
  * Get the last item in an Array/Object/string/etc.
@@ -66,8 +66,8 @@ Jymin.getFirst = function (array) {
  * @return {Object}                     The last item in the collection.
  */
 Jymin.getLast = function (array) {
-  return (array || 0)[Jymin.getLength(array) - 1];
-};
+  return (array || 0)[Jymin.getLength(array) - 1]
+}
 
 /**
  * Check for the existence of more than one collection items.
@@ -76,8 +76,8 @@ Jymin.getLast = function (array) {
  * @return {boolean}                     True if the collection has more than one item.
  */
 Jymin.hasMany = function (array) {
-  return Jymin.getLength(array) > 1;
-};
+  return Jymin.getLength(array) > 1
+}
 
 /**
  * Push an item into an array.
@@ -88,10 +88,10 @@ Jymin.hasMany = function (array) {
  */
 Jymin.push = function (array, item) {
   if (Jymin.isArray(array)) {
-    array.push(item);
+    array.push(item)
   }
-  return item;
-};
+  return item
+}
 
 /**
  * Pop an item off an array.
@@ -101,9 +101,9 @@ Jymin.push = function (array, item) {
  */
 Jymin.pop = function (array) {
   if (Jymin.isArray(array)) {
-    return array.pop();
+    return array.pop()
   }
-};
+}
 
 /**
  * Merge one or more arrays into an array.
@@ -116,12 +116,12 @@ Jymin.merge = function (array) {
   Jymin.forEach(arguments, function (items, index) {
     if (index) {
       Jymin.forEach(items, function (item) {
-        Jymin.push(array, item);
-      });
+        Jymin.push(array, item)
+      })
     }
-  });
-  return array;
-};
+  })
+  return array
+}
 
 /**
  * Push padding values onto an array up to a specified length.
@@ -133,16 +133,16 @@ Jymin.merge = function (array) {
  * @return {Number}              The number of padding values that were added.
  */
 Jymin.padArray = function (array, padToLength, paddingValue) {
-  var countAdded = 0;
+  var countAdded = 0
   if (Jymin.isArray(array)) {
-    var startingLength = Jymin.getLength(array);
+    var startingLength = Jymin.getLength(array)
     if (startingLength < length) {
-      paddingValue = Jymin.isUndefined(paddingValue) ? '' : paddingValue;
+      paddingValue = Jymin.isUndefined(paddingValue) ? '' : paddingValue
       for (var index = startingLength; index < length; index++) {
-        Jymin.push(array, paddingValue);
-        countAdded++;
+        Jymin.push(array, paddingValue)
+        countAdded++
       }
     }
   }
-  return countAdded;
-};
+  return countAdded
+}

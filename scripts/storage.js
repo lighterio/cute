@@ -4,8 +4,8 @@
  * @return {Object}  The local storage object.
  */
 Jymin.getStorage = function () {
-  return window.localStorage;
-};
+  return window.localStorage
+}
 
 /**
  * Fetch an item from local storage.
@@ -14,9 +14,9 @@ Jymin.getStorage = function () {
  * @return {Any}         The object that was fetched and deserialized
  */
 Jymin.fetch = function (key) {
-  var storage = Jymin.getStorage();
-  return storage ? Jymin.parse(storage.getItem(key)) : 0;
-};
+  var storage = Jymin.getStorage()
+  return storage ? Jymin.parse(storage.getItem(key)) : 0
+}
 
 /**
  * Store an item in local storage.
@@ -25,8 +25,8 @@ Jymin.fetch = function (key) {
  * @param  {Any}    value  A value to be stringified and stored
  */
 Jymin.store = function (key, value) {
-  var storage = Jymin.getStorage();
+  var storage = Jymin.getStorage()
   if (storage) {
-    storage.setItem(key, Jymin.stringify(value));
+    storage.setItem(key, Jymin.stringify(value))
   }
-};
+}

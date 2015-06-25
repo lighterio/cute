@@ -2,25 +2,19 @@
  * Empty handler.
  * @type {function}
  */
-Jymin.doNothing = function () {};
+Jymin.doNothing = function () {}
 
 /**
  * Default AJAX success handler function.
  * @type {function}
  */
-Jymin.responseSuccessFn = Jymin.doNothing;
+Jymin.responseSuccessFn = Jymin.doNothing
 
 /**
  * Default AJAX failure handler function.
  * @type {function}
  */
-Jymin.responseFailureFn = Jymin.doNothing;
-
-/**
- * Name of the XMLHttpRequest object.
- * @type {String}
- */
-Jymin.XHR = 'XMLHttpRequest';
+Jymin.responseFailureFn = Jymin.doNothing
 
 /**
  * Get an XMLHttpRequest object (or ActiveX object in old IE).
@@ -28,17 +22,17 @@ Jymin.XHR = 'XMLHttpRequest';
  * @return {XMLHttpRequest}   The request object.
  */
 Jymin.getXhr = function () {
-  var xhr;
+  var xhr
   //+browser:old
   xhr = window.XMLHttpRequest ? new XMLHttpRequest() :
     window.ActiveXObject ? new ActiveXObject('Microsoft.XMLHTTP') : // jshint ignore:line
-    false;
+    false
   //-browser:old
   //+browser:ok
-  xhr = new XMLHttpRequest();
+  xhr = new XMLHttpRequest()
   //-browser:ok
-  return xhr;
-};
+  return xhr
+}
 
 /**
  * Get an XMLHttpRequest upload object.
@@ -46,9 +40,9 @@ Jymin.getXhr = function () {
  * @return {XMLHttpRequestUpload}   The request upload object.
  */
 Jymin.getUpload = function () {
-  var xhr = Jymin.getXhr();
-  return xhr ? xhr.upload : false;
-};
+  var xhr = Jymin.getXhr()
+  return xhr ? xhr.upload : false
+}
 
 /**
  * Make an AJAX request, and handle it with success or failure.
@@ -62,58 +56,60 @@ Jymin.getUpload = function () {
 Jymin.getResponse = function (url, body, onSuccess, onFailure) {
   // If the optional body argument is omitted, shuffle it out.
   if (Jymin.isFunction(body)) {
-    onFailure = onSuccess;
-    onSuccess = body;
-    body = 0;
+    onFailure = onSuccess
+    onSuccess = body
+    body = 0
   }
-  var request = Jymin.getXhr();
+  var request = Jymin.getXhr()
   if (request) {
-    onFailure = onFailure || Jymin.responseFailureFn;
-    onSuccess = onSuccess || Jymin.responseSuccessFn;
-    Jymin.bindReady(request, function () {
+    onFailure = onFailure || Jymin.responseFailureFn
+    onSuccess = onSuccess || Jymin.responseSuccessFn
+    request.onreadystatechange = function () {
+      if (request.readyState === 4) {
 
-      //+env:debug
-      Jymin.log('[Jymin] Received response from "' + url + '". (' + Jymin.getResponse._waiting + ' in progress).');
-      --Jymin.getResponse._waiting;
-      //-env:debug
+        //+env:debug
+        Jymin.log('[Jymin] Received response from "' + url + '". (' + Jymin.getResponse._waiting + ' in progress).')
+        --Jymin.getResponse._waiting
+        //-env:debug
 
-      var status = request.status;
-      var isSuccess = (status == 200);
-      var fn = isSuccess ?
-        onSuccess || Jymin.responseSuccessFn :
-        onFailure || Jymin.responseFailureFn;
-      var data = Jymin.parse(request.responseText) || {};
-      fn(data, request, status);
-    });
-    request.open(body ? 'POST' : 'GET', url, true);
+        var status = request.status
+        var isSuccess = (status === 200)
+        var fn = isSuccess ?
+          onSuccess || Jymin.responseSuccessFn :
+          onFailure || Jymin.responseFailureFn
+        var data = Jymin.parse(request.responseText) || {}
+        fn(data, request, status)
+      }
+    }
+    request.open(body ? 'POST' : 'GET', url, true)
     if (body) {
-      request.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+      request.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
       if (Jymin.isObject(body)) {
-        body = 'json=' + Jymin.escape(Jymin.stringify(body));
+        body = 'json=' + Jymin.escape(Jymin.stringify(body))
       }
     }
 
     //+env:debug
 
     // Record the original request URL.
-    request._url = url;
+    request._url = url
 
     // If it's a post, record the post body.
     if (body) {
-      request._body = body;
+      request._body = body
     }
 
     // Record the time the request was made.
-    request._time = Jymin.getTime();
+    request._time = Jymin.getTime()
 
     // Allow applications to back off when too many requests are in progress.
-    Jymin.getResponse._waiting = (Jymin.getResponse._waiting || 0) + 1;
+    Jymin.getResponse._waiting = (Jymin.getResponse._waiting || 0) + 1
 
-    Jymin.log('[Jymin] Sending request to "' + url + '". (' + Jymin.getResponse._waiting + ' in progress).');
+    Jymin.log('[Jymin] Sending request to "' + url + '". (' + Jymin.getResponse._waiting + ' in progress).')
 
     //-env:debug
 
-    request.send(body || null);
+    request.send(body || null)
   }
-  return true;
-};
+  return true
+}

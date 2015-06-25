@@ -5,8 +5,8 @@
  * @return {number}         The number, or zero.
  */
 Jymin.ensureNumber = function (number) {
-  return isNaN(number *= 1) ? 0 : number;
-};
+  return isNaN(number *= 1) ? 0 : number
+}
 
 /**
  * Left-pad a number with zeros if it's shorter than the desired length.
@@ -16,8 +16,8 @@ Jymin.ensureNumber = function (number) {
  * @return {String}         The zero-padded number.
  */
 Jymin.zeroFill = function (number, length) {
-  number = '' + number;
+  number = '' + number
   // Repurpose the lenth variable to count how much padding we need.
-  length = Math.max(length - Jymin.getLength(number), 0);
-  return (new Array(length + 1)).join('0') + number;
-};
+  length = Math.max(length - Jymin.getLength(number), 0)
+  return (new Array(length + 1)).join('0') + number
+}

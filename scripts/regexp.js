@@ -4,16 +4,23 @@
  * @param  {String}   html    [description]
  * @param  {String}   tagName [description]
  * @param  {Function} fn      [description]
- * @return {Array}           [description]
+ * @return {Array}            [description]
  */
 Jymin.getTagContents = function (html, tagName, fn) {
-  var pattern = new RegExp('<' + tagName + '.*?>([\\s\\S]*?)<\\/' + tagName + '>', 'gi');
-  var contents = [];
+  var pattern = Jymin.tagPatterns[tagName]
+  if (!pattern) {
+    var flags = /^(html|head|title|body)$/.test(tagName) ? 'i' : 'gi'
+    pattern = new RegExp('<' + tagName + '.*?>([\\s\\S]*?)<\\/' + tagName + '>', flags)
+    Jymin.tagPatterns[tagName] = pattern
+  }
+  var contents = []
   html.replace(pattern, function (match, content) {
-    contents.push(content);
+    contents.push(content)
     if (fn) {
-      fn(content);
+      fn(content)
     }
-  });
-  return contents;
-};
+  })
+  return contents
+}
+
+Jymin.tagPatterns = {}

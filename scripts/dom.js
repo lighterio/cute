@@ -9,11 +9,11 @@
  */
 Jymin.getElement = function (parentElement, idOrElement) {
   if (!Jymin.hasMany(arguments)) {
-    idOrElement = parentElement;
-    parentElement = document;
+    idOrElement = parentElement
+    parentElement = document
   }
-  return Jymin.isString(idOrElement) ? parentElement.getElementById(idOrElement) : idOrElement;
-};
+  return Jymin.isString(idOrElement) ? parentElement.getElementById(idOrElement) : idOrElement
+}
 
 /**
  * Get the parent of an element, or an ancestor with a specified tag name.
@@ -23,8 +23,8 @@ Jymin.getElement = function (parentElement, idOrElement) {
  * @return {HTMLElement}           The parent or matching ancestor.
  */
 Jymin.getParent = function (element, selector) {
-  return Jymin.getTrail(element, selector)[selector ? 0 : 1];
-};
+  return Jymin.getTrail(element, selector)[selector ? 0 : 1]
+}
 
 /**
  * Get the trail that leads back to the root starting with a given
@@ -35,22 +35,22 @@ Jymin.getParent = function (element, selector) {
  * @return {Array}                 The array of elements in the trail.
  */
 Jymin.getTrail = function (element, selector) {
-  var trail = [element];
+  var trail = [element]
   while (element = element.parentNode) { // jshint ignore:line
-    Jymin.push(trail, element);
+    Jymin.push(trail, element)
   }
   // TODO: Test ordering more thoroughly.
   if (selector) {
-    var set = trail;
-    trail = [];
+    var set = trail
+    trail = []
     Jymin.all(selector, function (element) {
       if (set.indexOf(element) > -1) {
-        Jymin.push(trail, element);
+        Jymin.push(trail, element)
       }
-    });
+    })
   }
-  return trail;
-};
+  return trail
+}
 
 /**
  * Get the children of a parent element.
@@ -59,8 +59,8 @@ Jymin.getTrail = function (element, selector) {
  * @return {HTMLCollection}          The collection of children.
  */
 Jymin.getChildren = function (element) {
-  return element.childNodes;
-};
+  return element.childNodes
+}
 
 /**
  * Get an element's index with respect to its parent.
@@ -69,13 +69,13 @@ Jymin.getChildren = function (element) {
  * @return {Number}               The element's index, or -1 if there's no matching element.
  */
 Jymin.getIndex = function (element) {
-  var index = -1;
+  var index = -1
   while (element) {
-    ++index;
-    element = element.previousSibling;
+    ++index
+    element = element.previousSibling
   }
-  return index;
-};
+  return index
+}
 
 /**
  * Get an element's first child.
@@ -84,8 +84,8 @@ Jymin.getIndex = function (element) {
  * @return {[type]}               The element's first child.
  */
 Jymin.getFirstChild = function (element) {
-  return element.firstChild;
-};
+  return element.firstChild
+}
 
 /**
  * Get an element's previous sibling.
@@ -94,8 +94,8 @@ Jymin.getFirstChild = function (element) {
  * @return {HTMLElement}          The element's previous sibling.
  */
 Jymin.getPreviousSibling = function (element) {
-  return element.previousSibling;
-};
+  return element.previousSibling
+}
 
 /**
  * Get an element's next sibling.
@@ -104,8 +104,8 @@ Jymin.getPreviousSibling = function (element) {
  * @return {HTMLElement}          The element's next sibling.
  */
 Jymin.getNextSibling = function (element) {
-  return element.nextSibling;
-};
+  return element.nextSibling
+}
 
 /**
  * Create a cloneable element with a specified tag name.
@@ -114,11 +114,11 @@ Jymin.getNextSibling = function (element) {
  * @return {HTMLElement}          The newly-created DOM Element with the specified tag name.
  */
 Jymin.createTag = function (tagName) {
-  tagName = tagName || 'div';
-  var isSvg = /^(svg|g|path|circle|line)$/.test(tagName);
-  var uri = 'http://www.w3.org/' + (isSvg ? '2000/svg' : '1999/xhtml');
-  return document.createElementNS(uri, tagName);
-};
+  tagName = tagName || 'div'
+  var isSvg = /^(svg|g|path|circle|line)$/.test(tagName)
+  var uri = 'http://www.w3.org/' + (isSvg ? '2000/svg' : '1999/xhtml')
+  return document.createElementNS(uri, tagName)
+}
 
 /**
  * Create an element, given a specified tag identifier.
@@ -133,40 +133,40 @@ Jymin.createTag = function (tagName) {
  * @return {HTMLElement}                         The existing or created element.
  */
 Jymin.createElement = function (elementOrString, innerHtml) {
-  var element = elementOrString;
+  var element = elementOrString
   if (Jymin.isString(elementOrString)) {
-    var tagAndAttributes = elementOrString.split('?');
-    var tagAndClass = tagAndAttributes[0].split('.');
-    var className = tagAndClass.slice(1).join(' ');
-    var tagAndId = tagAndClass[0].split('#');
-    var tagName = tagAndId[0];
-    var id = tagAndId[1];
-    var attributes = tagAndAttributes[1];
-    var cachedElement = Jymin.createTag[tagName] || (Jymin.createTag[tagName] = Jymin.createTag(tagName));
-    element = cachedElement.cloneNode(true);
+    var tagAndAttributes = elementOrString.split('?')
+    var tagAndClass = tagAndAttributes[0].split('.')
+    var className = tagAndClass.slice(1).join(' ')
+    var tagAndId = tagAndClass[0].split('#')
+    var tagName = tagAndId[0]
+    var id = tagAndId[1]
+    var attributes = tagAndAttributes[1]
+    var cachedElement = Jymin.createTag[tagName] || (Jymin.createTag[tagName] = Jymin.createTag(tagName))
+    element = cachedElement.cloneNode(true)
     if (id) {
-      element.id = id;
+      element.id = id
     }
     if (className) {
-      element.className = className;
+      element.className = className
     }
     // TODO: Do something less janky than using query string syntax (Maybe like Ltl?).
     if (attributes) {
-      attributes = attributes.split('&');
+      attributes = attributes.split('&')
       Jymin.forEach(attributes, function (attribute) {
-        var keyAndValue = attribute.split('=');
-        var key = keyAndValue[0];
-        var value = keyAndValue[1];
-        element[key] = value;
-        Jymin.setAttribute(element, key, value);
-      });
+        var keyAndValue = attribute.split('=')
+        var key = keyAndValue[0]
+        var value = keyAndValue[1]
+        element[key] = value
+        Jymin.setAttribute(element, key, value)
+      })
     }
     if (innerHtml) {
-      Jymin.setHtml(element, innerHtml);
+      Jymin.setHtml(element, innerHtml)
     }
   }
-  return element;
-};
+  return element
+}
 
 /**
  * Add an element to a parent element, creating it first if necessary.
@@ -178,13 +178,13 @@ Jymin.createElement = function (elementOrString, innerHtml) {
  */
 Jymin.addElement = function (parentElement, elementOrString, innerHtml) {
   if (Jymin.isString(parentElement)) {
-    elementOrString = parentElement;
-    parentElement = document.body;
+    elementOrString = parentElement
+    parentElement = document.body
   }
-  var element = Jymin.createElement(elementOrString, innerHtml);
-  parentElement.appendChild(element);
-  return element;
-};
+  var element = Jymin.createElement(elementOrString, innerHtml)
+  parentElement.appendChild(element)
+  return element
+}
 
 /**
  * Insert a child element under a parent element, optionally before another element.
@@ -196,21 +196,21 @@ Jymin.addElement = function (parentElement, elementOrString, innerHtml) {
  */
 Jymin.insertElement = function (parentElement, elementOrString, beforeSibling) {
   if (Jymin.isString(parentElement)) {
-    beforeSibling = elementOrString;
-    elementOrString = parentElement;
-    parentElement = document.body;
+    beforeSibling = elementOrString
+    elementOrString = parentElement
+    parentElement = document.body
   }
-  var element = Jymin.createElement(elementOrString);
+  var element = Jymin.createElement(elementOrString)
   if (parentElement) {
     // If the beforeSibling value is a number, get the (future) sibling at that index.
     if (Jymin.isNumber(beforeSibling)) {
-      beforeSibling = Jymin.getChildren(parentElement)[beforeSibling];
+      beforeSibling = Jymin.getChildren(parentElement)[beforeSibling]
     }
     // Insert the element, optionally before an existing sibling.
-    parentElement.insertBefore(element, beforeSibling || Jymin.getFirstChild(parentElement) || null);
+    parentElement.insertBefore(element, beforeSibling || Jymin.getFirstChild(parentElement) || null)
   }
-  return element;
-};
+  return element
+}
 
 /**
  * Wrap an element with another element.
@@ -220,11 +220,11 @@ Jymin.insertElement = function (parentElement, elementOrString, beforeSibling) {
  * @return {HTMLElement}                      The element that was created as a wrapper.
  */
 Jymin.wrapElement = function (innerElement, outerElement) {
-  var parentElement = Jymin.getParent(innerElement);
-  outerElement = Jymin.insertElement(parentElement, outerElement, innerElement);
-  Jymin.insertElement(outerElement, innerElement);
-  return outerElement;
-};
+  var parentElement = Jymin.getParent(innerElement)
+  outerElement = Jymin.insertElement(parentElement, outerElement, innerElement)
+  Jymin.insertElement(outerElement, innerElement)
+  return outerElement
+}
 
 /**
  * Remove an element from its parent.
@@ -234,12 +234,12 @@ Jymin.wrapElement = function (innerElement, outerElement) {
 Jymin.removeElement = function (element) {
   if (element) {
     // Remove the element from its parent, provided that it has a parent.
-    var parentElement = Jymin.getParent(element);
+    var parentElement = Jymin.getParent(element)
     if (parentElement) {
-      parentElement.removeChild(element);
+      parentElement.removeChild(element)
     }
   }
-};
+}
 
 /**
  * Remove children from an element.
@@ -247,8 +247,8 @@ Jymin.removeElement = function (element) {
  * @param  {HTMLElement} element  An element whose children should all be removed.
  */
 Jymin.clearElement = function (element) {
-  Jymin.setHtml(element, '');
-};
+  Jymin.setHtml(element, '')
+}
 
 /**
  * Get an element's inner HTML.
@@ -257,8 +257,8 @@ Jymin.clearElement = function (element) {
  * @return {String}               The element's HTML.
  */
 Jymin.getHtml = function (element) {
-  return element.innerHTML;
-};
+  return element.innerHTML
+}
 
 /**
  * Set an element's inner HTML.
@@ -267,8 +267,8 @@ Jymin.getHtml = function (element) {
  * @param  {String}      html     A string of HTML to set as the innerHTML.
  */
 Jymin.setHtml = function (element, html) {
-  element.innerHTML = html;
-};
+  element.innerHTML = html
+}
 
 /**
  * Get an element's lowercase tag name.
@@ -277,8 +277,8 @@ Jymin.setHtml = function (element, html) {
  * @return {String}               The element's tag name.
  */
 Jymin.getTag = function (element) {
-  return Jymin.lower(element.tagName);
-};
+  return Jymin.lower(element.tagName)
+}
 
 /**
  * Get an element's text.
@@ -287,8 +287,8 @@ Jymin.getTag = function (element) {
  * @return {String}               The element's text content.
  */
 Jymin.getText = function (element) {
-  return element.textContent || element.innerText;
-};
+  return element.textContent || element.innerText
+}
 
 /**
  * Set the text of an element.
@@ -297,9 +297,9 @@ Jymin.getText = function (element) {
  * @return {String}      text     A text string to set.
  */
 Jymin.setText = function (element, text) {
-  Jymin.clearElement(element);
-  Jymin.addText(element, text);
-};
+  Jymin.clearElement(element)
+  Jymin.addText(element, text)
+}
 
 /**
  * Add text to an element.
@@ -308,8 +308,8 @@ Jymin.setText = function (element, text) {
  * @return {String}      text     A text string to add.
  */
 Jymin.addText = function (element, text) {
-  Jymin.addElement(element, document.createTextNode(text));
-};
+  Jymin.addElement(element, document.createTextNode(text))
+}
 
 /**
  * Get an attribute from an element.
@@ -319,8 +319,8 @@ Jymin.addText = function (element, text) {
  * @return {String}                     The value of the attribute.
  */
 Jymin.getAttribute = function (element, attributeName) {
-  return element.getAttribute(attributeName);
-};
+  return element.getAttribute(attributeName)
+}
 
 /**
  * Set an attribute on an element.
@@ -331,15 +331,14 @@ Jymin.getAttribute = function (element, attributeName) {
  */
 Jymin.setAttribute = function (element, name, value) {
   if (value === null) {
-    element.removeAttribute(name);
-  }
-  else {
-    var old = Jymin.getAttribute(element, name);
-    if (value != old) {
-      element.setAttribute(name, value);
+    element.removeAttribute(name)
+  } else {
+    var old = Jymin.getAttribute(element, name)
+    if (value !== old) {
+      element.setAttribute(name, value)
     }
   }
-};
+}
 
 /**
  * Get a data attribute from an element.
@@ -349,8 +348,8 @@ Jymin.setAttribute = function (element, name, value) {
  * @return {String}               The value of the data attribute.
  */
 Jymin.getData = function (element, dataKey) {
-  return Jymin.getAttribute(element, 'data-' + dataKey);
-};
+  return Jymin.getAttribute(element, 'data-' + dataKey)
+}
 
 /**
  * Set a data attribute on an element.
@@ -360,8 +359,8 @@ Jymin.getData = function (element, dataKey) {
  * @param  {String}      value    A value to set the data attribute to.
  */
 Jymin.setData = function (element, dataKey, value) {
-  Jymin.setAttribute(element, 'data-' + dataKey, value);
-};
+  Jymin.setAttribute(element, 'data-' + dataKey, value)
+}
 
 /**
  * Get an element's class name.
@@ -370,9 +369,9 @@ Jymin.setData = function (element, dataKey, value) {
  * @return {String}               The element's class name.
  */
 Jymin.getClass = function (element) {
-  var className = element.className || '';
-  return className.baseVal || className;
-};
+  var className = element.className || ''
+  return className.baseVal || className
+}
 
 /**
  * Get an element's class name as an array of classes.
@@ -381,9 +380,9 @@ Jymin.getClass = function (element) {
  * @return {Array}                The element's class name classes.
  */
 Jymin.getClasses = function (element) {
-  var classes = Jymin.getClass(element) || '';
-  return classes.split(/\s+/);
-};
+  var classes = Jymin.getClass(element) || ''
+  return classes.split(/\s+/)
+}
 
 /**
  * Set an element's class name.
@@ -392,8 +391,8 @@ Jymin.getClasses = function (element) {
  * @return {String}               One or more space-delimited classes to set.
  */
 Jymin.setClass = function (element, className) {
-  element.className = className;
-};
+  element.className = className
+}
 
 /**
  * Find out whether an element has a specified class.
@@ -403,9 +402,9 @@ Jymin.setClass = function (element, className) {
  * @return {boolean}                True if the class was found.
  */
 Jymin.hasClass = function (element, className) {
-  var classes = Jymin.getClasses(element);
-  return classes.indexOf(className) > -1;
-};
+  var classes = Jymin.getClasses(element)
+  return classes.indexOf(className) > -1
+}
 
 /**
  * Add a class to a given element.
@@ -415,9 +414,9 @@ Jymin.hasClass = function (element, className) {
  */
 Jymin.addClass = function (element, className) {
   if (!Jymin.hasClass(element, className)) {
-    element.className += ' ' + className;
+    element.className += ' ' + className
   }
-};
+}
 
 /**
  * Remove a class from a given element, assuming no duplication.
@@ -426,14 +425,14 @@ Jymin.addClass = function (element, className) {
  * @return {String}               A class to remove.
  */
 Jymin.removeClass = function (element, className) {
-  var classes = Jymin.getClasses(element);
-  var index = classes.indexOf(className);
+  var classes = Jymin.getClasses(element)
+  var index = classes.indexOf(className)
   if (index > -1) {
-    classes.splice(index, 1);
+    classes.splice(index, 1)
   }
-  classes = classes.join(' ');
-  Jymin.setClass(element, classes);
-};
+  classes = classes.join(' ')
+  Jymin.setClass(element, classes)
+}
 
 /**
  * Turn a class on or off on a given element.
@@ -443,9 +442,9 @@ Jymin.removeClass = function (element, className) {
  * @param  {boolean}     flipOn     Whether to add, rather than removing.
  */
 Jymin.flipClass = function (element, className, flipOn) {
-  var method = flipOn ? Jymin.addClass : Jymin.removeClass;
-  method(element, className);
-};
+  var method = flipOn ? Jymin.addClass : Jymin.removeClass
+  method(element, className)
+}
 
 /**
  * Turn a class on if it's off, or off if it's on.
@@ -455,10 +454,10 @@ Jymin.flipClass = function (element, className, flipOn) {
  * @return {boolean}                True if the class was turned on.
  */
 Jymin.toggleClass = function (element, className) {
-  var flipOn = !Jymin.hasClass(element, className);
-  Jymin.flipClass(element, className, flipOn);
-  return flipOn;
-};
+  var flipOn = !Jymin.hasClass(element, className)
+  Jymin.flipClass(element, className, flipOn)
+  return flipOn
+}
 
 /**
  * Find elements matching a selector, and return or run a function on them.
@@ -473,67 +472,64 @@ Jymin.toggleClass = function (element, className) {
  */
 Jymin.all = function (parentElement, selector, fn) {
   if (!selector || Jymin.isFunction(selector)) {
-    fn = selector;
-    selector = parentElement;
-    parentElement = document;
+    fn = selector
+    selector = parentElement
+    parentElement = document
   }
   if (!parentElement) {
-    parentElement = document;
+    parentElement = document
   }
-  var elements;
+  var elements
   //+browser:old
-  elements = [];
+  elements = []
   if (Jymin.contains(selector, ',')) {
     Jymin.forEach(selector, function (selector) {
       Jymin.all(parentElement, selector, function (element) {
-        Jymin.push(elements, element);
-      });
-    });
-  }
-  else if (Jymin.contains(selector, ' ')) {
-    var pos = selector.indexOf(' ');
-    var preSelector = selector.substr(0, pos);
-    var postSelector = selector.substr(pos + 1);
-    elements = [];
+        Jymin.push(elements, element)
+      })
+    })
+  } else if (Jymin.contains(selector, ' ')) {
+    var pos = selector.indexOf(' ')
+    var preSelector = selector.substr(0, pos)
+    var postSelector = selector.substr(pos + 1)
+    elements = []
     Jymin.all(parentElement, preSelector, function (element) {
-      var children = Jymin.all(element, postSelector);
-      Jymin.merge(elements, children);
-    });
-  }
-  else if (selector[0] == '#') {
-    var id = selector.substr(1);
-    var child = Jymin.getElement(parentElement.ownerDocument || document, id);
+      var children = Jymin.all(element, postSelector)
+      Jymin.merge(elements, children)
+    })
+  } else if (selector[0] === '#') {
+    var id = selector.substr(1)
+    var child = Jymin.getElement(parentElement.ownerDocument || document, id)
     if (child) {
-      var parent = Jymin.getParent(child);
+      var parent = Jymin.getParent(child)
       while (parent) {
         if (parent === parentElement) {
-          elements = [child];
-          break;
+          elements = [child]
+          break
         }
-        parent = Jymin.getParent(parent);
+        parent = Jymin.getParent(parent)
       }
     }
-  }
-  else {
-    selector = selector.split('.');
-    var tagName = selector[0];
-    var className = selector[1];
-    var tagElements = parentElement.getElementsByTagName(tagName);
+  } else {
+    selector = selector.split('.')
+    var tagName = selector[0]
+    var className = selector[1]
+    var tagElements = parentElement.getElementsByTagName(tagName)
     Jymin.forEach(tagElements, function (element) {
       if (!className || Jymin.hasClass(element, className)) {
-        Jymin.push(elements, element);
+        Jymin.push(elements, element)
       }
-    });
+    })
   }
   //-browser:old
   //+browser:ok
-  elements = parentElement.querySelectorAll(selector);
+  elements = parentElement.querySelectorAll(selector)
   //-browser:ok
   if (fn) {
-    Jymin.forEach(elements, fn);
+    Jymin.forEach(elements, fn)
   }
-  return elements;
-};
+  return elements
+}
 
 /**
  * Find an element matching a selector, optionally run a function on it, and return it.
@@ -545,22 +541,22 @@ Jymin.all = function (parentElement, selector, fn) {
  */
 Jymin.one = function (parentElement, selector, fn) {
   if (!selector || Jymin.isFunction(selector)) {
-    fn = selector;
-    selector = parentElement;
-    parentElement = document;
+    fn = selector
+    selector = parentElement
+    parentElement = document
   }
-  var element;
+  var element
   //+browser:old
-  element = Jymin.all(parentElement, selector)[0];
+  element = Jymin.all(parentElement, selector)[0]
   //-browser:old
   //+browser:ok
-  element = parentElement.querySelector(selector);
+  element = parentElement.querySelector(selector)
   //-browser:ok
   if (element && fn) {
-    fn(element);
+    fn(element)
   }
-  return element;
-};
+  return element
+}
 
 /**
  * Push new HTML into one or more selected elements.
@@ -569,34 +565,34 @@ Jymin.one = function (parentElement, selector, fn) {
  * @param  {String} selector An optional selector (default: "body").
  */
 Jymin.pushHtml = function (html, selector) {
+  var content = html
+  selector = selector || 'body'
 
-  // Grab the new page title if there is one.
-  var title = Jymin.getTagContents(html, 'title')[0];
-
-  // If there's no target, we're replacing the body contents.
-  if (!selector) {
-    selector = 'body';
-    html = Jymin.getTagContents(html, selector)[0];
+  if (selector === 'body') {
+    content = (/<body\b.*?>(.*?)<\/body>/i.exec(html) || 0)[0] || html
   }
 
-  // TODO: Implement a DOM diff.
-  Jymin.all(selector || 'body', function (element) {
+  // Set the HTML of an element.
+  Jymin.all(selector, function (element) {
 
-    // Set the HTML of an element.
-    Jymin.mergeHtml(element, html);
+    Jymin.startTime('virtual')
+    var virtualDom = Jymin.createElement('m', content)
+    Jymin.endTime('virtual')
+    Jymin.startTime('diff')
+    Jymin.diffDom(element, virtualDom)
+    Jymin.endTime('diff')
+    Jymin.ready(element)
 
-    // If there's a title, set it.
-    if (title) {
-      document.title = title;
-      Jymin.scrollTop(0);
-    }
-    Jymin.ready(element);
-  });
+    Jymin.setTimer(function () {
+      Jymin.all(virtualDom, 'script', function (script) {
+        script = Jymin.getHtml(script)
+        Jymin.execute(script)
+      })
+      Jymin.all('script', Jymin.removeElement)
+    })
 
-  // Execute any scripts that are found.
-  // TODO: Skip over JSX, etc.
-  Jymin.getTagContents(html, 'script', Jymin.execute);
-};
+  })
+}
 
 /**
  * Set HTML by DOM merging.
@@ -604,52 +600,67 @@ Jymin.pushHtml = function (html, selector) {
  * @param  {HTMLElement} element  The element to merge HTML into.
  * @param  {String}      html     A string of HTML to merge.
  */
-Jymin.mergeHtml = function (element, html) {
+Jymin.diffHtml = function (element, html) {
+  Jymin.startTime('virtual')
+  var virtualDom = Jymin.createElement('p', html)
+  Jymin.endTime('virtual')
+  Jymin.startTime('diff')
+  Jymin.diffDom(element, virtualDom)
+  Jymin.endTime('diff')
+}
 
-  var virtualDom = Jymin.createElement('p', html);
-  mergeNodes(element, virtualDom);
-
-  function mergeNodes(domNode, newNode) {
-
-    Jymin.forEach([domNode, newNode], function (element, index) {
-      Jymin.forEach(element.attributes, function (attribute) {
-        if (attribute) {
-          var name = attribute.name;
-          var value = index ? attribute.value : null;
-          Jymin.setAttribute(domNode, name, value);
-        }
-      });
-    });
-
-    var domChild = domNode.firstChild || 0;
-    var newChild = newNode.firstChild || 0;
-    while (newChild) {
-      var domTag = domChild.tagName;
-      var newTag = newChild.tagName;
-      var domNext = domChild.nextSibling || 0;
-      var newNext = newChild.nextSibling || 0;
-      if ((domTag != newTag) || /svg/i.test(newTag)) {
-        domNode.insertBefore(newChild, domChild || null);
-        if (domChild) {
-          domNode.removeChild(domChild);
-        }
-        domChild = domNext;
+/**
+ * Merge children from a virtual DOM.
+ *
+ * @param  {HTMLElement} domNode     The DOM node to merge into.
+ * @param  {HTMLElement} newNode     The virtual DOM to merge from.
+ */
+Jymin.diffDom = function (domNode, newNode, isTopLevel) {
+  var domChild = domNode.firstChild || 0
+  var newChild = newNode.firstChild || 0
+  while (newChild) {
+    var domTag = domChild.tagName
+    var newTag = newChild.tagName
+    var domNext = domChild.nextSibling || 0
+    var newNext = newChild.nextSibling || 0
+    if ((domTag !== newTag) || Jymin.lower(newTag) === 'svg') {
+      domNode.insertBefore(newChild, domChild || null)
+      if (domChild) {
+        domNode.removeChild(domChild)
       }
-      else {
-        if (newTag) {
-          mergeNodes(domChild, newChild);
-        }
-        else {
-          domChild.textContent = newChild.textContent;
-        }
-        domChild = domNext;
+      domChild = domNext
+    } else {
+      if (newTag) {
+        Jymin.diffDom(domChild, newChild)
+        Jymin.diffAttributes(domChild, newChild)
+      } else {
+        domChild.textContent = newChild.textContent
       }
-      newChild = newNext;
+      domChild = domNext
     }
-    while (domChild) {
-      domNext = domChild.nextSibling;
-      domNode.removeChild(domChild);
-      domChild = domNext;
-    }
+    newChild = newNext
   }
-};
+  while (domChild) {
+    domNext = domChild.nextSibling
+    domNode.removeChild(domChild)
+    domChild = domNext
+  }
+}
+
+/**
+ * Merge attributes from a virtual DOM.
+ *
+ * @param  {HTMLElement} domNode     The DOM node to merge into.
+ * @param  {HTMLElement} newNode     The virtual DOM to merge from.
+ */
+Jymin.diffAttributes = function (domNode, newNode) {
+  Jymin.forEach([domNode, newNode], function (element, index) {
+    Jymin.forEach(element.attributes, function (attribute) {
+      if (attribute) {
+        var name = attribute.name
+        var value = index ? attribute.value : null
+        Jymin.setAttribute(domNode, name, value)
+      }
+    })
+  })
+}
