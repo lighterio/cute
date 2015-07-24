@@ -1304,11 +1304,12 @@ Jymin.on = function (selectorOrElement, eventTypes, listener) {
     eventTypes = selectorOrElement
     selectorOrElement = document
   }
+  var element = Jymin.isString(selectorOrElement) ? document : selectorOrElement
   Jymin.forEach(eventTypes, function (eventType) {
     var handlers = Jymin.handlers[eventType]
     if (!handlers) {
       handlers = Jymin.handlers[eventType] = []
-      document['on' + eventType] = function (event) {
+      element['on' + eventType] = function (event) {
         event = event || window.event
         var element = event.target || event.srcElement
         Jymin.trigger(element, event)
@@ -1497,6 +1498,16 @@ Jymin.insertScript = function (src, fn) {
  * @param  {String} css  CSS text to be inserted.
  */
 Jymin.insertCss = function (css) {
+
+  // Allow CSS pixel sizes to be scaled using a window property.
+  var scale = window._scale
+  if (scale && scale > 1) {
+    css = css.replace(/([\.\d]+)px\b/g, function (match, n) {
+      return Math.floor(n * scale) + 'px'
+    })
+  }
+
+  // Insert CSS into the document head.
   var head = Jymin.getHead()
   var style = Jymin.addElement(head, 'style?type=text/css', css)
   var sheet = style.styleSheet
@@ -1512,10 +1523,10 @@ Jymin.getHistory = function () {
   Jymin.forEach(['push', 'replace'], function (key) {
     var fn = history[key + 'State']
     history[key] = function (href) {
-      if (fn) {
+      try {
         fn.apply(history, [null, null, href])
-      } else {
-        // TODO: Create a backward compatible history push.
+      } catch (e) {
+        // TODO: Create a backward-compatible history push.
       }
     }
   })
@@ -1803,6 +1814,18 @@ Jymin.setUnit = function (unit) {
  */
 Jymin.moveElement = function (element, left, top, width, height, unit) {
   unit = unit || Jymin.setUnit._unit || ''
+}
+
+/**
+ * Get the width and height of the viewport as an array.
+ *
+ * @return {Array} [width, height]
+ */
+Jymin.getViewport = function () {
+  function dim (key) {
+    return Math.max(document.documentElement['client' + key], window['inner' + key] || 0)
+  }
+  return [dim('Width'), dim('Height')]
 }
 /**
  * If the argument is numeric, return a number, otherwise return zero.

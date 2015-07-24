@@ -36,6 +36,16 @@ Jymin.insertScript = function (src, fn) {
  * @param  {String} css  CSS text to be inserted.
  */
 Jymin.insertCss = function (css) {
+
+  // Allow CSS pixel sizes to be scaled using a window property.
+  var scale = window._scale
+  if (scale && scale > 1) {
+    css = css.replace(/([\.\d]+)px\b/g, function (match, n) {
+      return Math.floor(n * scale) + 'px'
+    })
+  }
+
+  // Insert CSS into the document head.
   var head = Jymin.getHead()
   var style = Jymin.addElement(head, 'style?type=text/css', css)
   var sheet = style.styleSheet

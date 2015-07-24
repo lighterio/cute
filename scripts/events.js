@@ -6,11 +6,12 @@ Jymin.on = function (selectorOrElement, eventTypes, listener) {
     eventTypes = selectorOrElement
     selectorOrElement = document
   }
+  var element = Jymin.isString(selectorOrElement) ? document : selectorOrElement
   Jymin.forEach(eventTypes, function (eventType) {
     var handlers = Jymin.handlers[eventType]
     if (!handlers) {
       handlers = Jymin.handlers[eventType] = []
-      document['on' + eventType] = function (event) {
+      element['on' + eventType] = function (event) {
         event = event || window.event
         var element = event.target || event.srcElement
         Jymin.trigger(element, event)

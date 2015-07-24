@@ -6,10 +6,10 @@ Jymin.getHistory = function () {
   Jymin.forEach(['push', 'replace'], function (key) {
     var fn = history[key + 'State']
     history[key] = function (href) {
-      if (fn) {
+      try {
         fn.apply(history, [null, null, href])
-      } else {
-        // TODO: Create a backward compatible history push.
+      } catch (e) {
+        // TODO: Create a backward-compatible history push.
       }
     }
   })

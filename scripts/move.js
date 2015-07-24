@@ -55,3 +55,15 @@ Jymin.setUnit = function (unit) {
 Jymin.moveElement = function (element, left, top, width, height, unit) {
   unit = unit || Jymin.setUnit._unit || ''
 }
+
+/**
+ * Get the width and height of the viewport as an array.
+ *
+ * @return {Array} [width, height]
+ */
+Jymin.getViewport = function () {
+  function dim (key) {
+    return Math.max(document.documentElement['client' + key], window['inner' + key] || 0)
+  }
+  return [dim('Width'), dim('Height')]
+}
