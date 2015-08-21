@@ -36,3 +36,9 @@ Jymin.getHashParams = function (hash) {
   hash = (hash || location.hash).replace(/^#/, '')
   return hash ? Jymin.getQueryParams(hash) : {}
 }
+
+/**
+ * Set the appropriate protocol.
+ * @type {String}
+ */
+Jymin.protocol = location.protocol.replace(/file/, 'http')

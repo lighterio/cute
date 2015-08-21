@@ -30,7 +30,7 @@ Jymin.scrollToAnchor = function (name) {
     offset += element.offsetTop || 0
     element = element.offsetParent || 0
   }
-  Jymin.scrollTop(offset - (Jymin.body._.offsetTop || 0))
+  Jymin.scrollTop(offset - (document._menuOffset || 0))
 }
 
 /**
@@ -40,6 +40,16 @@ Jymin.scrollToAnchor = function (name) {
  */
 Jymin.setUnit = function (unit) {
   Jymin.setUnit._unit = unit
+}
+
+/**
+ * Get the width and height of an element.
+ *
+ * @param  {HTMLElement} element  Element to measure.
+ */
+Jymin.size = function (element) {
+  element = element || 0
+  return [element.offsetWidth, element.offsetHeight]
 }
 
 /**
