@@ -1,11 +1,11 @@
 {
   "name": "jymin",
-  "version": "1.0.0",
+  "version": "0.5.0",
   "description": "Minifier-friendly JavaScript built for speed and usefulness",
   "dependencies": {},
   "devDependencies": {
-    "exam": "git+https://github.com/zerious/exam.git",
-    "chug": "git+https://github.com/zerious/chug.git",
+    "exam": "0.3.0",
+    "chug": "0.4.0",
     "figlet": "1.0.9"
   },
   "keywords": [
