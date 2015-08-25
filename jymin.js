@@ -1572,11 +1572,9 @@ Jymin.insertScript = function (src, fn) {
 Jymin.insertCss = function (css) {
 
   // Allow CSS pixel sizes to be scaled using a window property.
-  var scale = window._scale
-  if (scale && scale > 1) {
-    css = css.replace(/([\.\d]+)px\b/g, function (match, n) {
-      return Math.floor(n * scale) + 'px'
-    })
+  var zoom = window._zoom
+  if (zoom && zoom > 1) {
+    css = Jymin.zoomCss(css)
   }
 
   // Insert CSS into the document head.
@@ -1586,6 +1584,18 @@ Jymin.insertCss = function (css) {
   if (sheet) {
     sheet.cssText = css
   }
+}
+
+/**
+ * Scale CSS pixel sizes using a window property.
+ *
+ * @param  {String} css  CSS text to be zoomed.
+ */
+Jymin.zoomCss = function (css) {
+  var zoom = window._zoom || 1
+  return css.replace(/([\.\d]+)px\b/g, function (match, n) {
+    return Math.floor(n * zoom) + 'px'
+  })
 }
 /**
  * Return a history object.

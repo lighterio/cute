@@ -4,8 +4,8 @@
   "description": "Minifier-friendly JavaScript built for speed and usefulness",
   "dependencies": {},
   "devDependencies": {
-    "exam": "^1.0.0",
-    "chug": "^1.0.0",
+    "exam": "git+https://github.com/zerious/exam.git",
+    "chug": "git+https://github.com/zerious/chug.git",
     "figlet": "1.0.9"
   },
   "keywords": [
