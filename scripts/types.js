@@ -1,15 +1,4 @@
 /**
- * Check whether a value is of a given primitive type.
- *
- * @param  {Any}     value  A value to check.
- * @param  {Any}     type   The primitive type.
- * @return {boolean}        True if the value is of the given type.
- */
-Jymin.isType = function (value, type) {
-  return typeof value === type
-}
-
-/**
  * Check whether a value is undefined.
  *
  * @param  {Any}     value  A value to check.

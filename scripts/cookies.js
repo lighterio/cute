@@ -8,7 +8,7 @@ Jymin.getAllCookies = function () {
   var documentCookie = Jymin.trim(document.cookie)
   if (documentCookie) {
     var cookies = documentCookie.split(/\s*;\s*/)
-    Jymin.forEach(cookies, function (cookie) {
+    Jymin.each(cookies, function (cookie) {
       var pair = cookie.split(/\s*=\s*/)
       obj[Jymin.unescape(pair[0])] = Jymin.unescape(pair[1])
     })

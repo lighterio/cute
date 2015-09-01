@@ -6,7 +6,7 @@
  * @param  {Function} fn      [description]
  * @return {Array}            [description]
  */
-Jymin.getTagContents = function (html, tagName, fn) {
+Jymin.tagContents = function (html, tagName, fn) {
   var pattern = Jymin.tagPatterns[tagName]
   if (!pattern) {
     var flags = /^(html|head|title|body)$/.test(tagName) ? 'i' : 'gi'

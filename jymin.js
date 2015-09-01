@@ -1,8 +1,8 @@
-/**      _                 _               _   ___   ___
- *      | |_   _ _ __ ___ (_)_ __   __   _/ | / _ \ / _ \
- *   _  | | | | | '_ ` _ \| | '_ \  \ \ / / || | | | | | |
- *  | |_| | |_| | | | | | | | | | |  \ V /| || |_| | |_| |
- *   \___/ \__, |_| |_| |_|_|_| |_|   \_/ |_(_)___(_)___/
+/**      _                 _                ___   ____   ___
+ *      | |_   _ _ __ ___ (_)_ __   __   __/ _ \ | ___| / _ \
+ *   _  | | | | | '_ ` _ \| | '_ \  \ \ / / | | ||___ \| | | |
+ *  | |_| | |_| | | | | | | | | | |  \ V /| |_| | ___) | |_| |
+ *   \___/ \__, |_| |_| |_|_|_| |_|   \_/  \___(_)____(_)___/
  *         |___/
  *
  * http://lighter.io/jymin
@@ -11,8 +11,8 @@
  *
  * Source files:
  *   https://github.com/lighterio/jymin/blob/master/scripts/ajax.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/arrays.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/charts.js
+ *   https://github.com/lighterio/jymin/blob/master/scripts/collections.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/cookies.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/crypto.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/dates.js
@@ -28,7 +28,6 @@
  *   https://github.com/lighterio/jymin/blob/master/scripts/logging.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/move.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/numbers.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/objects.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/ready.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/regexp.js
  *   https://github.com/lighterio/jymin/blob/master/scripts/storage.js
@@ -39,7 +38,7 @@
  */
 
 
-var Jymin = {version: '1.0.0'};
+var Jymin = {version: '0.5.0'};
 
 //+env:commonjs
 // Support CommonJS.
@@ -68,26 +67,26 @@ else {
  * Empty handler.
  * @type {function}
  */
-Jymin.doNothing = function () {}
+Jymin.no = function () {}
 
 /**
  * Default AJAX success handler function.
  * @type {function}
  */
-Jymin.responseSuccessFn = Jymin.doNothing
+Jymin.ok = Jymin.no
 
 /**
  * Default AJAX failure handler function.
  * @type {function}
  */
-Jymin.responseFailureFn = Jymin.doNothing
+Jymin.fail = Jymin.no
 
 /**
  * Get an XMLHttpRequest object (or ActiveX object in old IE).
  *
  * @return {XMLHttpRequest}   The request object.
  */
-Jymin.getXhr = function () {
+Jymin.xhr = function () {
   var xhr
 
 
@@ -101,227 +100,48 @@ Jymin.getXhr = function () {
  *
  * @return {XMLHttpRequestUpload}   The request upload object.
  */
-Jymin.getUpload = function () {
-  var xhr = Jymin.getXhr()
+Jymin.upload = function () {
+  var xhr = Jymin.xhr()
   return xhr ? xhr.upload : false
 }
 
 /**
  * Make an AJAX request, and handle it with success or failure.
  *
- * @param  {string}   url        A URL from which to request a response.
- * @param  {string}   body       An optional query, which if provided, makes the request a POST.
- * @param  {function} onSuccess  An optional function to run upon success.
- * @param  {function} onFailure  An optional function to run upon failure.
- * @return {boolean}             True if AJAX is supported.
+ * @param  {string}   url   A URL from which to request a response.
+ * @param  {string}   data  An optional query, which if provided, makes the request a POST.
+ * @param  {function} ok    An optional function to run upon success.
+ * @param  {function} fail  An optional function to run upon failure.
  */
-Jymin.getResponse = function (url, body, onSuccess, onFailure) {
-  // If the optional body argument is omitted, shuffle it out.
-  if (Jymin.isFunction(body)) {
-    onFailure = onSuccess
-    onSuccess = body
-    body = 0
+Jymin.get = function (url, data, ok, fail) {
+  // If the optional data argument is omitted, zero it.
+  if (Jymin.isFunction(data)) {
+    fail = ok
+    ok = data
+    data = 0
   }
-  var request = Jymin.getXhr()
+  var request = Jymin.xhr()
   if (request) {
-    onFailure = onFailure || Jymin.responseFailureFn
-    onSuccess = onSuccess || Jymin.responseSuccessFn
+    ok = ok || Jymin.ok
+    fail = fail || Jymin.fail
     request.onreadystatechange = function () {
       if (request.readyState === 4) {
-
-        //+env:debug
-        Jymin.log('[Jymin] Received response from "' + url + '". (' + Jymin.getResponse._waiting + ' in progress).')
-        --Jymin.getResponse._waiting
-        //-env:debug
-
         var status = request.status
         var isSuccess = (status === 200)
-        var fn = isSuccess ?
-          onSuccess || Jymin.responseSuccessFn :
-          onFailure || Jymin.responseFailureFn
+        var fn = isSuccess ? (ok || Jymin.ok) : (fail || Jymin.fail)
         var data = Jymin.parse(request.responseText) || {}
         fn(data, request, status)
       }
     }
-    request.open(body ? 'POST' : 'GET', url, true)
-    if (body) {
+    request.open(data ? 'POST' : 'GET', url, true)
+    if (data) {
       request.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
-      if (Jymin.isObject(body)) {
-        body = 'json=' + Jymin.escape(Jymin.stringify(body))
+      if (Jymin.isObject(data)) {
+        data = 'json=' + Jymin.escape(Jymin.stringify(data))
       }
     }
-
-    //+env:debug
-
-    // Record the original request URL.
-    request._url = url
-
-    // If it's a post, record the post body.
-    if (body) {
-      request._body = body
-    }
-
-    // Record the time the request was made.
-    request._time = Jymin.getTime()
-
-    // Allow applications to back off when too many requests are in progress.
-    Jymin.getResponse._waiting = (Jymin.getResponse._waiting || 0) + 1
-
-    Jymin.log('[Jymin] Sending request to "' + url + '". (' + Jymin.getResponse._waiting + ' in progress).')
-
-    //-env:debug
-
-    request.send(body || null)
+    request.send(data || null)
   }
-  return true
-}
-/**
- * Iterate over an array-like collection, and call a function on each value, with
- * the arguments: (value, index, array). Iteration stops if the function returns false.
- *
- * @param  {Array|Object|string}  array  A collection, expected to have indexed items and a length.
- * @param  {Function}             fn     A function to call on each item.
- * @return {Number}                      The number of items iterated over without breaking.
- */
-Jymin.forEach = function (array, fn) {
-  if (array) {
-    array = Jymin.isString(array) ? Jymin.splitByCommas(array) : array
-    for (var index = 0, length = Jymin.getLength(array); index < length; index++) {
-      var result = fn(array[index], index, array)
-      if (result === false) {
-        break
-      }
-    }
-    return index
-  }
-}
-
-/**
- * Iterate over an array-like collection, and call a function on each value, with
- * the arguments: (index, value, array). Iteration stops if the function returns false.
- *
- * @param  {Array|Object|string}     array  A collection, expected to have indexed items and a length.
- * @param  {Function}  fn                   A function to call on each item.
- * @return {Number}                         The number of items iterated over without breaking.
- */
-Jymin.each = function (array, fn) {
-  if (array) {
-    array = Jymin.isString(array) ? Jymin.splitByCommas(array) : array
-    for (var index = 0, length = Jymin.getLength(array); index < length; index++) {
-      var result = fn(index, array[index], array)
-      if (result === false) {
-        break
-      }
-    }
-    return index
-  }
-}
-
-/**
- * Get the length of an Array/Object/string/etc.
- *
- * @param {Array|Object|string}  array  A collection, expected to have a length.
- * @return {Number}                     The length of the collection.
- */
-Jymin.getLength = function (array) {
-  return (array || 0).length || 0
-}
-
-/**
- * Get the first item in an Array/Object/string/etc.
- * @param {Array|Object|string}  array  A collection, expected to have index items.
- * @return {Object}                     The first item in the collection.
- */
-Jymin.getFirst = function (array) {
-  return (array || 0)[0]
-}
-
-/**
- * Get the last item in an Array/Object/string/etc.
- *
- * @param {Array|Object|string}  array  A collection, expected to have indexed items and a length.
- * @return {Object}                     The last item in the collection.
- */
-Jymin.getLast = function (array) {
-  return (array || 0)[Jymin.getLength(array) - 1]
-}
-
-/**
- * Check for the existence of more than one collection items.
- *
- * @param {Array|Object|string}   array  A collection, expected to have a length.
- * @return {boolean}                     True if the collection has more than one item.
- */
-Jymin.hasMany = function (array) {
-  return Jymin.getLength(array) > 1
-}
-
-/**
- * Push an item into an array.
- *
- * @param  {Array}  array  An array to push an item into.
- * @param  {Object} item   An item to push.
- * @return {Object}        The item that was pushed.
- */
-Jymin.push = function (array, item) {
-  if (Jymin.isArray(array)) {
-    array.push(item)
-  }
-  return item
-}
-
-/**
- * Pop an item off an array.
- *
- * @param  {Array}  array  An array to pop an item from.
- * @return {Object}        The item that was popped.
- */
-Jymin.pop = function (array) {
-  if (Jymin.isArray(array)) {
-    return array.pop()
-  }
-}
-
-/**
- * Merge one or more arrays into an array.
- *
- * @param  {Array}     array  An array to merge into.
- * @params {Array...}         Items to merge into the array.
- * @return {Array}            The first array argument, with new items merged in.
- */
-Jymin.merge = function (array) {
-  Jymin.forEach(arguments, function (items, index) {
-    if (index) {
-      Jymin.forEach(items, function (item) {
-        Jymin.push(array, item)
-      })
-    }
-  })
-  return array
-}
-
-/**
- * Push padding values onto an array up to a specified length.
- *
- * @return number:
- * @param  {Array}  array        An array to pad.
- * @param  {Number} padToLength  A desired length for the array, after padding.
- * @param  {Object} paddingValue A value to use as padding.
- * @return {Number}              The number of padding values that were added.
- */
-Jymin.padArray = function (array, padToLength, paddingValue) {
-  var countAdded = 0
-  if (Jymin.isArray(array)) {
-    var startingLength = Jymin.getLength(array)
-    if (startingLength < length) {
-      paddingValue = Jymin.isUndefined(paddingValue) ? '' : paddingValue
-      for (var index = startingLength; index < length; index++) {
-        Jymin.push(array, paddingValue)
-        countAdded++
-      }
-    }
-  }
-  return countAdded
 }
 /**
  * Get 100 consistent colors for charting.
@@ -353,6 +173,97 @@ Jymin.getChartColors = function () {
   return colors
 }
 /**
+ * Iterate over an object or array, calling a function on each value.
+ * If the function returns false, stop iterating.
+ *
+ * - For arrays, the function arguments are: (value, index, collection).
+ * - For objects, the arguments are: (key, value, collection).
+ *
+ * @param  {Array|Object|string}  collection  A collection of items.
+ * @param  {Function}             fn          A function to call on each item.
+ * @return {Number}                           Index or key that returned false.
+ */
+Jymin.each = function (collection, fn) {
+  if (collection) {
+    collection = Jymin.isString(collection) ? Jymin.splitByCommas(collection) : collection
+    var length = collection.length
+    var key, result
+    if (Jymin.isNumber(length)) {
+      for (key = 0; key < length; key++) {
+        result = fn(collection[key], key, collection)
+        if (result === false) {
+          break
+        }
+      }
+    } else {
+      for (key in collection) {
+        result = fn(collection[key], key, collection)
+        if (result === false) {
+          break
+        }
+      }
+    }
+    return key
+  }
+}
+
+/**
+ * Decorate an object with properties from another object.
+ */
+Jymin.decorate = function (object, decorations) {
+  if (object) {
+    Jymin.each(decorations, function (value, key) {
+      object[key] = value
+    })
+  }
+  return object
+}
+
+/**
+ * Return a property if it is defined, otherwise set and return a default if provided.
+ */
+Jymin.prop = function (object, property, defaultValue) {
+  var value = object[property]
+  if (!Jymin.isDefined(value)) {
+    value = object[property] = defaultValue
+  }
+  return value
+}
+
+
+/**
+ * Return the subset of an array for which a filter function returns truthy.
+ *
+ * @param  {Array|Object|string}  array  An array to filter.
+ * @param  {Function}             fn     A filter function.
+ * @return {Array}          [description]
+ */
+Jymin.filter = function (array, fn) {
+  var filtered = []
+  Jymin.each(array, function (item) {
+    if (fn(item)) {
+      filtered.push(item)
+    }
+  })
+  return filtered
+}
+
+/**
+ * Merge one or more arrays into an array.
+ *
+ * @param  {Array}     array  An array to merge into.
+ * @params {Array...}         Items to merge into the array.
+ * @return {Array}            The first array argument, with new items merged in.
+ */
+Jymin.merge = function (array) {
+  Jymin.each(arguments, function (items, index) {
+    if (index) {
+      [].push.apply(array, items)
+    }
+  })
+  return array
+}
+/**
  * Get all cookies from the document, and return a map.
  *
  * @return {Object}  The map of cookie names and values.
@@ -362,7 +273,7 @@ Jymin.getAllCookies = function () {
   var documentCookie = Jymin.trim(document.cookie)
   if (documentCookie) {
     var cookies = documentCookie.split(/\s*;\s*/)
-    Jymin.forEach(cookies, function (cookie) {
+    Jymin.each(cookies, function (cookie) {
       var pair = cookie.split(/\s*=\s*/)
       obj[Jymin.unescape(pair[0])] = Jymin.unescape(pair[1])
     })
@@ -682,8 +593,8 @@ Jymin.formatTime = function (date) {
  * @param  {string|HTMLElement} idOrElement    ID of an element, or the element itself.
  * @return {HTMLElement}                       The matching element, or undefined.
  */
-Jymin.getElement = function (parentElement, idOrElement) {
-  if (!Jymin.hasMany(arguments)) {
+Jymin.byId = function (parentElement, idOrElement) {
+  if (!idOrElement) {
     idOrElement = parentElement
     parentElement = document
   }
@@ -691,40 +602,38 @@ Jymin.getElement = function (parentElement, idOrElement) {
 }
 
 /**
- * Get the parent of an element, or an ancestor with a specified tag name.
+ * Get or set the parent of an element.
  *
- * @param  {HTMLElement} element   A element whose parent elements are being searched.
- * @param  {String}      selector  An optional selector to search up the tree.
- * @return {HTMLElement}           The parent or matching ancestor.
+ * @param  {HTMLElement} element    A element whose parent we want to get/set.
+ * @param  {String}      parent     An optional parent to add the element to.
+ * @param  {String}      before     An optional child to insert the element before.
+ * @return {HTMLElement}            The parent of the element.
  */
-Jymin.getParent = function (element, selector) {
-  return Jymin.getTrail(element, selector)[selector ? 0 : 1]
+Jymin.parent = function (element, parent, before) {
+  if (parent) {
+    parent.insertBefore(element, before || null)
+  } else {
+    parent = element.parentNode
+  }
+  return parent
 }
 
 /**
- * Get the trail that leads back to the root starting with a given
- * element, optionally filtered by a selector.
+ * Get an element's ancestors, optionally filtered by a selector.
  *
- * @param  {HTMLElement} element   An element to start the trail.
- * @param  {String}      selector  An optional selector to filter the trail.
- * @return {Array}                 The array of elements in the trail.
+ * @param  {HTMLElement} element   An element to start from.
+ * @param  {String}      selector  An optional selector to filter ancestors.
+ * @return {Array}                 The array of ancestors.
  */
-Jymin.getTrail = function (element, selector) {
-  var trail = [element]
-  while (element = element.parentNode) { // jshint ignore:line
-    Jymin.push(trail, element)
+Jymin.up = function (element, selector) {
+  var ancestors = []
+  while (element = Jymin.parent(element)) { // jshint ignore:line
+    ancestors.push(element)
   }
-  // TODO: Test ordering more thoroughly.
-  if (selector) {
-    var set = trail
-    trail = []
-    Jymin.all(selector, function (element) {
-      if (set.indexOf(element) > -1) {
-        Jymin.push(trail, element)
-      }
-    })
-  }
-  return trail
+  ancestors = Jymin.filter(ancestors, function (element) {
+    return Jymin.matches(element, selector)
+  })
+  return ancestors
 }
 
 /**
@@ -733,7 +642,7 @@ Jymin.getTrail = function (element, selector) {
  * @param  {HTMLElement}    element  A parent element who might have children.
  * @return {HTMLCollection}          The collection of children.
  */
-Jymin.getChildren = function (element) {
+Jymin.children = function (element) {
   return element.childNodes
 }
 
@@ -743,43 +652,13 @@ Jymin.getChildren = function (element) {
  * @param  {HTMLElement} element  An element with a parent, and potentially siblings.
  * @return {Number}               The element's index, or -1 if there's no matching element.
  */
-Jymin.getIndex = function (element) {
+Jymin.index = function (element) {
   var index = -1
   while (element) {
     ++index
     element = element.previousSibling
   }
   return index
-}
-
-/**
- * Get an element's first child.
- *
- * @param  {HTMLElement} element  An element.
- * @return {[type]}               The element's first child.
- */
-Jymin.getFirstChild = function (element) {
-  return element.firstChild
-}
-
-/**
- * Get an element's previous sibling.
- *
- * @param  {HTMLElement} element  An element.
- * @return {HTMLElement}          The element's previous sibling.
- */
-Jymin.getPreviousSibling = function (element) {
-  return element.previousSibling
-}
-
-/**
- * Get an element's next sibling.
- *
- * @param  {HTMLElement} element  An element.
- * @return {HTMLElement}          The element's next sibling.
- */
-Jymin.getNextSibling = function (element) {
-  return element.nextSibling
 }
 
 /**
@@ -807,7 +686,7 @@ Jymin.createTag = function (tagName) {
  * @param  {String}             innerHtml        An optional string of HTML to populate the element.
  * @return {HTMLElement}                         The existing or created element.
  */
-Jymin.createElement = function (elementOrString, innerHtml) {
+Jymin.create = function (elementOrString, innerHtml) {
   var element = elementOrString
   if (Jymin.isString(elementOrString)) {
     var tagAndAttributes = elementOrString.split('?')
@@ -828,7 +707,7 @@ Jymin.createElement = function (elementOrString, innerHtml) {
     // TODO: Do something less janky than using query string syntax (Maybe like Ltl?).
     if (attributes) {
       attributes = attributes.split('&')
-      Jymin.forEach(attributes, function (attribute) {
+      Jymin.each(attributes, function (attribute) {
         var keyAndValue = attribute.split('=')
         var key = keyAndValue[0]
         var value = keyAndValue[1]
@@ -837,7 +716,7 @@ Jymin.createElement = function (elementOrString, innerHtml) {
       })
     }
     if (innerHtml) {
-      Jymin.setHtml(element, innerHtml)
+      Jymin.html(element, innerHtml)
     }
   }
   return element
@@ -851,12 +730,12 @@ Jymin.createElement = function (elementOrString, innerHtml) {
  * @param  {String}             innerHtml        An optional string of HTML to populate the element.
  * @return {HTMLElement}                         The element that was added.
  */
-Jymin.addElement = function (parentElement, elementOrString, innerHtml) {
+Jymin.add = function (parentElement, elementOrString, innerHtml) {
   if (Jymin.isString(parentElement)) {
     elementOrString = parentElement
     parentElement = document.body
   }
-  var element = Jymin.createElement(elementOrString, innerHtml)
+  var element = Jymin.create(elementOrString, innerHtml)
   parentElement.appendChild(element)
   return element
 }
@@ -869,17 +748,17 @@ Jymin.addElement = function (parentElement, elementOrString, innerHtml) {
  * @param  {HTMLElement}         beforeSibling    An optional child to insert the element before.
  * @return {HTMLElement}                          The element that was inserted.
  */
-Jymin.insertElement = function (parentElement, elementOrString, beforeSibling) {
+Jymin.insert = function (parentElement, elementOrString, beforeSibling) {
   if (Jymin.isString(parentElement)) {
     beforeSibling = elementOrString
     elementOrString = parentElement
     parentElement = document.body
   }
-  var element = Jymin.createElement(elementOrString)
+  var element = Jymin.create(elementOrString)
   if (parentElement) {
     // If the beforeSibling value is a number, get the (future) sibling at that index.
     if (Jymin.isNumber(beforeSibling)) {
-      beforeSibling = Jymin.getChildren(parentElement)[beforeSibling]
+      beforeSibling = Jymin.children(parentElement)[beforeSibling]
     }
     // Insert the element, optionally before an existing sibling.
     parentElement.insertBefore(element, beforeSibling || Jymin.getFirstChild(parentElement) || null)
@@ -888,28 +767,14 @@ Jymin.insertElement = function (parentElement, elementOrString, beforeSibling) {
 }
 
 /**
- * Wrap an element with another element.
- *
- * @param  {HTMLElement}        innerElement  An element to wrap with another element.
- * @param  {HTMLElement|String} outerElement  An element or a string used to create an element (default: div).
- * @return {HTMLElement}                      The element that was created as a wrapper.
- */
-Jymin.wrapElement = function (innerElement, outerElement) {
-  var parentElement = Jymin.getParent(innerElement)
-  outerElement = Jymin.insertElement(parentElement, outerElement, innerElement)
-  Jymin.insertElement(outerElement, innerElement)
-  return outerElement
-}
-
-/**
  * Remove an element from its parent.
  *
  * @param  {HTMLElement} element  An element to remove.
  */
-Jymin.removeElement = function (element) {
+Jymin.remove = function (element) {
   if (element) {
     // Remove the element from its parent, provided that it has a parent.
-    var parentElement = Jymin.getParent(element)
+    var parentElement = Jymin.parent(element)
     if (parentElement) {
       parentElement.removeChild(element)
     }
@@ -917,32 +782,17 @@ Jymin.removeElement = function (element) {
 }
 
 /**
- * Remove children from an element.
- *
- * @param  {HTMLElement} element  An element whose children should all be removed.
- */
-Jymin.clearElement = function (element) {
-  Jymin.setHtml(element, '')
-}
-
-/**
- * Get an element's inner HTML.
+ * Get or set an element's inner HTML.
  *
  * @param  {HTMLElement} element  An element.
+ * @param  {String}      html     An optional string of HTML to set as the innerHTML.
  * @return {String}               The element's HTML.
  */
-Jymin.getHtml = function (element) {
+Jymin.html = function (element, html) {
+  if (!Jymin.isUndefined(html)) {
+    element.innerHTML = html
+  }
   return element.innerHTML
-}
-
-/**
- * Set an element's inner HTML.
- *
- * @param  {HTMLElement} element  An element.
- * @param  {String}      html     A string of HTML to set as the innerHTML.
- */
-Jymin.setHtml = function (element, html) {
-  element.innerHTML = html
 }
 
 /**
@@ -951,29 +801,22 @@ Jymin.setHtml = function (element, html) {
  * @param  {HTMLElement} element  An element.
  * @return {String}               The element's tag name.
  */
-Jymin.getTag = function (element) {
+Jymin.tag = function (element) {
   return Jymin.lower(element.tagName)
 }
 
 /**
- * Get an element's text.
- *
- * @param  {HTMLElement} element  An element.
- * @return {String}               The element's text content.
- */
-Jymin.getText = function (element) {
-  return element.textContent || element.innerText
-}
-
-/**
- * Set the text of an element.
+ * Get or set the text of an element.
  *
  * @param  {HTMLElement} element  An element.
  * @return {String}      text     A text string to set.
  */
-Jymin.setText = function (element, text) {
-  Jymin.clearElement(element)
-  Jymin.addText(element, text)
+Jymin.text = function (element, text) {
+  if (!Jymin.isUndefined(text)) {
+    Jymin.html(element, '')
+    Jymin.addText(element, text)
+  }
+  return element.textContent || element.innerText
 }
 
 /**
@@ -983,7 +826,7 @@ Jymin.setText = function (element, text) {
  * @return {String}      text     A text string to add.
  */
 Jymin.addText = function (element, text) {
-  Jymin.addElement(element, document.createTextNode(text))
+  Jymin.add(element, document.createTextNode(text))
 }
 
 /**
@@ -1160,7 +1003,7 @@ Jymin.all = function (parentElement, selector, fn) {
   elements = parentElement.querySelectorAll(selector)
 
   if (fn) {
-    Jymin.forEach(elements, fn)
+    Jymin.each(elements, fn)
   }
   return elements
 }
@@ -1205,25 +1048,25 @@ Jymin.pushHtml = function (html, selector) {
   }
 
   // Set the HTML of an element.
-  Jymin.all(selector, function (element) {
+  return Jymin.all(selector, function (element) {
 
     Jymin.startTime('virtual')
-    var virtualDom = Jymin.createElement('m', content)
+    var virtualDom = Jymin.create('m', content)
     Jymin.endTime('virtual')
     Jymin.startTime('diff')
     Jymin.diffDom(element, virtualDom)
     Jymin.endTime('diff')
-    Jymin.ready(element)
+    Jymin.isReady(element, 1)
 
     Jymin.setTimer(function () {
       Jymin.all(virtualDom, 'script', function (script) {
-        script = Jymin.getHtml(script)
+        script = Jymin.html(script)
         Jymin.execute(script)
       })
-      Jymin.all('script', Jymin.removeElement)
+      Jymin.all('script', Jymin.remove)
     })
 
-  })
+  })[0]
 }
 
 /**
@@ -1234,7 +1077,7 @@ Jymin.pushHtml = function (html, selector) {
  */
 Jymin.diffHtml = function (element, html) {
   Jymin.startTime('virtual')
-  var virtualDom = Jymin.createElement('p', html)
+  var virtualDom = Jymin.create('p', html)
   Jymin.endTime('virtual')
   Jymin.startTime('diff')
   Jymin.diffDom(element, virtualDom)
@@ -1286,14 +1129,16 @@ Jymin.diffDom = function (domNode, newNode, isTopLevel) {
  * @param  {HTMLElement} newNode     The virtual DOM to merge from.
  */
 Jymin.diffAttributes = function (domNode, newNode) {
-  Jymin.forEach([domNode, newNode], function (element, index) {
-    Jymin.forEach(element.attributes, function (attribute) {
+  var map = {}
+  Jymin.each([domNode, newNode], function (element, index) {
+    Jymin.each(element.attributes, function (attribute) {
       if (attribute) {
-        var name = attribute.name
-        var value = index ? attribute.value : null
-        Jymin.setAttribute(domNode, name, value)
+        map[attribute.name] = index ? attribute.value : null
       }
     })
+  })
+  Jymin.each(map, function (value, name) {
+    Jymin.setAttribute(domNode, name, value)
   })
 }
 /**
@@ -1316,21 +1161,16 @@ Jymin.on = function (selectorOrElement, eventTypes, listener) {
     selectorOrElement = document
   }
   var element = Jymin.isString(selectorOrElement) ? document : selectorOrElement
-  Jymin.forEach(eventTypes, function (eventType) {
+  Jymin.each(eventTypes, function (eventType) {
     var handlers = Jymin.handlers[eventType]
     if (!handlers) {
       handlers = Jymin.handlers[eventType] = []
-      var fn = function (event) {
-        event = event || window.event
-        var element = event.target || event.srcElement
-        Jymin.trigger(element, event)
-      }
       if (element.addEventListener) {
-        element.addEventListener(eventType, fn, false)
+        element.addEventListener(eventType, Jymin.emit, false)
       } else if (element.attachEvent) {
-        element.attachEvent('on' + eventType, fn)
+        element.attachEvent('on' + eventType, Jymin.emit)
       } else {
-        element['on' + eventType] = fn
+        element['on' + eventType] = Jymin.emit
       }
     }
     handlers.push([selectorOrElement, listener])
@@ -1372,65 +1212,65 @@ Jymin.once = function (selectorOrElement, eventTypes, listener) {
 }
 
 /**
- * Fake an event.
+ * Simulate an event, or propagate an event up the DOM.
  *
- * @param  {HTMLElement}   element  An element to pretend the event occurred on.
- * @param  {String|Object} event    An event or event type to fake.
+ * @param  {String|Object} event   An event or event type to propagate.
+ * @param  {HTMLElement}   target  An optional target to start propagation from.
+ * @param  {Object}        data    Optional data to report with the event.
  */
-Jymin.trigger = function (element, event) {
-  if (!event) {
-    event = element
-    element = event.target || event.srcElement || document
-  }
+Jymin.emit = function (event, target, data) {
+
+  // Get the window-level event if an event isn't passed.
+  event = event || window.event
+
+  // Construct an event object if necessary.
   if (Jymin.isString(event)) {
     event = {type: event}
   }
-  element = element || 0
-  var handlers = Jymin.handlers[event.type]
+
+  // Reference an element if possible.
+  var element = event.target = target || event.target || event.srcElement || document
+
+  // Extract the event type.
+  var type = event.type
+
+  var handlers = Jymin.handlers[type]
   while (element && !event._stopped) {
-    Jymin.forEach(handlers, function (handler) {
+    Jymin.each(handlers, function (handler) {
       var selector = handler[0]
       var fn = handler[1]
-      var isMatch
-      if (Jymin.isString(selector)) {
-        element._matches = element._matches ||
-          element.matchesSelector ||
-          element.msMatchesSelector ||
-          element.webkitMatchesSelector ||
-          element.mozMatchesSelector ||
-          element.oMatchesSelector ||
-          Jymin.matchesSelector
-        isMatch = element._matches(selector)
-      } else {
-        isMatch = element = selector
-      }
+      var isMatch = Jymin.isString(selector) ?
+        Jymin.matches(element, selector) :
+        (element === selector)
       if (isMatch) {
-        fn(element, event, event.type)
+        fn(data || element, event, type)
       }
       return !event._stopped
     })
     if (element === document) {
       break
     }
-    element = Jymin.getParent(element)
+    element = Jymin.parent(element)
   }
 }
 
 /**
- * DOM element selector matching method for older browsers.
+ * Find out if an element matches a given selector.
  *
- * @param  {String}  selector  A CSS selector to check against an element.
- * @return {boolean}           True if the element (this) matches the selector.
+ * @param  {HTMLElement} element   An element to pretend the event occurred on.
+ * @param  {String}      selector  A CSS selector to check against an element.
+ * @return {boolean}               True if the element (this) matches the selector.
  */
-Jymin.matchesSelector = function (selector) {
+Jymin.matches = function (element, selector, type) {
   var self = this
-  var isMatch
-  Jymin.all(selector, function (element) {
-    if (element == self) {
-      isMatch = 1
-      return !isMatch
-    }
-  })
+  var matches =
+    element.webkitMatchesSelector ||
+    element.msMatchesSelector ||
+    element.mozMatchesSelector ||
+    element.oMatchesSelector ||
+    element.matchesSelector ||
+    element.matches || Jymin.no
+  var isMatch = matches.call(element, selector)
   return isMatch
 }
 
@@ -1462,63 +1302,47 @@ Jymin.focusElement = function (element) {
   Jymin.apply(element, 'focus')
 }
 /**
- * Get the value of a form element.
+ * Get or set the value of a form element.
  *
- * @param  {HTMLElement}  input  A form element.
- * @return {String|Array}        The value of the form element (or array of elements).
+ * @param  {HTMLElement} input     A form element.
+ * @param  {String}      newValue  An optional new value for the element.
+ * @return {String|Array}          A value or values to set on the form element.
  */
-Jymin.getValue = function (input) {
-  input = Jymin.getElement(input)
+Jymin.value = function (input, newValue) {
+  input = Jymin.byId(input)
   if (input) {
     var type = input.type[0]
     var value = input.value
     var checked = input.checked
     var options = input.options
+    var setNew = !Jymin.isUndefined(newValue)
     if (type === 'c' || type === 'r') {
-      value = checked ? value : null
-    } else if (input.multiple) {
-      value = []
-      Jymin.forEach(options, function (option) {
-        if (option.selected) {
-          Jymin.push(value, option.value)
+      if (setNew) {
+        input.checked = newValue ? true : false
+      } else {
+        value = checked ? value : null
+      }
+    } else if (options) {
+      if (setNew) {
+        var selected = {}
+        if (input.multiple) {
+          newValue = Jymin.isArray(newValue) ? newValue : [newValue]
+          Jymin.each(newValue, function (optionValue) {
+            selected[optionValue] = 1
+          })
+        } else {
+          selected[newValue] = 1
         }
-      })
-    } else if (options) {
-      value = Jymin.getValue(options[input.selectedIndex])
-    }
-    return value
-  }
-}
-
-/**
- * Set the value of a form element.
- *
- * @param  {HTMLElement}  input  A form element.
- * @return {String|Array}        A value or values to set on the form element.
- */
-Jymin.setValue = function (input, value) {
-  input = Jymin.getElement(input)
-  if (input) {
-    var type = input.type[0]
-    var options = input.options
-    if (type === 'c' || type === 'r') {
-      input.checked = value ? true : false
-    } else if (options) {
-      var selected = {}
-      if (input.multiple) {
-        Jymin.forEach(value, function (optionValue) {
-          selected[optionValue] = true
+        Jymin.each(options, function (option) {
+          option.selected = !!selected[option.value]
         })
       } else {
-        selected[value] = true
+        value = Jymin.value(options[input.selectedIndex])
       }
-      value = Jymin.isArray(value) ? value : [value]
-      Jymin.forEach(options, function (option) {
-        option.selected = !!selected[option.value]
-      })
-    } else {
-      input.value = value
+    } else if (setNew) {
+      input.value = newValue
     }
+    return value
   }
 }
 /**
@@ -1530,7 +1354,7 @@ Jymin.setValue = function (input, value) {
  * @return {Object}                      The result returned by the object method.
  */
 Jymin.apply = function (object, methodName, args) {
-  return ((object || 0)[methodName] || Jymin.doNothing).apply(object, args)
+  return ((object || 0)[methodName] || Jymin.no).apply(object, args)
 }
 /**
  * Get the head element from the document.
@@ -1554,11 +1378,11 @@ Jymin.getBody = function () {
  * @param  {String}   src  A source URL of a script to insert.
  * @param  {function} fn   An optional function to run when the script loads.
  */
-Jymin.insertScript = function (src, fn) {
+Jymin.js = function (src, fn) {
   var head = Jymin.getHead()
-  var script = Jymin.addElement(head, 'script')
+  var script = Jymin.add(head, 'script')
   if (fn) {
-    Jymin.onReady(script, fn)
+    Jymin.ready(script, fn)
   }
   script.async = 1
   script.src = src
@@ -1569,7 +1393,7 @@ Jymin.insertScript = function (src, fn) {
  *
  * @param  {String} css  CSS text to be inserted.
  */
-Jymin.insertCss = function (css) {
+Jymin.css = function (css) {
 
   // Allow CSS pixel sizes to be scaled using a window property.
   var zoom = window._zoom
@@ -1579,7 +1403,7 @@ Jymin.insertCss = function (css) {
 
   // Insert CSS into the document head.
   var head = Jymin.getHead()
-  var style = Jymin.addElement(head, 'style?type=text/css', css)
+  var style = Jymin.add(head, 'style?type=text/css', css)
   var sheet = style.styleSheet
   if (sheet) {
     sheet.cssText = css
@@ -1602,7 +1426,7 @@ Jymin.zoomCss = function (css) {
  */
 Jymin.getHistory = function () {
   var history = window.history || {}
-  Jymin.forEach(['push', 'replace'], function (key) {
+  Jymin.each(['push', 'replace'], function (key) {
     var fn = history[key + 'State']
     history[key] = function (href) {
       try {
@@ -1692,7 +1516,7 @@ Jymin.safeStringify = function (data, quote, stack) {
   } else if (data && Jymin.isObject(data)) {
     stack = stack || []
     var isCircular
-    Jymin.forEach(stack, function (item) {
+    Jymin.each(stack, function (item) {
       if (item === data) {
         isCircular = 1
       }
@@ -1700,23 +1524,23 @@ Jymin.safeStringify = function (data, quote, stack) {
     if (isCircular) {
       return null
     }
-    Jymin.push(stack, data)
+    stack.push(data)
     var parts = []
     var before, after
     if (Jymin.isArray(data)) {
       before = '['
       after = ']'
-      Jymin.forEach(data, function (value) {
-        Jymin.push(parts, Jymin.safeStringify(value, quote, stack))
+      Jymin.each(data, function (value) {
+        parts.push(Jymin.safeStringify(value, quote, stack))
       })
     } else {
       before = '{'
       after = '}'
-      Jymin.forIn(data, function (key, value) {
-        Jymin.push(parts, Jymin.stringify(key) + ':' + Jymin.safeStringify(value, stack))
+      Jymin.each(data, function (value, key) {
+        parts.push(Jymin.stringify(key) + ':' + Jymin.safeStringify(value, stack))
       })
     }
-    Jymin.pop(stack)
+    stack.pop()
     data = before + parts.join(',') + after
   } else {
     data = '' + data
@@ -1802,39 +1626,48 @@ Jymin.parseArray = function (value, alternative) {
   value = Jymin.parse(value)
   return Jymin.isObject(value) ? value : (alternative || [])
 }
+// When not in debug mode, make the logging functions do nothing.
+Jymin.error = Jymin.no
+Jymin.warn = Jymin.no
+Jymin.info = Jymin.no
+Jymin.log = Jymin.no
+Jymin.trace = Jymin.no
+
+//+env:debug
+
 /**
  * Log values to the console, if it's available.
  */
 Jymin.error = function () {
-  Jymin.ifConsole('Jymin.error', arguments)
+  Jymin.ifConsole('error', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
 Jymin.warn = function () {
-  Jymin.ifConsole('Jymin.warn', arguments)
+  Jymin.ifConsole('warn', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
 Jymin.info = function () {
-  Jymin.ifConsole('Jymin.info', arguments)
+  Jymin.ifConsole('info', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
 Jymin.log = function () {
-  Jymin.ifConsole('Jymin.log', arguments)
+  Jymin.ifConsole('log', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
 Jymin.trace = function () {
-  Jymin.ifConsole('Jymin.trace', arguments)
+  Jymin.ifConsole('trace', arguments)
 }
 
 /**
@@ -1846,6 +1679,8 @@ Jymin.ifConsole = function (method, args) {
     console[method].apply(console, args)
   }
 }
+
+//-env:debug
 /**
  * Scroll the top of the page to a specified Y position.
  *
@@ -1939,65 +1774,15 @@ Jymin.ensureNumber = function (number) {
 Jymin.zeroFill = function (number, length) {
   number = '' + number
   // Repurpose the lenth variable to count how much padding we need.
-  length = Math.max(length - Jymin.getLength(number), 0)
+  length = Math.max(length - number.length, 0)
   return (new Array(length + 1)).join('0') + number
-}
-/**
- * Iterate over an object's keys, and call a function on each key value pair.
- */
-Jymin.forIn = function (object, callback) {
-  if (object) {
-    for (var key in object) {
-      var result = callback(key, object[key], object)
-      if (result === false) {
-        break
-      }
-    }
-  }
-}
-
-/**
- * Iterate over an object's keys, and call a function on each (value, key) pair.
- */
-Jymin.forOf = function (object, callback) {
-  if (object) {
-    for (var key in object) {
-      var result = callback(object[key], key, object)
-      if (result === false) {
-        break
-      }
-    }
-  }
-}
-
-/**
- * Decorate an object with properties from another object.
- */
-Jymin.decorateObject = function (object, decorations) {
-  if (object && decorations) {
-    Jymin.forIn(decorations, function (key, value) {
-      object[key] = value
-    })
-  }
-  return object
-}
-
-/**
- * Ensure that a property exists by creating it if it doesn't.
- */
-Jymin.ensureProperty = function (object, property, defaultValue) {
-  var value = object[property]
-  if (!value) {
-    value = object[property] = defaultValue
-  }
-  return value
 }
 /**
  * Execute a function when the page loads or new content is added.
  *
  * @param  {Function}  listener  A function which will receive a ready element.
  */
-Jymin.onReady = function (object, listener) {
+Jymin.ready = function (object, listener) {
   if (!listener) {
     listener = object
     object = document
@@ -2011,9 +1796,9 @@ Jymin.onReady = function (object, listener) {
   // Create a function that replaces itself so it will only run once.
   var fn = function () {
     if (Jymin.isReady(object)) {
-      Jymin.ready(object)
+      Jymin.isReady(object, 1)
       listener(object)
-      listener = Jymin.doNothing
+      listener = Jymin.no
     }
   }
 
@@ -2026,24 +1811,18 @@ Jymin.onReady = function (object, listener) {
 }
 
 /**
- * Declare an object to be ready, and run events that have been bound to it.
+ * Get or set the readiness status of an object.
  *
- * @param  {Any} object  An HTMLElement or other object.
+ * @param  {Object}  object    The object that might be ready.
+ * @param  {Boolean} setReady  Whether to .
+ * @return {Boolean}           Whether the object is currently ready.
  */
-Jymin.ready = function (object) {
-  if (!object._ready) {
-    object._ready = 1
-    Jymin.trigger(object, '_ready')
+Jymin.isReady = function (object, setReady) {
+  // Declare an object to be ready, and run events that have been bound to it.
+  if (setReady && !object._ready) {
+    object._ready = true
+    Jymin.emit('_ready', object)
   }
-}
-
-/**
- * Check if a document, iframe, script or AJAX response is ready.
- *
- * @param  {Object}  object  The object to check for readiness.
- * @return {Boolean}         Whether the object is currently ready.
- */
-Jymin.isReady = function (object) {
   // AJAX requests have readyState 4 when loaded.
   // All documents will reach readyState=="complete".
   // In IE, scripts can reach readyState=="loaded" or readyState=="complete".
@@ -2057,7 +1836,7 @@ Jymin.isReady = function (object) {
  * @param  {Function} fn      [description]
  * @return {Array}            [description]
  */
-Jymin.getTagContents = function (html, tagName, fn) {
+Jymin.tagContents = function (html, tagName, fn) {
   var pattern = Jymin.tagPatterns[tagName]
   if (!pattern) {
     var flags = /^(html|head|title|body)$/.test(tagName) ? 'i' : 'gi'
@@ -2154,7 +1933,7 @@ Jymin.splitBySpaces = function (string) {
  */
 Jymin.decorateString = function (string, replacements) {
   string = Jymin.ensureString(string)
-  Jymin.forEach(replacements, function(replacement) {
+  Jymin.each(replacements, function(replacement) {
     string = string.replace('*', replacement)
   })
   return string
@@ -2217,7 +1996,7 @@ Jymin.unescape = function (value) {
  */
 Jymin.buildQueryString = function (object) {
   var queryParams = []
-  Jymin.forIn(object, function(key, value) {
+  Jymin.each(object, function (value, key) {
     queryParams.push(Jymin.escape(key) + '=' + Jymin.escape(value))
   })
   return queryParams.join('&')
@@ -2299,7 +2078,7 @@ Jymin.endTime = function (label) {
 
 Jymin.beamTimes = function (label) {
   var times = []
-  Jymin.forIn(Jymin.times, function (key, value) {
+  Jymin.each(Jymin.times, function (value, key) {
     times.push(key + ' ' + value + 'ms')
   })
   Beams.log(times.join(', '))
@@ -2307,22 +2086,11 @@ Jymin.beamTimes = function (label) {
 
 Jymin.logTimes = function (label) {
   var times = []
-  Jymin.forIn(Jymin.times, function (key, value) {
+  Jymin.each(Jymin.times, function (value, key) {
     times.push(key + ' ' + value + 'ms')
   })
   console.log(times.join(', '))
 }
-/**
- * Check whether a value is of a given primitive type.
- *
- * @param  {Any}     value  A value to check.
- * @param  {Any}     type   The primitive type.
- * @return {boolean}        True if the value is of the given type.
- */
-Jymin.isType = function (value, type) {
-  return typeof value === type
-}
-
 /**
  * Check whether a value is undefined.
  *
@@ -2465,7 +2233,7 @@ Jymin.getQueryParams = function (url) {
   var query = url.substr(url.indexOf('?') + 1).split('#')[0]
   var pairs = query.split('&')
   query = {}
-  Jymin.forEach(pairs, function (pair) {
+  Jymin.each(pairs, function (pair) {
     var eqPos = pair.indexOf('=')
     var name = pair.substr(0, eqPos)
     var value = pair.substr(eqPos + 1)
@@ -2481,9 +2249,3 @@ Jymin.getHashParams = function (hash) {
   hash = (hash || location.hash).replace(/^#/, '')
   return hash ? Jymin.getQueryParams(hash) : {}
 }
-
-/**
- * Set the appropriate protocol.
- * @type {String}
- */
-Jymin.protocol = location.protocol.replace(/file/, 'http')

@@ -1,60 +1,44 @@
 /**
- * Get the value of a form element.
+ * Get or set the value of a form element.
  *
- * @param  {HTMLElement}  input  A form element.
- * @return {String|Array}        The value of the form element (or array of elements).
+ * @param  {HTMLElement} input     A form element.
+ * @param  {String}      newValue  An optional new value for the element.
+ * @return {String|Array}          A value or values to set on the form element.
  */
-Jymin.getValue = function (input) {
-  input = Jymin.getElement(input)
+Jymin.value = function (input, newValue) {
+  input = Jymin.byId(input)
   if (input) {
     var type = input.type[0]
     var value = input.value
     var checked = input.checked
     var options = input.options
+    var setNew = !Jymin.isUndefined(newValue)
     if (type === 'c' || type === 'r') {
-      value = checked ? value : null
-    } else if (input.multiple) {
-      value = []
-      Jymin.forEach(options, function (option) {
-        if (option.selected) {
-          Jymin.push(value, option.value)
+      if (setNew) {
+        input.checked = newValue ? true : false
+      } else {
+        value = checked ? value : null
+      }
+    } else if (options) {
+      if (setNew) {
+        var selected = {}
+        if (input.multiple) {
+          newValue = Jymin.isArray(newValue) ? newValue : [newValue]
+          Jymin.each(newValue, function (optionValue) {
+            selected[optionValue] = 1
+          })
+        } else {
+          selected[newValue] = 1
         }
-      })
-    } else if (options) {
-      value = Jymin.getValue(options[input.selectedIndex])
-    }
-    return value
-  }
-}
-
-/**
- * Set the value of a form element.
- *
- * @param  {HTMLElement}  input  A form element.
- * @return {String|Array}        A value or values to set on the form element.
- */
-Jymin.setValue = function (input, value) {
-  input = Jymin.getElement(input)
-  if (input) {
-    var type = input.type[0]
-    var options = input.options
-    if (type === 'c' || type === 'r') {
-      input.checked = value ? true : false
-    } else if (options) {
-      var selected = {}
-      if (input.multiple) {
-        Jymin.forEach(value, function (optionValue) {
-          selected[optionValue] = true
+        Jymin.each(options, function (option) {
+          option.selected = !!selected[option.value]
         })
       } else {
-        selected[value] = true
+        value = Jymin.value(options[input.selectedIndex])
       }
-      value = Jymin.isArray(value) ? value : [value]
-      Jymin.forEach(options, function (option) {
-        option.selected = !!selected[option.value]
-      })
-    } else {
-      input.value = value
+    } else if (setNew) {
+      input.value = newValue
     }
+    return value
   }
 }

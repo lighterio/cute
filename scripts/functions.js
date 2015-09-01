@@ -7,5 +7,5 @@
  * @return {Object}                      The result returned by the object method.
  */
 Jymin.apply = function (object, methodName, args) {
-  return ((object || 0)[methodName] || Jymin.doNothing).apply(object, args)
+  return ((object || 0)[methodName] || Jymin.no).apply(object, args)
 }

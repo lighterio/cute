@@ -3,7 +3,7 @@
  *
  * @param  {Function}  listener  A function which will receive a ready element.
  */
-Jymin.onReady = function (object, listener) {
+Jymin.ready = function (object, listener) {
   if (!listener) {
     listener = object
     object = document
@@ -17,9 +17,9 @@ Jymin.onReady = function (object, listener) {
   // Create a function that replaces itself so it will only run once.
   var fn = function () {
     if (Jymin.isReady(object)) {
-      Jymin.ready(object)
+      Jymin.isReady(object, 1)
       listener(object)
-      listener = Jymin.doNothing
+      listener = Jymin.no
     }
   }
 
@@ -32,24 +32,18 @@ Jymin.onReady = function (object, listener) {
 }
 
 /**
- * Declare an object to be ready, and run events that have been bound to it.
+ * Get or set the readiness status of an object.
  *
- * @param  {Any} object  An HTMLElement or other object.
+ * @param  {Object}  object    The object that might be ready.
+ * @param  {Boolean} setReady  Whether to .
+ * @return {Boolean}           Whether the object is currently ready.
  */
-Jymin.ready = function (object) {
-  if (!object._ready) {
-    object._ready = 1
-    Jymin.trigger(object, '_ready')
+Jymin.isReady = function (object, setReady) {
+  // Declare an object to be ready, and run events that have been bound to it.
+  if (setReady && !object._ready) {
+    object._ready = true
+    Jymin.emit('_ready', object)
   }
-}
-
-/**
- * Check if a document, iframe, script or AJAX response is ready.
- *
- * @param  {Object}  object  The object to check for readiness.
- * @return {Boolean}         Whether the object is currently ready.
- */
-Jymin.isReady = function (object) {
   // AJAX requests have readyState 4 when loaded.
   // All documents will reach readyState=="complete".
   // In IE, scripts can reach readyState=="loaded" or readyState=="complete".

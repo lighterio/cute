@@ -67,7 +67,7 @@ Jymin.endTime = function (label) {
 
 Jymin.beamTimes = function (label) {
   var times = []
-  Jymin.forIn(Jymin.times, function (key, value) {
+  Jymin.each(Jymin.times, function (value, key) {
     times.push(key + ' ' + value + 'ms')
   })
   Beams.log(times.join(', '))
@@ -75,7 +75,7 @@ Jymin.beamTimes = function (label) {
 
 Jymin.logTimes = function (label) {
   var times = []
-  Jymin.forIn(Jymin.times, function (key, value) {
+  Jymin.each(Jymin.times, function (value, key) {
     times.push(key + ' ' + value + 'ms')
   })
   console.log(times.join(', '))

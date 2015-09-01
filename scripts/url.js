@@ -20,7 +20,7 @@ Jymin.getQueryParams = function (url) {
   var query = url.substr(url.indexOf('?') + 1).split('#')[0]
   var pairs = query.split('&')
   query = {}
-  Jymin.forEach(pairs, function (pair) {
+  Jymin.each(pairs, function (pair) {
     var eqPos = pair.indexOf('=')
     var name = pair.substr(0, eqPos)
     var value = pair.substr(eqPos + 1)
@@ -36,9 +36,3 @@ Jymin.getHashParams = function (hash) {
   hash = (hash || location.hash).replace(/^#/, '')
   return hash ? Jymin.getQueryParams(hash) : {}
 }
-
-/**
- * Set the appropriate protocol.
- * @type {String}
- */
-Jymin.protocol = location.protocol.replace(/file/, 'http')

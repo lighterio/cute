@@ -11,7 +11,7 @@ Jymin.safeStringify = function (data, quote, stack) {
   } else if (data && Jymin.isObject(data)) {
     stack = stack || []
     var isCircular
-    Jymin.forEach(stack, function (item) {
+    Jymin.each(stack, function (item) {
       if (item === data) {
         isCircular = 1
       }
@@ -19,23 +19,23 @@ Jymin.safeStringify = function (data, quote, stack) {
     if (isCircular) {
       return null
     }
-    Jymin.push(stack, data)
+    stack.push(data)
     var parts = []
     var before, after
     if (Jymin.isArray(data)) {
       before = '['
       after = ']'
-      Jymin.forEach(data, function (value) {
-        Jymin.push(parts, Jymin.safeStringify(value, quote, stack))
+      Jymin.each(data, function (value) {
+        parts.push(Jymin.safeStringify(value, quote, stack))
       })
     } else {
       before = '{'
       after = '}'
-      Jymin.forIn(data, function (key, value) {
-        Jymin.push(parts, Jymin.stringify(key) + ':' + Jymin.safeStringify(value, stack))
+      Jymin.each(data, function (value, key) {
+        parts.push(Jymin.stringify(key) + ':' + Jymin.safeStringify(value, stack))
       })
     }
-    Jymin.pop(stack)
+    stack.pop()
     data = before + parts.join(',') + after
   } else {
     data = '' + data

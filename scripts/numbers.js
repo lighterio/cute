@@ -18,6 +18,6 @@ Jymin.ensureNumber = function (number) {
 Jymin.zeroFill = function (number, length) {
   number = '' + number
   // Repurpose the lenth variable to count how much padding we need.
-  length = Math.max(length - Jymin.getLength(number), 0)
+  length = Math.max(length - number.length, 0)
   return (new Array(length + 1)).join('0') + number
 }

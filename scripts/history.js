@@ -3,7 +3,7 @@
  */
 Jymin.getHistory = function () {
   var history = window.history || {}
-  Jymin.forEach(['push', 'replace'], function (key) {
+  Jymin.each(['push', 'replace'], function (key) {
     var fn = history[key + 'State']
     history[key] = function (href) {
       try {

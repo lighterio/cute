@@ -20,11 +20,11 @@ Jymin.getBody = function () {
  * @param  {String}   src  A source URL of a script to insert.
  * @param  {function} fn   An optional function to run when the script loads.
  */
-Jymin.insertScript = function (src, fn) {
+Jymin.js = function (src, fn) {
   var head = Jymin.getHead()
-  var script = Jymin.addElement(head, 'script')
+  var script = Jymin.add(head, 'script')
   if (fn) {
-    Jymin.onReady(script, fn)
+    Jymin.ready(script, fn)
   }
   script.async = 1
   script.src = src
@@ -35,7 +35,7 @@ Jymin.insertScript = function (src, fn) {
  *
  * @param  {String} css  CSS text to be inserted.
  */
-Jymin.insertCss = function (css) {
+Jymin.css = function (css) {
 
   // Allow CSS pixel sizes to be scaled using a window property.
   var zoom = window._zoom
@@ -45,7 +45,7 @@ Jymin.insertCss = function (css) {
 
   // Insert CSS into the document head.
   var head = Jymin.getHead()
-  var style = Jymin.addElement(head, 'style?type=text/css', css)
+  var style = Jymin.add(head, 'style?type=text/css', css)
   var sheet = style.styleSheet
   if (sheet) {
     sheet.cssText = css

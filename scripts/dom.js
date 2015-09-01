@@ -7,8 +7,8 @@
  * @param  {string|HTMLElement} idOrElement    ID of an element, or the element itself.
  * @return {HTMLElement}                       The matching element, or undefined.
  */
-Jymin.getElement = function (parentElement, idOrElement) {
-  if (!Jymin.hasMany(arguments)) {
+Jymin.byId = function (parentElement, idOrElement) {
+  if (!idOrElement) {
     idOrElement = parentElement
     parentElement = document
   }
@@ -16,40 +16,38 @@ Jymin.getElement = function (parentElement, idOrElement) {
 }
 
 /**
- * Get the parent of an element, or an ancestor with a specified tag name.
+ * Get or set the parent of an element.
  *
- * @param  {HTMLElement} element   A element whose parent elements are being searched.
- * @param  {String}      selector  An optional selector to search up the tree.
- * @return {HTMLElement}           The parent or matching ancestor.
+ * @param  {HTMLElement} element    A element whose parent we want to get/set.
+ * @param  {String}      parent     An optional parent to add the element to.
+ * @param  {String}      before     An optional child to insert the element before.
+ * @return {HTMLElement}            The parent of the element.
  */
-Jymin.getParent = function (element, selector) {
-  return Jymin.getTrail(element, selector)[selector ? 0 : 1]
+Jymin.parent = function (element, parent, before) {
+  if (parent) {
+    parent.insertBefore(element, before || null)
+  } else {
+    parent = element.parentNode
+  }
+  return parent
 }
 
 /**
- * Get the trail that leads back to the root starting with a given
- * element, optionally filtered by a selector.
+ * Get an element's ancestors, optionally filtered by a selector.
  *
- * @param  {HTMLElement} element   An element to start the trail.
- * @param  {String}      selector  An optional selector to filter the trail.
- * @return {Array}                 The array of elements in the trail.
+ * @param  {HTMLElement} element   An element to start from.
+ * @param  {String}      selector  An optional selector to filter ancestors.
+ * @return {Array}                 The array of ancestors.
  */
-Jymin.getTrail = function (element, selector) {
-  var trail = [element]
-  while (element = element.parentNode) { // jshint ignore:line
-    Jymin.push(trail, element)
+Jymin.up = function (element, selector) {
+  var ancestors = []
+  while (element = Jymin.parent(element)) { // jshint ignore:line
+    ancestors.push(element)
   }
-  // TODO: Test ordering more thoroughly.
-  if (selector) {
-    var set = trail
-    trail = []
-    Jymin.all(selector, function (element) {
-      if (set.indexOf(element) > -1) {
-        Jymin.push(trail, element)
-      }
-    })
-  }
-  return trail
+  ancestors = Jymin.filter(ancestors, function (element) {
+    return Jymin.matches(element, selector)
+  })
+  return ancestors
 }
 
 /**
@@ -58,7 +56,7 @@ Jymin.getTrail = function (element, selector) {
  * @param  {HTMLElement}    element  A parent element who might have children.
  * @return {HTMLCollection}          The collection of children.
  */
-Jymin.getChildren = function (element) {
+Jymin.children = function (element) {
   return element.childNodes
 }
 
@@ -68,43 +66,13 @@ Jymin.getChildren = function (element) {
  * @param  {HTMLElement} element  An element with a parent, and potentially siblings.
  * @return {Number}               The element's index, or -1 if there's no matching element.
  */
-Jymin.getIndex = function (element) {
+Jymin.index = function (element) {
   var index = -1
   while (element) {
     ++index
     element = element.previousSibling
   }
   return index
-}
-
-/**
- * Get an element's first child.
- *
- * @param  {HTMLElement} element  An element.
- * @return {[type]}               The element's first child.
- */
-Jymin.getFirstChild = function (element) {
-  return element.firstChild
-}
-
-/**
- * Get an element's previous sibling.
- *
- * @param  {HTMLElement} element  An element.
- * @return {HTMLElement}          The element's previous sibling.
- */
-Jymin.getPreviousSibling = function (element) {
-  return element.previousSibling
-}
-
-/**
- * Get an element's next sibling.
- *
- * @param  {HTMLElement} element  An element.
- * @return {HTMLElement}          The element's next sibling.
- */
-Jymin.getNextSibling = function (element) {
-  return element.nextSibling
 }
 
 /**
@@ -132,7 +100,7 @@ Jymin.createTag = function (tagName) {
  * @param  {String}             innerHtml        An optional string of HTML to populate the element.
  * @return {HTMLElement}                         The existing or created element.
  */
-Jymin.createElement = function (elementOrString, innerHtml) {
+Jymin.create = function (elementOrString, innerHtml) {
   var element = elementOrString
   if (Jymin.isString(elementOrString)) {
     var tagAndAttributes = elementOrString.split('?')
@@ -153,7 +121,7 @@ Jymin.createElement = function (elementOrString, innerHtml) {
     // TODO: Do something less janky than using query string syntax (Maybe like Ltl?).
     if (attributes) {
       attributes = attributes.split('&')
-      Jymin.forEach(attributes, function (attribute) {
+      Jymin.each(attributes, function (attribute) {
         var keyAndValue = attribute.split('=')
         var key = keyAndValue[0]
         var value = keyAndValue[1]
@@ -162,7 +130,7 @@ Jymin.createElement = function (elementOrString, innerHtml) {
       })
     }
     if (innerHtml) {
-      Jymin.setHtml(element, innerHtml)
+      Jymin.html(element, innerHtml)
     }
   }
   return element
@@ -176,12 +144,12 @@ Jymin.createElement = function (elementOrString, innerHtml) {
  * @param  {String}             innerHtml        An optional string of HTML to populate the element.
  * @return {HTMLElement}                         The element that was added.
  */
-Jymin.addElement = function (parentElement, elementOrString, innerHtml) {
+Jymin.add = function (parentElement, elementOrString, innerHtml) {
   if (Jymin.isString(parentElement)) {
     elementOrString = parentElement
     parentElement = document.body
   }
-  var element = Jymin.createElement(elementOrString, innerHtml)
+  var element = Jymin.create(elementOrString, innerHtml)
   parentElement.appendChild(element)
   return element
 }
@@ -194,17 +162,17 @@ Jymin.addElement = function (parentElement, elementOrString, innerHtml) {
  * @param  {HTMLElement}         beforeSibling    An optional child to insert the element before.
  * @return {HTMLElement}                          The element that was inserted.
  */
-Jymin.insertElement = function (parentElement, elementOrString, beforeSibling) {
+Jymin.insert = function (parentElement, elementOrString, beforeSibling) {
   if (Jymin.isString(parentElement)) {
     beforeSibling = elementOrString
     elementOrString = parentElement
     parentElement = document.body
   }
-  var element = Jymin.createElement(elementOrString)
+  var element = Jymin.create(elementOrString)
   if (parentElement) {
     // If the beforeSibling value is a number, get the (future) sibling at that index.
     if (Jymin.isNumber(beforeSibling)) {
-      beforeSibling = Jymin.getChildren(parentElement)[beforeSibling]
+      beforeSibling = Jymin.children(parentElement)[beforeSibling]
     }
     // Insert the element, optionally before an existing sibling.
     parentElement.insertBefore(element, beforeSibling || Jymin.getFirstChild(parentElement) || null)
@@ -213,28 +181,14 @@ Jymin.insertElement = function (parentElement, elementOrString, beforeSibling) {
 }
 
 /**
- * Wrap an element with another element.
- *
- * @param  {HTMLElement}        innerElement  An element to wrap with another element.
- * @param  {HTMLElement|String} outerElement  An element or a string used to create an element (default: div).
- * @return {HTMLElement}                      The element that was created as a wrapper.
- */
-Jymin.wrapElement = function (innerElement, outerElement) {
-  var parentElement = Jymin.getParent(innerElement)
-  outerElement = Jymin.insertElement(parentElement, outerElement, innerElement)
-  Jymin.insertElement(outerElement, innerElement)
-  return outerElement
-}
-
-/**
  * Remove an element from its parent.
  *
  * @param  {HTMLElement} element  An element to remove.
  */
-Jymin.removeElement = function (element) {
+Jymin.remove = function (element) {
   if (element) {
     // Remove the element from its parent, provided that it has a parent.
-    var parentElement = Jymin.getParent(element)
+    var parentElement = Jymin.parent(element)
     if (parentElement) {
       parentElement.removeChild(element)
     }
@@ -242,32 +196,17 @@ Jymin.removeElement = function (element) {
 }
 
 /**
- * Remove children from an element.
- *
- * @param  {HTMLElement} element  An element whose children should all be removed.
- */
-Jymin.clearElement = function (element) {
-  Jymin.setHtml(element, '')
-}
-
-/**
- * Get an element's inner HTML.
+ * Get or set an element's inner HTML.
  *
  * @param  {HTMLElement} element  An element.
+ * @param  {String}      html     An optional string of HTML to set as the innerHTML.
  * @return {String}               The element's HTML.
  */
-Jymin.getHtml = function (element) {
+Jymin.html = function (element, html) {
+  if (!Jymin.isUndefined(html)) {
+    element.innerHTML = html
+  }
   return element.innerHTML
-}
-
-/**
- * Set an element's inner HTML.
- *
- * @param  {HTMLElement} element  An element.
- * @param  {String}      html     A string of HTML to set as the innerHTML.
- */
-Jymin.setHtml = function (element, html) {
-  element.innerHTML = html
 }
 
 /**
@@ -276,29 +215,22 @@ Jymin.setHtml = function (element, html) {
  * @param  {HTMLElement} element  An element.
  * @return {String}               The element's tag name.
  */
-Jymin.getTag = function (element) {
+Jymin.tag = function (element) {
   return Jymin.lower(element.tagName)
 }
 
 /**
- * Get an element's text.
- *
- * @param  {HTMLElement} element  An element.
- * @return {String}               The element's text content.
- */
-Jymin.getText = function (element) {
-  return element.textContent || element.innerText
-}
-
-/**
- * Set the text of an element.
+ * Get or set the text of an element.
  *
  * @param  {HTMLElement} element  An element.
  * @return {String}      text     A text string to set.
  */
-Jymin.setText = function (element, text) {
-  Jymin.clearElement(element)
-  Jymin.addText(element, text)
+Jymin.text = function (element, text) {
+  if (!Jymin.isUndefined(text)) {
+    Jymin.html(element, '')
+    Jymin.addText(element, text)
+  }
+  return element.textContent || element.innerText
 }
 
 /**
@@ -308,7 +240,7 @@ Jymin.setText = function (element, text) {
  * @return {String}      text     A text string to add.
  */
 Jymin.addText = function (element, text) {
-  Jymin.addElement(element, document.createTextNode(text))
+  Jymin.add(element, document.createTextNode(text))
 }
 
 /**
@@ -483,9 +415,9 @@ Jymin.all = function (parentElement, selector, fn) {
   //+browser:old
   elements = []
   if (Jymin.contains(selector, ',')) {
-    Jymin.forEach(selector, function (selector) {
+    Jymin.each(selector, function (selector) {
       Jymin.all(parentElement, selector, function (element) {
-        Jymin.push(elements, element)
+        elements.push(element)
       })
     })
   } else if (Jymin.contains(selector, ' ')) {
@@ -499,15 +431,15 @@ Jymin.all = function (parentElement, selector, fn) {
     })
   } else if (selector[0] === '#') {
     var id = selector.substr(1)
-    var child = Jymin.getElement(parentElement.ownerDocument || document, id)
+    var child = Jymin.byId(parentElement.ownerDocument || document, id)
     if (child) {
-      var parent = Jymin.getParent(child)
+      var parent = Jymin.parent(child)
       while (parent) {
         if (parent === parentElement) {
           elements = [child]
           break
         }
-        parent = Jymin.getParent(parent)
+        parent = Jymin.parent(parent)
       }
     }
   } else {
@@ -515,9 +447,9 @@ Jymin.all = function (parentElement, selector, fn) {
     var tagName = selector[0]
     var className = selector[1]
     var tagElements = parentElement.getElementsByTagName(tagName)
-    Jymin.forEach(tagElements, function (element) {
+    Jymin.each(tagElements, function (element) {
       if (!className || Jymin.hasClass(element, className)) {
-        Jymin.push(elements, element)
+        elements.push(element)
       }
     })
   }
@@ -526,7 +458,7 @@ Jymin.all = function (parentElement, selector, fn) {
   elements = parentElement.querySelectorAll(selector)
   //-browser:ok
   if (fn) {
-    Jymin.forEach(elements, fn)
+    Jymin.each(elements, fn)
   }
   return elements
 }
@@ -573,25 +505,25 @@ Jymin.pushHtml = function (html, selector) {
   }
 
   // Set the HTML of an element.
-  Jymin.all(selector, function (element) {
+  return Jymin.all(selector, function (element) {
 
     Jymin.startTime('virtual')
-    var virtualDom = Jymin.createElement('m', content)
+    var virtualDom = Jymin.create('m', content)
     Jymin.endTime('virtual')
     Jymin.startTime('diff')
     Jymin.diffDom(element, virtualDom)
     Jymin.endTime('diff')
-    Jymin.ready(element)
+    Jymin.isReady(element, 1)
 
     Jymin.setTimer(function () {
       Jymin.all(virtualDom, 'script', function (script) {
-        script = Jymin.getHtml(script)
+        script = Jymin.html(script)
         Jymin.execute(script)
       })
-      Jymin.all('script', Jymin.removeElement)
+      Jymin.all('script', Jymin.remove)
     })
 
-  })
+  })[0]
 }
 
 /**
@@ -602,7 +534,7 @@ Jymin.pushHtml = function (html, selector) {
  */
 Jymin.diffHtml = function (element, html) {
   Jymin.startTime('virtual')
-  var virtualDom = Jymin.createElement('p', html)
+  var virtualDom = Jymin.create('p', html)
   Jymin.endTime('virtual')
   Jymin.startTime('diff')
   Jymin.diffDom(element, virtualDom)
@@ -654,13 +586,15 @@ Jymin.diffDom = function (domNode, newNode, isTopLevel) {
  * @param  {HTMLElement} newNode     The virtual DOM to merge from.
  */
 Jymin.diffAttributes = function (domNode, newNode) {
-  Jymin.forEach([domNode, newNode], function (element, index) {
-    Jymin.forEach(element.attributes, function (attribute) {
+  var map = {}
+  Jymin.each([domNode, newNode], function (element, index) {
+    Jymin.each(element.attributes, function (attribute) {
       if (attribute) {
-        var name = attribute.name
-        var value = index ? attribute.value : null
-        Jymin.setAttribute(domNode, name, value)
+        map[attribute.name] = index ? attribute.value : null
       }
     })
+  })
+  Jymin.each(map, function (value, name) {
+    Jymin.setAttribute(domNode, name, value)
   })
 }

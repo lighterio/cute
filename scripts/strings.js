@@ -45,7 +45,7 @@ Jymin.splitBySpaces = function (string) {
  */
 Jymin.decorateString = function (string, replacements) {
   string = Jymin.ensureString(string)
-  Jymin.forEach(replacements, function(replacement) {
+  Jymin.each(replacements, function(replacement) {
     string = string.replace('*', replacement)
   })
   return string
@@ -108,7 +108,7 @@ Jymin.unescape = function (value) {
  */
 Jymin.buildQueryString = function (object) {
   var queryParams = []
-  Jymin.forIn(object, function(key, value) {
+  Jymin.each(object, function (value, key) {
     queryParams.push(Jymin.escape(key) + '=' + Jymin.escape(value))
   })
   return queryParams.join('&')

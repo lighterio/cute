@@ -2,26 +2,26 @@
  * Empty handler.
  * @type {function}
  */
-Jymin.doNothing = function () {}
+Jymin.no = function () {}
 
 /**
  * Default AJAX success handler function.
  * @type {function}
  */
-Jymin.responseSuccessFn = Jymin.doNothing
+Jymin.ok = Jymin.no
 
 /**
  * Default AJAX failure handler function.
  * @type {function}
  */
-Jymin.responseFailureFn = Jymin.doNothing
+Jymin.fail = Jymin.no
 
 /**
  * Get an XMLHttpRequest object (or ActiveX object in old IE).
  *
  * @return {XMLHttpRequest}   The request object.
  */
-Jymin.getXhr = function () {
+Jymin.xhr = function () {
   var xhr
   //+browser:old
   xhr = window.XMLHttpRequest ? new XMLHttpRequest() :
@@ -39,77 +39,46 @@ Jymin.getXhr = function () {
  *
  * @return {XMLHttpRequestUpload}   The request upload object.
  */
-Jymin.getUpload = function () {
-  var xhr = Jymin.getXhr()
+Jymin.upload = function () {
+  var xhr = Jymin.xhr()
   return xhr ? xhr.upload : false
 }
 
 /**
  * Make an AJAX request, and handle it with success or failure.
  *
- * @param  {string}   url        A URL from which to request a response.
- * @param  {string}   body       An optional query, which if provided, makes the request a POST.
- * @param  {function} onSuccess  An optional function to run upon success.
- * @param  {function} onFailure  An optional function to run upon failure.
- * @return {boolean}             True if AJAX is supported.
+ * @param  {string}   url   A URL from which to request a response.
+ * @param  {string}   data  An optional query, which if provided, makes the request a POST.
+ * @param  {function} ok    An optional function to run upon success.
+ * @param  {function} fail  An optional function to run upon failure.
  */
-Jymin.getResponse = function (url, body, onSuccess, onFailure) {
-  // If the optional body argument is omitted, shuffle it out.
-  if (Jymin.isFunction(body)) {
-    onFailure = onSuccess
-    onSuccess = body
-    body = 0
+Jymin.get = function (url, data, ok, fail) {
+  // If the optional data argument is omitted, zero it.
+  if (Jymin.isFunction(data)) {
+    fail = ok
+    ok = data
+    data = 0
   }
-  var request = Jymin.getXhr()
+  var request = Jymin.xhr()
   if (request) {
-    onFailure = onFailure || Jymin.responseFailureFn
-    onSuccess = onSuccess || Jymin.responseSuccessFn
+    ok = ok || Jymin.ok
+    fail = fail || Jymin.fail
     request.onreadystatechange = function () {
       if (request.readyState === 4) {
-
-        //+env:debug
-        Jymin.log('[Jymin] Received response from "' + url + '". (' + Jymin.getResponse._waiting + ' in progress).')
-        --Jymin.getResponse._waiting
-        //-env:debug
-
         var status = request.status
         var isSuccess = (status === 200)
-        var fn = isSuccess ?
-          onSuccess || Jymin.responseSuccessFn :
-          onFailure || Jymin.responseFailureFn
+        var fn = isSuccess ? (ok || Jymin.ok) : (fail || Jymin.fail)
         var data = Jymin.parse(request.responseText) || {}
         fn(data, request, status)
       }
     }
-    request.open(body ? 'POST' : 'GET', url, true)
-    if (body) {
+    request.open(data ? 'POST' : 'GET', url, true)
+    if (data) {
       request.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
-      if (Jymin.isObject(body)) {
-        body = 'json=' + Jymin.escape(Jymin.stringify(body))
+      if (Jymin.isObject(data)) {
+        data = 'json=' + Jymin.escape(Jymin.stringify(data))
       }
     }
-
-    //+env:debug
-
-    // Record the original request URL.
-    request._url = url
-
-    // If it's a post, record the post body.
-    if (body) {
-      request._body = body
-    }
-
-    // Record the time the request was made.
-    request._time = Jymin.getTime()
-
-    // Allow applications to back off when too many requests are in progress.
-    Jymin.getResponse._waiting = (Jymin.getResponse._waiting || 0) + 1
-
-    Jymin.log('[Jymin] Sending request to "' + url + '". (' + Jymin.getResponse._waiting + ' in progress).')
-
-    //-env:debug
-
-    request.send(body || null)
+    request.send(data || null)
   }
-  return true
 }
