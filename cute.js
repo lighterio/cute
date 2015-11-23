@@ -1,43 +1,43 @@
-/**      _                 _                ___   ____   _
- *      | |_   _ _ __ ___ (_)_ __   __   __/ _ \ | ___| / |
- *   _  | | | | | '_ ` _ \| | '_ \  \ \ / / | | ||___ \ | |
- *  | |_| | |_| | | | | | | | | | |  \ V /| |_| | ___) || |
- *   \___/ \__, |_| |_| |_|_|_| |_|   \_/  \___(_)____(_)_|
- *         |___/
+/**   ____      _                ___   ___   _
+ *   / ___|   _| |_ ___  __   __/ _ \ / _ \ / |
+ *  | |  | | | | __/ _ \ \ \ / / | | | | | || |
+ *  | |__| |_| | ||  __/  \ V /| |_| | |_| || |
+ *   \____\__,_|\__\___|   \_/  \___(_)___(_)_|
+ *
  *
  * http://lighter.io/cute
  *
  * If you're seeing this in production, you really should minify.
  *
  * Source files:
- *   https://github.com/lighterio/cute/blob/master/scripts/ajax.js
- *   https://github.com/lighterio/cute/blob/master/scripts/charts.js
- *   https://github.com/lighterio/cute/blob/master/scripts/collections.js
- *   https://github.com/lighterio/cute/blob/master/scripts/cookies.js
- *   https://github.com/lighterio/cute/blob/master/scripts/crypto.js
- *   https://github.com/lighterio/cute/blob/master/scripts/dates.js
- *   https://github.com/lighterio/cute/blob/master/scripts/dom.js
- *   https://github.com/lighterio/cute/blob/master/scripts/emitter.js
- *   https://github.com/lighterio/cute/blob/master/scripts/events.js
- *   https://github.com/lighterio/cute/blob/master/scripts/forms.js
- *   https://github.com/lighterio/cute/blob/master/scripts/functions.js
- *   https://github.com/lighterio/cute/blob/master/scripts/head.js
- *   https://github.com/lighterio/cute/blob/master/scripts/history.js
- *   https://github.com/lighterio/cute/blob/master/scripts/i18n.js
- *   https://github.com/lighterio/cute/blob/master/scripts/json.js
- *   https://github.com/lighterio/cute/blob/master/scripts/logging.js
- *   https://github.com/lighterio/cute/blob/master/scripts/move.js
- *   https://github.com/lighterio/cute/blob/master/scripts/numbers.js
- *   https://github.com/lighterio/cute/blob/master/scripts/ready.js
- *   https://github.com/lighterio/cute/blob/master/scripts/regexp.js
- *   https://github.com/lighterio/cute/blob/master/scripts/storage.js
- *   https://github.com/lighterio/cute/blob/master/scripts/strings.js
- *   https://github.com/lighterio/cute/blob/master/scripts/timing.js
- *   https://github.com/lighterio/cute/blob/master/scripts/types.js
+ *   /Users/sam/Projects/cute/scripts/ajax.js
+ *   /Users/sam/Projects/cute/scripts/charts.js
+ *   /Users/sam/Projects/cute/scripts/collections.js
+ *   /Users/sam/Projects/cute/scripts/cookies.js
+ *   /Users/sam/Projects/cute/scripts/crypto.js
+ *   /Users/sam/Projects/cute/scripts/dates.js
+ *   /Users/sam/Projects/cute/scripts/dom.js
+ *   /Users/sam/Projects/cute/scripts/emitter.js
+ *   /Users/sam/Projects/cute/scripts/events.js
+ *   /Users/sam/Projects/cute/scripts/forms.js
+ *   /Users/sam/Projects/cute/scripts/functions.js
+ *   /Users/sam/Projects/cute/scripts/head.js
+ *   /Users/sam/Projects/cute/scripts/history.js
+ *   /Users/sam/Projects/cute/scripts/i18n.js
+ *   /Users/sam/Projects/cute/scripts/json.js
+ *   /Users/sam/Projects/cute/scripts/logging.js
+ *   /Users/sam/Projects/cute/scripts/move.js
+ *   /Users/sam/Projects/cute/scripts/numbers.js
+ *   /Users/sam/Projects/cute/scripts/ready.js
+ *   /Users/sam/Projects/cute/scripts/regexp.js
+ *   /Users/sam/Projects/cute/scripts/storage.js
+ *   /Users/sam/Projects/cute/scripts/strings.js
+ *   /Users/sam/Projects/cute/scripts/timing.js
+ *   /Users/sam/Projects/cute/scripts/types.js
  */
 
 
-var Cute = {version: '0.5.1'};
+var Cute = {version: '0.0.1'};
 
 //+env:commonjs
 // Support CommonJS.
