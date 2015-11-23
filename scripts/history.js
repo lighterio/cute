@@ -1,45 +1,21 @@
 /**
- * Return a history object.
+ * Push, replace or pop a history item.
+ *
+ * @param  {String}  href   An href, if not popping.
+ * @param  {Boolean} isNew  Whether the URL should be pushed as a new entry.
  */
-Jymin.getHistory = function () {
-  var history = window.history || {}
-  Jymin.each(['push', 'replace'], function (key) {
-    var fn = history[key + 'State']
-    history[key] = function (href) {
+Cute.history = function (href, isNew) {
+  var history = window.history
+  if (history) {
+    if (href) {
       try {
-        fn.apply(history, [null, null, href])
-      } catch (e) {
-        // TODO: Create a backward-compatible history push.
+        var method = isNew ? 'push' : 'replace'
+        history[method + 'State'](null, null, href)
+      } catch (ignore) {
+        // TODO: Create a hash-based history push for old browsers.
       }
+    } else {
+      history.back()
     }
-  })
-  return history
-}
-
-/**
- * Push an item into the history.
- */
-Jymin.historyPush = function (href) {
-  Jymin.getHistory().push(href)
-}
-
-/**
- * Replace the current item in the history.
- */
-Jymin.historyReplace = function (href) {
-  Jymin.getHistory().replace(href)
-}
-
-/**
- * Go back.
- */
-Jymin.historyPop = function () {
-  Jymin.getHistory().back()
-}
-
-/**
- * Listen for a history change.
- */
-Jymin.onHistoryPop = function (callback) {
-  Jymin.on(window, 'popstate', callback)
+  }
 }

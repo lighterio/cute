@@ -2,7 +2,7 @@
  * Event Handlers
  * @type {Object}
  */
-Jymin.handlers = {}
+Cute.handlers = {}
 
 /**
  * Listen for one or more events, optionally on a given element.
@@ -11,23 +11,23 @@ Jymin.handlers = {}
  * @param  {String|Array}       eventTypes         A list of events to listen for.
  * @param  {Function}           listener           A function to execute when an event occurs.
  */
-Jymin.on = function (selectorOrElement, eventTypes, listener) {
+Cute.on = function (selectorOrElement, eventTypes, listener) {
   if (!listener) {
     listener = eventTypes
     eventTypes = selectorOrElement
     selectorOrElement = document
   }
-  var element = Jymin.isString(selectorOrElement) ? document : selectorOrElement
-  Jymin.each(eventTypes, function (eventType) {
-    var handlers = Jymin.handlers[eventType]
+  var element = Cute.isString(selectorOrElement) ? document : selectorOrElement
+  Cute.each(eventTypes, function (eventType) {
+    var handlers = Cute.handlers[eventType]
     if (!handlers) {
-      handlers = Jymin.handlers[eventType] = []
+      handlers = Cute.handlers[eventType] = []
       if (element.addEventListener) {
-        element.addEventListener(eventType, Jymin.emit, false)
+        element.addEventListener(eventType, Cute.emit, false)
       } else if (element.attachEvent) {
-        element.attachEvent('on' + eventType, Jymin.emit)
+        element.attachEvent('on' + eventType, Cute.emit)
       } else {
-        element['on' + eventType] = Jymin.emit
+        element['on' + eventType] = Cute.emit
       }
     }
     handlers.push([selectorOrElement, listener])
@@ -37,15 +37,15 @@ Jymin.on = function (selectorOrElement, eventTypes, listener) {
 /**
  * Remove a listener for one event type.
  *
- * @param  {String|Array} eventType   An event to stop listening for.
- * @param  {Function}     listener    A listener function to remove.
+ * @param  {String|Array} eventType  An event to stop listening for.
+ * @param  {Function}     listener   A listener function to remove.
  */
-Jymin.off = function (eventType, listener) {
-  var handlers = Jymin.handlers[eventType]
-  var index = handlers.indexOf(listener)
-  if (index > -1) {
-    handlers.splice(index, 1)
-  }
+Cute.off = function (eventType, listener) {
+  var handlers = Cute.handlers[eventType]
+  handlers = Cute.each(handlers, function (item) {
+    return item[1] !== listener
+  })
+  Cute.handlers[eventType] = handlers
 }
 
 /**
@@ -55,7 +55,7 @@ Jymin.off = function (eventType, listener) {
  * @param  {String|Array}       eventTypes         A list of events to listen for.
  * @param  {Function}           listener           A function to execute when an event occurs.
  */
-Jymin.once = function (selectorOrElement, eventTypes, listener) {
+Cute.once = function (selectorOrElement, eventTypes, listener) {
   if (!listener) {
     listener = eventTypes
     eventTypes = selectorOrElement
@@ -63,9 +63,9 @@ Jymin.once = function (selectorOrElement, eventTypes, listener) {
   }
   var fn = function (element, event, type) {
     listener(element, event, type)
-    Jymin.off(type, fn)
+    Cute.off(type, fn)
   }
-  Jymin.on(selectorOrElement, eventTypes, fn)
+  Cute.on(selectorOrElement, eventTypes, fn)
 }
 
 /**
@@ -75,13 +75,13 @@ Jymin.once = function (selectorOrElement, eventTypes, listener) {
  * @param  {HTMLElement}   target  An optional target to start propagation from.
  * @param  {Object}        data    Optional data to report with the event.
  */
-Jymin.emit = function (event, target, data) {
+Cute.emit = function (event, target, data) {
 
   // Get the window-level event if an event isn't passed.
   event = event || window.event
 
   // Construct an event object if necessary.
-  if (Jymin.isString(event)) {
+  if (Cute.isString(event)) {
     event = {type: event}
   }
 
@@ -91,13 +91,13 @@ Jymin.emit = function (event, target, data) {
   // Extract the event type.
   var type = event.type
 
-  var handlers = Jymin.handlers[type]
+  var handlers = Cute.handlers[type]
   while (element && !event._stopped) {
-    Jymin.each(handlers, function (handler) {
+    Cute.each(handlers, function (handler) {
       var selector = handler[0]
       var fn = handler[1]
-      var isMatch = Jymin.isString(selector) ?
-        Jymin.matches(element, selector) :
+      var isMatch = Cute.isString(selector) ?
+        Cute.matches(element, selector) :
         (element === selector)
       if (isMatch) {
         fn(data || element, event, type)
@@ -107,7 +107,7 @@ Jymin.emit = function (event, target, data) {
     if (element === document) {
       break
     }
-    element = Jymin.parent(element)
+    element = Cute.parent(element)
   }
 }
 
@@ -118,7 +118,7 @@ Jymin.emit = function (event, target, data) {
  * @param  {String}      selector  A CSS selector to check against an element.
  * @return {boolean}               True if the element (this) matches the selector.
  */
-Jymin.matches = function (element, selector, type) {
+Cute.matches = function (element, selector, type) {
   var self = this
   var matches =
     element.webkitMatchesSelector ||
@@ -126,7 +126,7 @@ Jymin.matches = function (element, selector, type) {
     element.mozMatchesSelector ||
     element.oMatchesSelector ||
     element.matchesSelector ||
-    element.matches || Jymin.no
+    element.matches || Cute.no
   var isMatch = matches.call(element, selector)
   return isMatch
 }
@@ -136,8 +136,8 @@ Jymin.matches = function (element, selector, type) {
  *
  * @param  {Event} event  Event to prevent from doing its default action.
  */
-Jymin.preventDefault = function (event) {
-  Jymin.apply(event, 'preventDefault')
+Cute.prevent = function (event) {
+  Cute.apply(event, 'preventDefault')
 }
 
 /**
@@ -145,16 +145,17 @@ Jymin.preventDefault = function (event) {
  *
  * @param  {Event} event  Event to stop.
  */
-Jymin.stopEvent = function (event) {
+Cute.stop = function (event) {
   event._stopped = 1
-  Jymin.preventDefault(event)
+  Cute.prevent(event)
 }
 
 /**
  * Focus on a specified element.
  *
  * @param  {HTMLElement} element  The element to focus on.
+ * @param  {Boolean}     blur     Whether to blur instead.
  */
-Jymin.focusElement = function (element) {
-  Jymin.apply(element, 'focus')
+Cute.focus = function (element, blur) {
+  Cute.apply(element, blur ? 'blur' : 'focus')
 }

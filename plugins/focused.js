@@ -1,17 +1,17 @@
 var focusedElement
 
-Jymin.on('a,button,input,select,textarea', 'focus', function (element) {
+Cute.on('a,button,input,select,textarea', 'focus', function (element) {
   var focusMethod = element.focus
   if (focusMethod) {
     focusedElement = element
-    Jymin.removeTimeout(focusMethod)
+    Cute.removeTimeout(focusMethod)
   }
 })
 
-Jymin.on('a,button,input,select,textarea', 'blur', function (element) {
+Cute.on('a,button,input,select,textarea', 'blur', function (element) {
   var focusMethod = element.focus
   if (focusMethod) {
-    Jymin.setTimer(focusMethod, function () {
+    Cute.timer(focusMethod, function () {
       if (focusedElement === element) {
         focusedElement = null
       }

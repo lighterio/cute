@@ -4,8 +4,8 @@
  *
  * @return {Array}   The request object.
  */
-Jymin.getChartColors = function () {
-  var colors = Jymin.getChartColors._cache
+Cute.colors = function () {
+  var colors = Cute.colors._cache
   if (!colors) {
     var map = {}
     var string =
@@ -23,7 +23,7 @@ Jymin.getChartColors = function () {
         }
       }
     }
-    Jymin.getChartColors._cache = colors
+    Cute.colors._cache = colors
   }
   return colors
 }

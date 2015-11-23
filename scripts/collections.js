@@ -9,12 +9,12 @@
  * @param  {Function}             fn          A function to call on each item.
  * @return {Number}                           Index or key that returned false.
  */
-Jymin.each = function (collection, fn) {
+Cute.each = function (collection, fn) {
   if (collection) {
-    collection = Jymin.isString(collection) ? Jymin.splitByCommas(collection) : collection
+    collection = Cute.isString(collection) ? Cute.split(collection) : collection
     var length = collection.length
     var key, result
-    if (Jymin.isNumber(length)) {
+    if (Cute.isNumber(length)) {
       for (key = 0; key < length; key++) {
         result = fn(collection[key], key, collection)
         if (result === false) {
@@ -36,9 +36,9 @@ Jymin.each = function (collection, fn) {
 /**
  * Decorate an object with properties from another object.
  */
-Jymin.decorate = function (object, decorations) {
+Cute.decorate = function (object, decorations) {
   if (object) {
-    Jymin.each(decorations, function (value, key) {
+    Cute.each(decorations, function (value, key) {
       object[key] = value
     })
   }
@@ -48,9 +48,9 @@ Jymin.decorate = function (object, decorations) {
 /**
  * Return a property if it is defined, otherwise set and return a default if provided.
  */
-Jymin.prop = function (object, property, defaultValue) {
+Cute.prop = function (object, property, defaultValue) {
   var value = object[property]
-  if (!Jymin.isDefined(value)) {
+  if (!Cute.isDefined(value)) {
     value = object[property] = defaultValue
   }
   return value
@@ -64,9 +64,9 @@ Jymin.prop = function (object, property, defaultValue) {
  * @param  {Function}             fn     A filter function.
  * @return {Array}          [description]
  */
-Jymin.filter = function (array, fn) {
+Cute.filter = function (array, fn) {
   var filtered = []
-  Jymin.each(array, function (item) {
+  Cute.each(array, function (item) {
     if (fn(item)) {
       filtered.push(item)
     }
@@ -81,8 +81,8 @@ Jymin.filter = function (array, fn) {
  * @params {Array...}         Items to merge into the array.
  * @return {Array}            The first array argument, with new items merged in.
  */
-Jymin.merge = function (array) {
-  Jymin.each(arguments, function (items, index) {
+Cute.merge = function (array) {
+  Cute.each(arguments, function (items, index) {
     if (index) {
       [].push.apply(array, items)
     }

@@ -3,7 +3,7 @@
  *
  * @param  {Integer} top  A specified Y position, in pixels.
  */
-Jymin.scrollTop = function (top) {
+Cute.scrollTop = function (top) {
   document.body.scrollTop = (document.documentElement || 0).scrollTop = top
 }
 
@@ -13,24 +13,24 @@ Jymin.scrollTop = function (top) {
  * @param  {String} name  The name of an HTML anchor.
  * @return {String}
  */
-Jymin.scrollToAnchor = function (name) {
+Cute.scrollToAnchor = function (name) {
   var offset = 0
   var element
   //+browser:old
-  Jymin.all('a', function (anchor) {
+  Cute.all('a', function (anchor) {
     if (anchor.name === name) {
       element = anchor
     }
   })
   //-browser:old
   //+browser:ok
-  element = Jymin.all('a[name=' + name + ']')[0]
+  element = Cute.all('a[name=' + name + ']')[0]
   //-browser:ok
   while (element) {
     offset += element.offsetTop || 0
     element = element.offsetParent || 0
   }
-  Jymin.scrollTop(offset - (document._menuOffset || 0))
+  Cute.scrollTop(offset - (document._menuOffset || 0))
 }
 
 /**
@@ -38,8 +38,8 @@ Jymin.scrollToAnchor = function (name) {
  *
  * @param {String} unit  CSS positioning unit (px/em/rem).
  */
-Jymin.setUnit = function (unit) {
-  Jymin.setUnit._unit = unit
+Cute.setUnit = function (unit) {
+  Cute.setUnit._unit = unit
 }
 
 /**
@@ -47,7 +47,7 @@ Jymin.setUnit = function (unit) {
  *
  * @param  {HTMLElement} element  Element to measure.
  */
-Jymin.size = function (element) {
+Cute.size = function (element) {
   element = element || 0
   return [element.offsetWidth, element.offsetHeight]
 }
@@ -62,8 +62,8 @@ Jymin.size = function (element) {
  * @param  {Number}      height   New height for the element.
  * @param  {String}      unit     An optional unit (px/em/rem).
  */
-Jymin.moveElement = function (element, left, top, width, height, unit) {
-  unit = unit || Jymin.setUnit._unit || ''
+Cute.moveElement = function (element, left, top, width, height, unit) {
+  unit = unit || Cute.setUnit._unit || ''
 }
 
 /**
@@ -71,7 +71,7 @@ Jymin.moveElement = function (element, left, top, width, height, unit) {
  *
  * @return {Array} [width, height]
  */
-Jymin.getViewport = function () {
+Cute.getViewport = function () {
   function dim (key) {
     return Math.max(document.documentElement['client' + key], window['inner' + key] || 0)
   }

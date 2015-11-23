@@ -4,7 +4,7 @@
  * @param  {Object} number  An object to convert to a number, if necessary.
  * @return {number}         The number, or zero.
  */
-Jymin.ensureNumber = function (number) {
+Cute.ensureNumber = function (number) {
   return isNaN(number *= 1) ? 0 : number
 }
 
@@ -15,7 +15,7 @@ Jymin.ensureNumber = function (number) {
  * @param  {number} length  A length to pad to.
  * @return {String}         The zero-padded number.
  */
-Jymin.zeroFill = function (number, length) {
+Cute.zeroFill = function (number, length) {
   number = '' + number
   // Repurpose the lenth variable to count how much padding we need.
   length = Math.max(length - number.length, 0)

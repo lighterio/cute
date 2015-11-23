@@ -5,7 +5,7 @@ var cwd = process.cwd()
 
 global.window = global.window || {}
 global.document = global.document || {}
-global.Jymin = global.Jymin || {}
+global.Cute = global.Cute || {}
 
 var dirs = ['scripts', 'plugins']
 dirs.forEach(function (dir) {

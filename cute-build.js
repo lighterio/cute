@@ -13,8 +13,8 @@ require('figlet').text(title + ' Client v' + version, {font: 'Standard'}, functi
   figlet = figlet.replace(/\n/g, '\n *')
 
   var source = require('chug')([
-    dir + '/node_modules/jymin/scripts',
-    dir + '/scripts/' + key + '-jymin.js'
+    dir + '/node_modules/cute/scripts',
+    dir + '/scripts/' + key + '-cute.js'
   ])
 
   source.concat(key + '.js')
@@ -29,7 +29,7 @@ require('figlet').text(title + ' Client v' + version, {font: 'Standard'}, functi
     })
     .wrap()
     .write(dir, key + '-client.js')
-    .replace(/Jymin\.([$_a-zA-Z0-9]+)(\s*=)?/g, function (match, name, equals) {
+    .replace(/Cute\.([$_a-zA-Z0-9]+)(\s*=)?/g, function (match, name, equals) {
       return equals ? 'var ' + name + ' =' : name
     })
     .minify()

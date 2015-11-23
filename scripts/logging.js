@@ -1,51 +1,51 @@
 // When not in debug mode, make the logging functions do nothing.
-Jymin.error = Jymin.no
-Jymin.warn = Jymin.no
-Jymin.info = Jymin.no
-Jymin.log = Jymin.no
-Jymin.trace = Jymin.no
+Cute.error = Cute.no
+Cute.warn = Cute.no
+Cute.info = Cute.no
+Cute.log = Cute.no
+Cute.trace = Cute.no
 
 //+env:debug
 
 /**
  * Log values to the console, if it's available.
  */
-Jymin.error = function () {
-  Jymin.ifConsole('error', arguments)
+Cute.error = function () {
+  Cute.ifConsole('error', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
-Jymin.warn = function () {
-  Jymin.ifConsole('warn', arguments)
+Cute.warn = function () {
+  Cute.ifConsole('warn', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
-Jymin.info = function () {
-  Jymin.ifConsole('info', arguments)
+Cute.info = function () {
+  Cute.ifConsole('info', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
-Jymin.log = function () {
-  Jymin.ifConsole('log', arguments)
+Cute.log = function () {
+  Cute.ifConsole('log', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
-Jymin.trace = function () {
-  Jymin.ifConsole('trace', arguments)
+Cute.trace = function () {
+  Cute.ifConsole('trace', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
-Jymin.ifConsole = function (method, args) {
+Cute.ifConsole = function (method, args) {
   var console = window.console
   if (console && console[method]) {
     console[method].apply(console, args)

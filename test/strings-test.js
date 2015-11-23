@@ -1,9 +1,9 @@
-describe('Jymin', function () {
+describe('Cute', function () {
 
   describe('.lower', function () {
 
     it('converts a string to lowercase', function () {
-      is(Jymin.lower('Hello'), 'hello')
+      is(Cute.lower('Hello'), 'hello')
     })
 
   })

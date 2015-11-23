@@ -1,17 +1,17 @@
 /**
  * Create a circular-safe JSON string.
  */
-Jymin.safeStringify = function (data, quote, stack) {
-  if (Jymin.isString(data)) {
+Cute.safeStringify = function (data, quote, stack) {
+  if (Cute.isString(data)) {
     data = quote + data.replace(/\n\r"'/g, function (c) {
       return c === '\n' ? '\\n' : c === '\r' ? '\\r' : c === quote ? '\\' + c : c === '"' ? '&quot;' : "'"
     }) + quote
-  } else if (Jymin.isFunction(data) || Jymin.isUndefined(data)) {
+  } else if (Cute.isFunction(data) || Cute.isUndefined(data)) {
     return null
-  } else if (data && Jymin.isObject(data)) {
+  } else if (data && Cute.isObject(data)) {
     stack = stack || []
     var isCircular
-    Jymin.each(stack, function (item) {
+    Cute.each(stack, function (item) {
       if (item === data) {
         isCircular = 1
       }
@@ -22,17 +22,17 @@ Jymin.safeStringify = function (data, quote, stack) {
     stack.push(data)
     var parts = []
     var before, after
-    if (Jymin.isArray(data)) {
+    if (Cute.isArray(data)) {
       before = '['
       after = ']'
-      Jymin.each(data, function (value) {
-        parts.push(Jymin.safeStringify(value, quote, stack))
+      Cute.each(data, function (value) {
+        parts.push(Cute.safeStringify(value, quote, stack))
       })
     } else {
       before = '{'
       after = '}'
-      Jymin.each(data, function (value, key) {
-        parts.push(Jymin.stringify(key) + ':' + Jymin.safeStringify(value, stack))
+      Cute.each(data, function (value, key) {
+        parts.push(Cute.stringify(key) + ':' + Cute.safeStringify(value, stack))
       })
     }
     stack.pop()
@@ -47,30 +47,30 @@ Jymin.safeStringify = function (data, quote, stack) {
  * Create a JSON string.
  */
 //+browser:old
-Jymin.stringify = Jymin.safeStringify
+Cute.stringify = Cute.safeStringify
 //-browser:old
 //+browser:ok
-Jymin.stringify = JSON.stringify
+Cute.stringify = JSON.stringify
 //-browser:ok
 
 /**
  * Create a JSON-ish string.
  */
-Jymin.attrify = function (data) {
-  return Jymin.safeStringify(data, "'")
+Cute.attrify = function (data) {
+  return Cute.safeStringify(data, "'")
 }
 
 /**
  * Parse JavaScript and return a value.
  */
-Jymin.parse = function (value, alternative) {
+Cute.parse = function (value, alternative) {
   try {
     var evil = window.eval; // jshint ignore:line
     evil('eval.J=' + value)
     value = evil.J
   } catch (e) {
     //+env:debug
-    Jymin.error('[Jymin] Could not parse JS: ' + value)
+    Cute.error('[Cute] Could not parse JS: ' + value)
     //-env:debug
     value = alternative
   }
@@ -80,46 +80,46 @@ Jymin.parse = function (value, alternative) {
 /**
  * Execute JavaScript.
  */
-Jymin.execute = function (text) {
-  Jymin.parse('0;' + text)
+Cute.execute = function (text) {
+  Cute.parse('0;' + text)
 }
 
 /**
  * Parse a value and return a boolean no matter what.
  */
-Jymin.parseBoolean = function (value, alternative) {
-  value = Jymin.parse(value)
-  return Jymin.isBoolean(value) ? value : (alternative || false)
+Cute.parseBoolean = function (value, alternative) {
+  value = Cute.parse(value)
+  return Cute.isBoolean(value) ? value : (alternative || false)
 }
 
 /**
  * Parse a value and return a number no matter what.
  */
-Jymin.parseNumber = function (value, alternative) {
-  value = Jymin.parse(value)
-  return Jymin.isNumber(value) ? value : (alternative || 0)
+Cute.parseNumber = function (value, alternative) {
+  value = Cute.parse(value)
+  return Cute.isNumber(value) ? value : (alternative || 0)
 }
 
 /**
  * Parse a value and return a string no matter what.
  */
-Jymin.parseString = function (value, alternative) {
-  value = Jymin.parse(value)
-  return Jymin.isString(value) ? value : (alternative || '')
+Cute.parseString = function (value, alternative) {
+  value = Cute.parse(value)
+  return Cute.isString(value) ? value : ('' + alternative)
 }
 
 /**
  * Parse a value and return an object no matter what.
  */
-Jymin.parseObject = function (value, alternative) {
-  value = Jymin.parse(value)
-  return Jymin.isObject(value) ? value : (alternative || {})
+Cute.parseObject = function (value, alternative) {
+  value = Cute.parse(value)
+  return Cute.isObject(value) ? value : (alternative || {})
 }
 
 /**
  * Parse a value and return a number no matter what.
  */
-Jymin.parseArray = function (value, alternative) {
-  value = Jymin.parse(value)
-  return Jymin.isObject(value) ? value : (alternative || [])
+Cute.parseArray = function (value, alternative) {
+  value = Cute.parse(value)
+  return Cute.isObject(value) ? value : (alternative || [])
 }

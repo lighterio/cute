@@ -1,59 +1,53 @@
 /**
- * Get all cookies from the document, and return a map.
+ * Read cookies, and optionally get or set one.
  *
- * @return {Object}  The map of cookie names and values.
+ * @param  {String} name     An optional cookie name to get or set. If not provided, return a map.
+ * @param  {Object} value    A value to be set as a string, or null if the cookie is to be deleted.
+ * @param  {Object} options  Optional cookie settings, including "ttl", "expires", "path", "domain" and "secure".
+ * @return {Object}          A cookie, or a map of cookie names and values.
  */
-Jymin.getAllCookies = function () {
-  var obj = {}
-  var documentCookie = Jymin.trim(document.cookie)
-  if (documentCookie) {
-    var cookies = documentCookie.split(/\s*;\s*/)
-    Jymin.each(cookies, function (cookie) {
+Cute.cookie = function (name, value, options) {
+
+  // Build a map of key-value pairs of all cookies.
+  var result = {}
+  var list = Cute.trim(document.cookie)
+  if (list) {
+    var cookies = list.split(/\s*;\s*/)
+    Cute.each(cookies, function (cookie) {
       var pair = cookie.split(/\s*=\s*/)
-      obj[Jymin.unescape(pair[0])] = Jymin.unescape(pair[1])
+      result[Cute.unescape(pair[0])] = Cute.unescape(pair[1])
     })
   }
-  return obj
-}
 
-/**
- * Get a cookie by its name.
- *
- * @param  {String} name  A cookie name.
- * @return {String}       The cookie value.
- */
-Jymin.getCookie = function (name) {
-  return Jymin.getAllCookies()[name]
-}
+  // If a cookie is named, get or set it.
+  if (name) {
 
-/**
- * Set or overwrite a cookie value.
- *
- * @param {String} name     A cookie name, whose value is to be set.
- * @param {Object} value    A value to be set as a string.
- * @param {Object} options  Optional cookie options, including "maxage", "expires", "path", "domain" and "secure".
- */
-Jymin.setCookie = function (name, value, options) {
-  options = options || {}
-  var str = Jymin.escape(name) + '=' + Jymin.unescape(value)
-  if (null === value) {
-    options.maxage = -1
+    // If no value is provided, return the existing value.
+    if (Cute.isUndefined) {
+      result = result[name]
+
+    // If a value is provided, set the cookie to that value.
+    } else {
+      options = options || {}
+      var pair = Cute.escape(name) + '=' + Cute.unescape(value)
+
+      var path = options.path
+      var domain = options.domain
+      var secure = options.secure
+
+      // If the value is null, expire it as of one millisecond ago.
+      var ttl = (value === null) ? -1 : options.ttl
+      var expires = ttl ? new Date(Date.now() + ttl) : 0
+
+      document.cookie = pair
+        + (path ? ';path=' + path : '')
+        + (domain ? ';domain=' + domain : '')
+        + (expires ? ';expires=' + expires.toUTCString() : '')
+        + (secure ? ';secure' : '')
+
+      result = value
+    }
+
   }
-  if (options.maxage) {
-    options.expires = new Date(+new Date() + options.maxage)
-  }
-  document.cookie = str
-    + (options.path ? ';path=' + options.path : '')
-    + (options.domain ? ';domain=' + options.domain : '')
-    + (options.expires ? ';expires=' + options.expires.toUTCString() : '')
-    + (options.secure ? ';secure' : '')
-}
-
-/**
- * Delete a cookie by name.
- *
- * @param {String} name  A cookie name, whose value is to be deleted.
- */
-Jymin.deleteCookie = function (name) {
-  Jymin.setCookie(name, null)
+  return result
 }

@@ -3,7 +3,7 @@
  *
  * @param  {Function}  listener  A function which will receive a ready element.
  */
-Jymin.ready = function (object, listener) {
+Cute.ready = function (object, listener) {
   if (!listener) {
     listener = object
     object = document
@@ -16,19 +16,19 @@ Jymin.ready = function (object, listener) {
 
   // Create a function that replaces itself so it will only run once.
   var fn = function () {
-    if (Jymin.isReady(object)) {
-      Jymin.isReady(object, 1)
+    if (Cute.isReady(object)) {
+      Cute.isReady(object, 1)
       listener(object)
-      listener = Jymin.no
+      listener = Cute.no
     }
   }
 
   // Bind using multiple methods for a variety of browsers.
-  Jymin.on(object, 'readystatechange,DOMContentLoaded', fn)
-  Jymin.on(object === document ? window : object, 'load', fn)
+  Cute.on(object, 'readystatechange,DOMContentLoaded', fn)
+  Cute.on(object === document ? window : object, 'load', fn)
 
-  // Bind to the Jymin-triggered ready event.
-  Jymin.on(object, '_ready', fn)
+  // Bind to the Cute-triggered ready event.
+  Cute.on(object, '_ready', fn)
 }
 
 /**
@@ -38,11 +38,11 @@ Jymin.ready = function (object, listener) {
  * @param  {Boolean} setReady  Whether to .
  * @return {Boolean}           Whether the object is currently ready.
  */
-Jymin.isReady = function (object, setReady) {
+Cute.isReady = function (object, setReady) {
   // Declare an object to be ready, and run events that have been bound to it.
   if (setReady && !object._ready) {
     object._ready = true
-    Jymin.emit('_ready', object)
+    Cute.emit('_ready', object)
   }
   // AJAX requests have readyState 4 when loaded.
   // All documents will reach readyState=="complete".

@@ -4,7 +4,7 @@
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is undefined.
  */
-Jymin.isUndefined = function (value) {
+Cute.isUndefined = function (value) {
   return typeof value === 'undefined'
 }
 
@@ -14,7 +14,7 @@ Jymin.isUndefined = function (value) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is a boolean.
  */
-Jymin.isBoolean = function (value) {
+Cute.isBoolean = function (value) {
   return typeof value === 'boolean'
 }
 
@@ -24,7 +24,7 @@ Jymin.isBoolean = function (value) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is a number.
  */
-Jymin.isNumber = function (value) {
+Cute.isNumber = function (value) {
   return typeof value === 'number'
 }
 
@@ -34,7 +34,7 @@ Jymin.isNumber = function (value) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is a string.
  */
-Jymin.isString = function (value) {
+Cute.isString = function (value) {
   return typeof value === 'string'
 }
 
@@ -44,7 +44,7 @@ Jymin.isString = function (value) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is a function.
  */
-Jymin.isFunction = function (value) {
+Cute.isFunction = function (value) {
   return typeof value === 'function'
 }
 
@@ -54,7 +54,7 @@ Jymin.isFunction = function (value) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is an object.
  */
-Jymin.isObject = function (value) {
+Cute.isObject = function (value) {
   return typeof value === 'object'
 }
 
@@ -64,19 +64,8 @@ Jymin.isObject = function (value) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is null.
  */
-Jymin.isNull = function (value) {
+Cute.isNull = function (value) {
   return value === null
-}
-
-/**
- * Check whether a value is an instance of a given type.
- *
- * @param  {Any}      value        A value to check.
- * @param  {Function} Constructor  A constructor for a type of object.
- * @return {boolean}               True if the value is an instance of a given type.
- */
-Jymin.isInstance = function (value, Constructor) {
-  return value instanceof Constructor
 }
 
 /**
@@ -85,8 +74,8 @@ Jymin.isInstance = function (value, Constructor) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is an array.
  */
-Jymin.isArray = function (value) {
-  return Jymin.isInstance(value, Array)
+Cute.isArray = function (value) {
+  return value instanceof Array
 }
 
 /**
@@ -95,26 +84,6 @@ Jymin.isArray = function (value) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is a date.
  */
-Jymin.isDate = function (value) {
-  return Jymin.isInstance(value, Date)
-}
-
-/**
- * Check whether a value is an error.
- *
- * @param  {Any}     value  A value to check.
- * @return {boolean}        True if the value is an error.
- */
-Jymin.isError = function (value) {
-  return Jymin.isInstance(value, Error)
-}
-
-/**
- * Check whether a value is a regular expression.
- *
- * @param  {Any}     value  A value to check.
- * @return {boolean}        True if the value is a regular expression.
- */
-Jymin.isRegExp = function (value) {
-  return Jymin.isInstance(value, RegExp)
+Cute.isDate = function (value) {
+  return value instanceof Date
 }

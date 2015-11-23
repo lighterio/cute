@@ -2,26 +2,26 @@
  * Empty handler.
  * @type {function}
  */
-Jymin.no = function () {}
+Cute.no = function () {}
 
 /**
  * Default AJAX success handler function.
  * @type {function}
  */
-Jymin.ok = Jymin.no
+Cute.ok = Cute.no
 
 /**
  * Default AJAX failure handler function.
  * @type {function}
  */
-Jymin.fail = Jymin.no
+Cute.fail = Cute.no
 
 /**
  * Get an XMLHttpRequest object (or ActiveX object in old IE).
  *
  * @return {XMLHttpRequest}   The request object.
  */
-Jymin.xhr = function () {
+Cute.xhr = function () {
   var xhr
   //+browser:old
   xhr = window.XMLHttpRequest ? new XMLHttpRequest() :
@@ -39,8 +39,8 @@ Jymin.xhr = function () {
  *
  * @return {XMLHttpRequestUpload}   The request upload object.
  */
-Jymin.upload = function () {
-  var xhr = Jymin.xhr()
+Cute.upload = function () {
+  var xhr = Cute.xhr()
   return xhr ? xhr.upload : false
 }
 
@@ -52,31 +52,31 @@ Jymin.upload = function () {
  * @param  {function} ok    An optional function to run upon success.
  * @param  {function} fail  An optional function to run upon failure.
  */
-Jymin.get = function (url, data, ok, fail) {
+Cute.get = function (url, data, ok, fail) {
   // If the optional data argument is omitted, zero it.
-  if (Jymin.isFunction(data)) {
+  if (Cute.isFunction(data)) {
     fail = ok
     ok = data
     data = 0
   }
-  var request = Jymin.xhr()
+  var request = Cute.xhr()
   if (request) {
-    ok = ok || Jymin.ok
-    fail = fail || Jymin.fail
+    ok = ok || Cute.ok
+    fail = fail || Cute.fail
     request.onreadystatechange = function () {
       if (request.readyState === 4) {
         var status = request.status
         var isSuccess = (status === 200)
-        var fn = isSuccess ? (ok || Jymin.ok) : (fail || Jymin.fail)
-        var data = Jymin.parse(request.responseText) || {}
+        var fn = isSuccess ? (ok || Cute.ok) : (fail || Cute.fail)
+        var data = Cute.parse(request.responseText) || {}
         fn(data, request, status)
       }
     }
     request.open(data ? 'POST' : 'GET', url, true)
     if (data) {
       request.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
-      if (Jymin.isObject(data)) {
-        data = 'json=' + Jymin.escape(Jymin.stringify(data))
+      if (Cute.isObject(data)) {
+        data = 'json=' + Cute.escape(Cute.stringify(data))
       }
     }
     request.send(data || null)

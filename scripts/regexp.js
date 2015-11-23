@@ -6,12 +6,12 @@
  * @param  {Function} fn      [description]
  * @return {Array}            [description]
  */
-Jymin.tagContents = function (html, tagName, fn) {
-  var pattern = Jymin.tagPatterns[tagName]
+Cute.tagContents = function (html, tagName, fn) {
+  var pattern = Cute.tagPatterns[tagName]
   if (!pattern) {
     var flags = /^(html|head|title|body)$/.test(tagName) ? 'i' : 'gi'
     pattern = new RegExp('<' + tagName + '.*?>([\\s\\S]*?)<\\/' + tagName + '>', flags)
-    Jymin.tagPatterns[tagName] = pattern
+    Cute.tagPatterns[tagName] = pattern
   }
   var contents = []
   html.replace(pattern, function (match, content) {
@@ -23,4 +23,4 @@ Jymin.tagContents = function (html, tagName, fn) {
   return contents
 }
 
-Jymin.tagPatterns = {}
+Cute.tagPatterns = {}

@@ -18,7 +18,7 @@ coverage
 node_modules
 test
 build
-jymin.min.js
+cute.min.js
 .npmignore
 .editorconfig
 .jshintrc

@@ -1,4 +1,4 @@
-describe('Jymin.md5', function () {
+describe('Cute.md5', function () {
 
   var crypto = require('crypto')
   var json = JSON.stringify(JSON.stringify(this.fn.toString()))
@@ -7,17 +7,17 @@ describe('Jymin.md5', function () {
   }
 
   it('hashes strings', function () {
-    is(Jymin.md5('hello'), md5('hello'))
-    is(Jymin.md5('WTF!?'), md5('WTF!?'))
-    is(Jymin.md5(json), md5(json))
+    is(Cute.md5('hello'), md5('hello'))
+    is(Cute.md5('WTF!?'), md5('WTF!?'))
+    is(Cute.md5(json), md5(json))
   })
 
   bench('Benchmark', function () {
 
     var a, b
 
-    it('Jymin', function () {
-      a = Jymin.md5(json)
+    it('Cute', function () {
+      a = Cute.md5(json)
     })
 
     it('Node', function () {

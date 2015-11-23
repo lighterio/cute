@@ -4,7 +4,7 @@
  * @param  {String} s  A string to hash.
  * @return {String}    The MD5 hash for the given string.
  */
-Jymin.md5 = function (str) {
+Cute.md5 = function (str) {
 
   // Encode as UTF-8.
   str = decodeURIComponent(encodeURIComponent(str))

@@ -4,7 +4,7 @@
  * @param {Date}    date  An optional Date object (default: now).
  * @return {Number}       Epoch milliseconds.
  */
-Jymin.getTime = function (date) {
+Cute.getTime = function (date) {
   return date ? date.getTime() : Date.now()
 }
 
@@ -14,7 +14,7 @@ Jymin.getTime = function (date) {
  * @param {Date}    date  Date object (default: now).
  * @return {String}       ISO date string.
  */
-Jymin.getIsoDate = function (date) {
+Cute.getIsoDate = function (date) {
   date = date || new Date()
   //+browser:ok
   date = date.toISOString()
@@ -22,8 +22,8 @@ Jymin.getIsoDate = function (date) {
   //+browser:old
   var utcPattern = /^.*?(\d+) (\w+) (\d+) ([\d:]+).*?$/
   date = date.toUTCString().replace(utcPattern, function (a, day, m, y, t) {
-    m = Jymin.zeroFill(date.getMonth(), 2)
-    t += '.' + Jymin.zeroFill(date.getMilliseconds(), 3)
+    m = Cute.zeroFill(date.getMonth(), 2)
+    t += '.' + Cute.zeroFill(date.getMilliseconds(), 3)
     return y + '-' + m + '-' + day + 'T' + t + 'Z'
   })
   //-browser:old
@@ -40,15 +40,15 @@ Jymin.getIsoDate = function (date) {
  * @param  {Boolean} isTime  Whether to append the time.
  * @return {String}          The formatted date string.
  */
-Jymin.formatDate = function (date, isLong, isTime) {
-  if (!Jymin.isDate(date)) {
+Cute.formatDate = function (date, isLong, isTime) {
+  if (!Cute.isDate(date)) {
     date = new Date(+date || date)
   }
   var m = date.getMonth()
   var day = date.getDate()
   var y = date.getFullYear()
   if (isLong) {
-    m = Jymin.i18nMonths[m]
+    m = Cute.i18nMonths[m]
   } else {
     m++
     y = ('' + y).substr(2)
@@ -57,7 +57,7 @@ Jymin.formatDate = function (date, isLong, isTime) {
   var hour = +date.getHours()
   var minute = date.getMinutes()
   minute = minute > 9 ? minute : '0' + minute
-  if (!Jymin.i18n24Hour) {
+  if (!Cute.i18n24Hour) {
     if (hour > 12) {
       isAm = 0
       hour -= 12
@@ -66,7 +66,7 @@ Jymin.formatDate = function (date, isLong, isTime) {
     }
   }
   var string
-  if (Jymin.i18nDayMonthYear) {
+  if (Cute.i18nDayMonthYear) {
     string = m
     m = day
     day = string
@@ -78,10 +78,10 @@ Jymin.formatDate = function (date, isLong, isTime) {
   }
   if (isTime) {
     if (isLong) {
-      string += ' ' + Jymin.i18nAt
+      string += ' ' + Cute.i18nAt
     }
     string += ' ' + hour + ':' + minute
-    if (Jymin.i18n24Hour) {
+    if (Cute.i18n24Hour) {
       string += (isAm ? 'am' : 'pm')
     }
   }
@@ -94,6 +94,6 @@ Jymin.formatDate = function (date, isLong, isTime) {
  * @param  {Object}  date    An optional Date object or constructor argument.
  * @return {[type]}
  */
-Jymin.formatTime = function (date) {
-  date = Jymin.formatDate(date).replace(/^.* /, '')
+Cute.formatTime = function (date) {
+  date = Cute.formatDate(date).replace(/^.* /, '')
 }

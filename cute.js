@@ -1,49 +1,48 @@
-/**      _                 _                ___   ____   ___
- *      | |_   _ _ __ ___ (_)_ __   __   __/ _ \ | ___| / _ \
- *   _  | | | | | '_ ` _ \| | '_ \  \ \ / / | | ||___ \| | | |
- *  | |_| | |_| | | | | | | | | | |  \ V /| |_| | ___) | |_| |
- *   \___/ \__, |_| |_| |_|_|_| |_|   \_/  \___(_)____(_)___/
+/**      _                 _                ___   ____   _
+ *      | |_   _ _ __ ___ (_)_ __   __   __/ _ \ | ___| / |
+ *   _  | | | | | '_ ` _ \| | '_ \  \ \ / / | | ||___ \ | |
+ *  | |_| | |_| | | | | | | | | | |  \ V /| |_| | ___) || |
+ *   \___/ \__, |_| |_| |_|_|_| |_|   \_/  \___(_)____(_)_|
  *         |___/
  *
- * http://lighter.io/jymin
+ * http://lighter.io/cute
  *
  * If you're seeing this in production, you really should minify.
  *
  * Source files:
- *   https://github.com/lighterio/jymin/blob/master/scripts/ajax.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/charts.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/collections.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/cookies.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/crypto.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/dates.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/dom.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/emitter.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/events.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/forms.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/functions.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/head.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/history.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/i18n.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/json.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/logging.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/move.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/numbers.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/ready.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/regexp.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/storage.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/strings.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/timing.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/types.js
- *   https://github.com/lighterio/jymin/blob/master/scripts/url.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/ajax.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/charts.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/collections.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/cookies.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/crypto.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/dates.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/dom.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/emitter.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/events.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/forms.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/functions.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/head.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/history.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/i18n.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/json.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/logging.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/move.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/numbers.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/ready.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/regexp.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/storage.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/strings.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/timing.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/types.js
  */
 
 
-var Jymin = {version: '0.5.0'};
+var Cute = {version: '0.5.1'};
 
 //+env:commonjs
 // Support CommonJS.
 if (typeof exports === 'object') {
-  module.exports = Jymin;
+  module.exports = Cute;
 }
 //-env:commonjs
 
@@ -51,7 +50,7 @@ if (typeof exports === 'object') {
 // Support AMD.
 else if (typeof define === 'function' && define.amd) {
   define(function() {
-    return Jymin;
+    return Cute;
   });
 }
 //-env:amd
@@ -59,7 +58,7 @@ else if (typeof define === 'function' && define.amd) {
 //+env:window
 // Support browsers.
 else {
-  this.Jymin = Jymin;
+  this.Cute = Cute;
 }
 //-env:window
 
@@ -67,26 +66,26 @@ else {
  * Empty handler.
  * @type {function}
  */
-Jymin.no = function () {}
+Cute.no = function () {}
 
 /**
  * Default AJAX success handler function.
  * @type {function}
  */
-Jymin.ok = Jymin.no
+Cute.ok = Cute.no
 
 /**
  * Default AJAX failure handler function.
  * @type {function}
  */
-Jymin.fail = Jymin.no
+Cute.fail = Cute.no
 
 /**
  * Get an XMLHttpRequest object (or ActiveX object in old IE).
  *
  * @return {XMLHttpRequest}   The request object.
  */
-Jymin.xhr = function () {
+Cute.xhr = function () {
   var xhr
 
 
@@ -100,8 +99,8 @@ Jymin.xhr = function () {
  *
  * @return {XMLHttpRequestUpload}   The request upload object.
  */
-Jymin.upload = function () {
-  var xhr = Jymin.xhr()
+Cute.upload = function () {
+  var xhr = Cute.xhr()
   return xhr ? xhr.upload : false
 }
 
@@ -113,31 +112,31 @@ Jymin.upload = function () {
  * @param  {function} ok    An optional function to run upon success.
  * @param  {function} fail  An optional function to run upon failure.
  */
-Jymin.get = function (url, data, ok, fail) {
+Cute.get = function (url, data, ok, fail) {
   // If the optional data argument is omitted, zero it.
-  if (Jymin.isFunction(data)) {
+  if (Cute.isFunction(data)) {
     fail = ok
     ok = data
     data = 0
   }
-  var request = Jymin.xhr()
+  var request = Cute.xhr()
   if (request) {
-    ok = ok || Jymin.ok
-    fail = fail || Jymin.fail
+    ok = ok || Cute.ok
+    fail = fail || Cute.fail
     request.onreadystatechange = function () {
       if (request.readyState === 4) {
         var status = request.status
         var isSuccess = (status === 200)
-        var fn = isSuccess ? (ok || Jymin.ok) : (fail || Jymin.fail)
-        var data = Jymin.parse(request.responseText) || {}
+        var fn = isSuccess ? (ok || Cute.ok) : (fail || Cute.fail)
+        var data = Cute.parse(request.responseText) || {}
         fn(data, request, status)
       }
     }
     request.open(data ? 'POST' : 'GET', url, true)
     if (data) {
       request.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
-      if (Jymin.isObject(data)) {
-        data = 'json=' + Jymin.escape(Jymin.stringify(data))
+      if (Cute.isObject(data)) {
+        data = 'json=' + Cute.escape(Cute.stringify(data))
       }
     }
     request.send(data || null)
@@ -149,8 +148,8 @@ Jymin.get = function (url, data, ok, fail) {
  *
  * @return {Array}   The request object.
  */
-Jymin.getChartColors = function () {
-  var colors = Jymin.getChartColors._cache
+Cute.colors = function () {
+  var colors = Cute.colors._cache
   if (!colors) {
     var map = {}
     var string =
@@ -168,7 +167,7 @@ Jymin.getChartColors = function () {
         }
       }
     }
-    Jymin.getChartColors._cache = colors
+    Cute.colors._cache = colors
   }
   return colors
 }
@@ -183,12 +182,12 @@ Jymin.getChartColors = function () {
  * @param  {Function}             fn          A function to call on each item.
  * @return {Number}                           Index or key that returned false.
  */
-Jymin.each = function (collection, fn) {
+Cute.each = function (collection, fn) {
   if (collection) {
-    collection = Jymin.isString(collection) ? Jymin.splitByCommas(collection) : collection
+    collection = Cute.isString(collection) ? Cute.split(collection) : collection
     var length = collection.length
     var key, result
-    if (Jymin.isNumber(length)) {
+    if (Cute.isNumber(length)) {
       for (key = 0; key < length; key++) {
         result = fn(collection[key], key, collection)
         if (result === false) {
@@ -210,9 +209,9 @@ Jymin.each = function (collection, fn) {
 /**
  * Decorate an object with properties from another object.
  */
-Jymin.decorate = function (object, decorations) {
+Cute.decorate = function (object, decorations) {
   if (object) {
-    Jymin.each(decorations, function (value, key) {
+    Cute.each(decorations, function (value, key) {
       object[key] = value
     })
   }
@@ -222,9 +221,9 @@ Jymin.decorate = function (object, decorations) {
 /**
  * Return a property if it is defined, otherwise set and return a default if provided.
  */
-Jymin.prop = function (object, property, defaultValue) {
+Cute.prop = function (object, property, defaultValue) {
   var value = object[property]
-  if (!Jymin.isDefined(value)) {
+  if (!Cute.isDefined(value)) {
     value = object[property] = defaultValue
   }
   return value
@@ -238,9 +237,9 @@ Jymin.prop = function (object, property, defaultValue) {
  * @param  {Function}             fn     A filter function.
  * @return {Array}          [description]
  */
-Jymin.filter = function (array, fn) {
+Cute.filter = function (array, fn) {
   var filtered = []
-  Jymin.each(array, function (item) {
+  Cute.each(array, function (item) {
     if (fn(item)) {
       filtered.push(item)
     }
@@ -255,8 +254,8 @@ Jymin.filter = function (array, fn) {
  * @params {Array...}         Items to merge into the array.
  * @return {Array}            The first array argument, with new items merged in.
  */
-Jymin.merge = function (array) {
-  Jymin.each(arguments, function (items, index) {
+Cute.merge = function (array) {
+  Cute.each(arguments, function (items, index) {
     if (index) {
       [].push.apply(array, items)
     }
@@ -264,63 +263,57 @@ Jymin.merge = function (array) {
   return array
 }
 /**
- * Get all cookies from the document, and return a map.
+ * Read cookies, and optionally get or set one.
  *
- * @return {Object}  The map of cookie names and values.
+ * @param  {String} name     An optional cookie name to get or set. If not provided, return a map.
+ * @param  {Object} value    A value to be set as a string, or null if the cookie is to be deleted.
+ * @param  {Object} options  Optional cookie settings, including "ttl", "expires", "path", "domain" and "secure".
+ * @return {Object}          A cookie, or a map of cookie names and values.
  */
-Jymin.getAllCookies = function () {
-  var obj = {}
-  var documentCookie = Jymin.trim(document.cookie)
-  if (documentCookie) {
-    var cookies = documentCookie.split(/\s*;\s*/)
-    Jymin.each(cookies, function (cookie) {
+Cute.cookie = function (name, value, options) {
+
+  // Build a map of key-value pairs of all cookies.
+  var result = {}
+  var list = Cute.trim(document.cookie)
+  if (list) {
+    var cookies = list.split(/\s*;\s*/)
+    Cute.each(cookies, function (cookie) {
       var pair = cookie.split(/\s*=\s*/)
-      obj[Jymin.unescape(pair[0])] = Jymin.unescape(pair[1])
+      result[Cute.unescape(pair[0])] = Cute.unescape(pair[1])
     })
   }
-  return obj
-}
 
-/**
- * Get a cookie by its name.
- *
- * @param  {String} name  A cookie name.
- * @return {String}       The cookie value.
- */
-Jymin.getCookie = function (name) {
-  return Jymin.getAllCookies()[name]
-}
+  // If a cookie is named, get or set it.
+  if (name) {
 
-/**
- * Set or overwrite a cookie value.
- *
- * @param {String} name     A cookie name, whose value is to be set.
- * @param {Object} value    A value to be set as a string.
- * @param {Object} options  Optional cookie options, including "maxage", "expires", "path", "domain" and "secure".
- */
-Jymin.setCookie = function (name, value, options) {
-  options = options || {}
-  var str = Jymin.escape(name) + '=' + Jymin.unescape(value)
-  if (null === value) {
-    options.maxage = -1
+    // If no value is provided, return the existing value.
+    if (Cute.isUndefined) {
+      result = result[name]
+
+    // If a value is provided, set the cookie to that value.
+    } else {
+      options = options || {}
+      var pair = Cute.escape(name) + '=' + Cute.unescape(value)
+
+      var path = options.path
+      var domain = options.domain
+      var secure = options.secure
+
+      // If the value is null, expire it as of one millisecond ago.
+      var ttl = (value === null) ? -1 : options.ttl
+      var expires = ttl ? new Date(Date.now() + ttl) : 0
+
+      document.cookie = pair
+        + (path ? ';path=' + path : '')
+        + (domain ? ';domain=' + domain : '')
+        + (expires ? ';expires=' + expires.toUTCString() : '')
+        + (secure ? ';secure' : '')
+
+      result = value
+    }
+
   }
-  if (options.maxage) {
-    options.expires = new Date(+new Date() + options.maxage)
-  }
-  document.cookie = str
-    + (options.path ? ';path=' + options.path : '')
-    + (options.domain ? ';domain=' + options.domain : '')
-    + (options.expires ? ';expires=' + options.expires.toUTCString() : '')
-    + (options.secure ? ';secure' : '')
-}
-
-/**
- * Delete a cookie by name.
- *
- * @param {String} name  A cookie name, whose value is to be deleted.
- */
-Jymin.deleteCookie = function (name) {
-  Jymin.setCookie(name, null)
+  return result
 }
 /**
  * Calculate an MD5 hash for a string (useful for things like Gravatars).
@@ -328,7 +321,7 @@ Jymin.deleteCookie = function (name) {
  * @param  {String} s  A string to hash.
  * @return {String}    The MD5 hash for the given string.
  */
-Jymin.md5 = function (str) {
+Cute.md5 = function (str) {
 
   // Encode as UTF-8.
   str = decodeURIComponent(encodeURIComponent(str))
@@ -498,7 +491,7 @@ Jymin.md5 = function (str) {
  * @param {Date}    date  An optional Date object (default: now).
  * @return {Number}       Epoch milliseconds.
  */
-Jymin.getTime = function (date) {
+Cute.getTime = function (date) {
   return date ? date.getTime() : Date.now()
 }
 
@@ -508,7 +501,7 @@ Jymin.getTime = function (date) {
  * @param {Date}    date  Date object (default: now).
  * @return {String}       ISO date string.
  */
-Jymin.getIsoDate = function (date) {
+Cute.getIsoDate = function (date) {
   date = date || new Date()
 
   date = date.toISOString()
@@ -527,15 +520,15 @@ Jymin.getIsoDate = function (date) {
  * @param  {Boolean} isTime  Whether to append the time.
  * @return {String}          The formatted date string.
  */
-Jymin.formatDate = function (date, isLong, isTime) {
-  if (!Jymin.isDate(date)) {
+Cute.formatDate = function (date, isLong, isTime) {
+  if (!Cute.isDate(date)) {
     date = new Date(+date || date)
   }
   var m = date.getMonth()
   var day = date.getDate()
   var y = date.getFullYear()
   if (isLong) {
-    m = Jymin.i18nMonths[m]
+    m = Cute.i18nMonths[m]
   } else {
     m++
     y = ('' + y).substr(2)
@@ -544,7 +537,7 @@ Jymin.formatDate = function (date, isLong, isTime) {
   var hour = +date.getHours()
   var minute = date.getMinutes()
   minute = minute > 9 ? minute : '0' + minute
-  if (!Jymin.i18n24Hour) {
+  if (!Cute.i18n24Hour) {
     if (hour > 12) {
       isAm = 0
       hour -= 12
@@ -553,7 +546,7 @@ Jymin.formatDate = function (date, isLong, isTime) {
     }
   }
   var string
-  if (Jymin.i18nDayMonthYear) {
+  if (Cute.i18nDayMonthYear) {
     string = m
     m = day
     day = string
@@ -565,10 +558,10 @@ Jymin.formatDate = function (date, isLong, isTime) {
   }
   if (isTime) {
     if (isLong) {
-      string += ' ' + Jymin.i18nAt
+      string += ' ' + Cute.i18nAt
     }
     string += ' ' + hour + ':' + minute
-    if (Jymin.i18n24Hour) {
+    if (Cute.i18n24Hour) {
       string += (isAm ? 'am' : 'pm')
     }
   }
@@ -581,24 +574,24 @@ Jymin.formatDate = function (date, isLong, isTime) {
  * @param  {Object}  date    An optional Date object or constructor argument.
  * @return {[type]}
  */
-Jymin.formatTime = function (date) {
-  date = Jymin.formatDate(date).replace(/^.* /, '')
+Cute.formatTime = function (date) {
+  date = Cute.formatDate(date).replace(/^.* /, '')
 }
 /**
  * Get an element by its ID (if the argument is an ID).
  * If you pass in an element, it just returns it.
  * This can be used to ensure that you have an element.
  *
- * @param  {HTMLElement}        parentElement  Optional element to call getElementById on (default: document).
+ * @param  {HTMLElement}        parent  Optional element to call getElementById on (default: document).
  * @param  {string|HTMLElement} idOrElement    ID of an element, or the element itself.
  * @return {HTMLElement}                       The matching element, or undefined.
  */
-Jymin.byId = function (parentElement, idOrElement) {
+Cute.byId = function (parent, idOrElement) {
   if (!idOrElement) {
-    idOrElement = parentElement
-    parentElement = document
+    idOrElement = parent
+    parent = document
   }
-  return Jymin.isString(idOrElement) ? parentElement.getElementById(idOrElement) : idOrElement
+  return Cute.isString(idOrElement) ? parent.getElementById(idOrElement) : idOrElement
 }
 
 /**
@@ -609,7 +602,7 @@ Jymin.byId = function (parentElement, idOrElement) {
  * @param  {String}      before     An optional child to insert the element before.
  * @return {HTMLElement}            The parent of the element.
  */
-Jymin.parent = function (element, parent, before) {
+Cute.parent = function (element, parent, before) {
   if (parent) {
     parent.insertBefore(element, before || null)
   } else {
@@ -625,13 +618,13 @@ Jymin.parent = function (element, parent, before) {
  * @param  {String}      selector  An optional selector to filter ancestors.
  * @return {Array}                 The array of ancestors.
  */
-Jymin.up = function (element, selector) {
+Cute.up = function (element, selector) {
   var ancestors = []
-  while (element = Jymin.parent(element)) { // jshint ignore:line
+  while (element = Cute.parent(element)) { // jshint ignore:line
     ancestors.push(element)
   }
-  ancestors = Jymin.filter(ancestors, function (element) {
-    return Jymin.matches(element, selector)
+  ancestors = Cute.filter(ancestors, function (element) {
+    return Cute.matches(element, selector)
   })
   return ancestors
 }
@@ -642,7 +635,7 @@ Jymin.up = function (element, selector) {
  * @param  {HTMLElement}    element  A parent element who might have children.
  * @return {HTMLCollection}          The collection of children.
  */
-Jymin.children = function (element) {
+Cute.children = function (element) {
   return element.childNodes
 }
 
@@ -652,26 +645,13 @@ Jymin.children = function (element) {
  * @param  {HTMLElement} element  An element with a parent, and potentially siblings.
  * @return {Number}               The element's index, or -1 if there's no matching element.
  */
-Jymin.index = function (element) {
+Cute.index = function (element) {
   var index = -1
   while (element) {
     ++index
     element = element.previousSibling
   }
   return index
-}
-
-/**
- * Create a cloneable element with a specified tag name.
- *
- * @param  {String}      tagName  An optional tag name (default: div).
- * @return {HTMLElement}          The newly-created DOM Element with the specified tag name.
- */
-Jymin.createTag = function (tagName) {
-  tagName = tagName || 'div'
-  var isSvg = /^(svg|g|path|circle|line)$/.test(tagName)
-  var uri = 'http://www.w3.org/' + (isSvg ? '2000/svg' : '1999/xhtml')
-  return document.createElementNS(uri, tagName)
 }
 
 /**
@@ -686,18 +666,19 @@ Jymin.createTag = function (tagName) {
  * @param  {String}             innerHtml        An optional string of HTML to populate the element.
  * @return {HTMLElement}                         The existing or created element.
  */
-Jymin.create = function (elementOrString, innerHtml) {
+Cute.create = function (elementOrString, innerHtml) {
   var element = elementOrString
-  if (Jymin.isString(elementOrString)) {
+  if (Cute.isString(elementOrString)) {
     var tagAndAttributes = elementOrString.split('?')
     var tagAndClass = tagAndAttributes[0].split('.')
     var className = tagAndClass.slice(1).join(' ')
     var tagAndId = tagAndClass[0].split('#')
-    var tagName = tagAndId[0]
+    var tagName = tagAndId[0] || 'div'
     var id = tagAndId[1]
     var attributes = tagAndAttributes[1]
-    var cachedElement = Jymin.createTag[tagName] || (Jymin.createTag[tagName] = Jymin.createTag(tagName))
-    element = cachedElement.cloneNode(true)
+    var isSvg = /^(svg|g|path|circle|line)$/.test(tagName)
+    var uri = 'http://www.w3.org/' + (isSvg ? '2000/svg' : '1999/xhtml')
+    element = document.createElementNS(uri, tagName)
     if (id) {
       element.id = id
     }
@@ -707,16 +688,16 @@ Jymin.create = function (elementOrString, innerHtml) {
     // TODO: Do something less janky than using query string syntax (Maybe like Ltl?).
     if (attributes) {
       attributes = attributes.split('&')
-      Jymin.each(attributes, function (attribute) {
+      Cute.each(attributes, function (attribute) {
         var keyAndValue = attribute.split('=')
         var key = keyAndValue[0]
         var value = keyAndValue[1]
         element[key] = value
-        Jymin.setAttribute(element, key, value)
+        Cute.attr(element, key, value)
       })
     }
     if (innerHtml) {
-      Jymin.html(element, innerHtml)
+      Cute.html(element, innerHtml)
     }
   }
   return element
@@ -725,43 +706,43 @@ Jymin.create = function (elementOrString, innerHtml) {
 /**
  * Add an element to a parent element, creating it first if necessary.
  *
- * @param  {HTMLElement}        parentElement    An optional parent element (default: document).
+ * @param  {HTMLElement}        parent    An optional parent element (default: document).
  * @param  {HTMLElement|String} elementOrString  An element or a string used to create an element (default: div).
  * @param  {String}             innerHtml        An optional string of HTML to populate the element.
  * @return {HTMLElement}                         The element that was added.
  */
-Jymin.add = function (parentElement, elementOrString, innerHtml) {
-  if (Jymin.isString(parentElement)) {
-    elementOrString = parentElement
-    parentElement = document.body
+Cute.add = function (parent, elementOrString, innerHtml) {
+  if (Cute.isString(parent)) {
+    elementOrString = parent
+    parent = document.body
   }
-  var element = Jymin.create(elementOrString, innerHtml)
-  parentElement.appendChild(element)
+  var element = Cute.create(elementOrString, innerHtml)
+  parent.appendChild(element)
   return element
 }
 
 /**
  * Insert a child element under a parent element, optionally before another element.
  *
- * @param  {HTMLElement}         parentElement    An optional parent element (default: document).
+ * @param  {HTMLElement}         parent    An optional parent element (default: document).
  * @param  {HTMLElement|String}  elementOrString  An element or a string used to create an element (default: div).
  * @param  {HTMLElement}         beforeSibling    An optional child to insert the element before.
  * @return {HTMLElement}                          The element that was inserted.
  */
-Jymin.insert = function (parentElement, elementOrString, beforeSibling) {
-  if (Jymin.isString(parentElement)) {
+Cute.insert = function (parent, elementOrString, beforeSibling) {
+  if (Cute.isString(parent)) {
     beforeSibling = elementOrString
-    elementOrString = parentElement
-    parentElement = document.body
+    elementOrString = parent
+    parent = document.body
   }
-  var element = Jymin.create(elementOrString)
-  if (parentElement) {
+  var element = Cute.create(elementOrString)
+  if (parent) {
     // If the beforeSibling value is a number, get the (future) sibling at that index.
-    if (Jymin.isNumber(beforeSibling)) {
-      beforeSibling = Jymin.children(parentElement)[beforeSibling]
+    if (Cute.isNumber(beforeSibling)) {
+      beforeSibling = Cute.children(parent)[beforeSibling]
     }
     // Insert the element, optionally before an existing sibling.
-    parentElement.insertBefore(element, beforeSibling || Jymin.getFirstChild(parentElement) || null)
+    parent.insertBefore(element, beforeSibling || parent.firstChild || null)
   }
   return element
 }
@@ -771,12 +752,12 @@ Jymin.insert = function (parentElement, elementOrString, beforeSibling) {
  *
  * @param  {HTMLElement} element  An element to remove.
  */
-Jymin.remove = function (element) {
+Cute.remove = function (element) {
   if (element) {
     // Remove the element from its parent, provided that it has a parent.
-    var parentElement = Jymin.parent(element)
-    if (parentElement) {
-      parentElement.removeChild(element)
+    var parent = Cute.parent(element)
+    if (parent) {
+      parent.removeChild(element)
     }
   }
 }
@@ -788,8 +769,8 @@ Jymin.remove = function (element) {
  * @param  {String}      html     An optional string of HTML to set as the innerHTML.
  * @return {String}               The element's HTML.
  */
-Jymin.html = function (element, html) {
-  if (!Jymin.isUndefined(html)) {
+Cute.html = function (element, html) {
+  if (!Cute.isUndefined(html)) {
     element.innerHTML = html
   }
   return element.innerHTML
@@ -801,8 +782,8 @@ Jymin.html = function (element, html) {
  * @param  {HTMLElement} element  An element.
  * @return {String}               The element's tag name.
  */
-Jymin.tag = function (element) {
-  return Jymin.lower(element.tagName)
+Cute.tag = function (element) {
+  return Cute.lower(element.tagName)
 }
 
 /**
@@ -811,10 +792,10 @@ Jymin.tag = function (element) {
  * @param  {HTMLElement} element  An element.
  * @return {String}      text     A text string to set.
  */
-Jymin.text = function (element, text) {
-  if (!Jymin.isUndefined(text)) {
-    Jymin.html(element, '')
-    Jymin.addText(element, text)
+Cute.text = function (element, text) {
+  if (!Cute.isUndefined(text)) {
+    Cute.html(element, '')
+    Cute.addText(element, text)
   }
   return element.textContent || element.innerText
 }
@@ -825,156 +806,81 @@ Jymin.text = function (element, text) {
  * @param  {HTMLElement} element  An element.
  * @return {String}      text     A text string to add.
  */
-Jymin.addText = function (element, text) {
-  Jymin.add(element, document.createTextNode(text))
+Cute.addText = function (element, text) {
+  Cute.add(element, document.createTextNode(text))
 }
 
 /**
- * Get an attribute from an element.
+ * Get, set, or delete an attribute of an element.
  *
- * @param  {HTMLElement} element        An element.
- * @param  {String}      attributeName  An attribute's name.
- * @return {String}                     The value of the attribute.
+ * @param  {HTMLElement} element  An element.
+ * @param  {String}      name     An attribute name.
+ * @param  {String}      value    A value to set the attribute to.
+ * @return {String}               The value of the attribute.
  */
-Jymin.getAttribute = function (element, attributeName) {
-  return element.getAttribute(attributeName)
-}
-
-/**
- * Set an attribute on an element.
- *
- * @param  {HTMLElement} element        An element.
- * @param  {String}      attributeName  An attribute name.
- * @param  {String}      value          A value to set the attribute to.
- */
-Jymin.setAttribute = function (element, name, value) {
+Cute.attr = function (element, name, value) {
   if (value === null) {
     element.removeAttribute(name)
+  } else if (Cute.isUndefined(value)) {
+    value = element.getAttribute(name)
   } else {
-    var old = Jymin.getAttribute(element, name)
+    var old = Cute.attr(element, name)
     if (value !== old) {
       element.setAttribute(name, value)
     }
   }
+  return value
 }
 
 /**
- * Get a data attribute from an element.
+ * Get, set, or delete a data attribute of an element.
  *
  * @param  {HTMLElement} element  An element.
- * @param  {String}      dataKey  A data attribute's key.
- * @return {String}               The value of the data attribute.
- */
-Jymin.getData = function (element, dataKey) {
-  return Jymin.getAttribute(element, 'data-' + dataKey)
-}
-
-/**
- * Set a data attribute on an element.
- *
- * @param  {HTMLElement} element  An element.
- * @param  {String}      dataKey  A data attribute key.
+ * @param  {String}      key      A data attribute key.
  * @param  {String}      value    A value to set the data attribute to.
+ * @return {String}               The value of the attribute.
  */
-Jymin.setData = function (element, dataKey, value) {
-  Jymin.setAttribute(element, 'data-' + dataKey, value)
+Cute.data = function (element, key, value) {
+  return Cute.attr(element, 'data-' + key, value)
 }
 
 /**
- * Get an element's class name.
+ * Add, remove or check classes on an element.
  *
- * @param  {HTMLElement} element  An element.
- * @return {String}               The element's class name.
+ * @param  {HTMLElement} element     An element to change or read classes from.
+ * @param  {String}      operations  Operations to perform on classes.
+ * @return {Object}                  The map of classes, or truthy if the last queried class was found.
  */
-Jymin.getClass = function (element) {
-  var className = element.className || ''
-  return className.baseVal || className
-}
-
-/**
- * Get an element's class name as an array of classes.
- *
- * @param  {HTMLElement} element  An element.
- * @return {Array}                The element's class name classes.
- */
-Jymin.getClasses = function (element) {
-  var classes = Jymin.getClass(element) || ''
-  return classes.split(/\s+/)
-}
-
-/**
- * Set an element's class name.
- *
- * @param  {HTMLElement} element  An element.
- * @return {String}               One or more space-delimited classes to set.
- */
-Jymin.setClass = function (element, className) {
-  element.className = className
-}
-
-/**
- * Find out whether an element has a specified class.
- *
- * @param  {HTMLElement} element    An element.
- * @param  {String}      className  A class to search for.
- * @return {boolean}                True if the class was found.
- */
-Jymin.hasClass = function (element, className) {
-  var classes = Jymin.getClasses(element)
-  return classes.indexOf(className) > -1
-}
-
-/**
- * Add a class to a given element.
- *
- * @param  {HTMLElement} element  An element.
- * @param  {String}               A class to add if it's not already there.
- */
-Jymin.addClass = function (element, className) {
-  if (!Jymin.hasClass(element, className)) {
-    element.className += ' ' + className
+Cute.classes = function (element, operations) {
+  var map = {}
+  var result = map
+  var list = '' + element.className
+  list.replace(/\S+/g, function (key) {
+    map[key] = true
+  })
+  if (operations) {
+    operations.replace(/(!\+-\?)?(\S+)/, function (match, op, key) {
+      var value = map[key]
+      if (op === '!') {
+        value = !value
+      } else if (op === '+') {
+        value = true
+      } else if (op === '-') {
+        value = false
+      } else if (op === '?') {
+        result = value
+      }
+      map[key] = value
+    })
+    list = []
+    Cute.each(map, function (value, key) {
+      if (value) {
+        list.push(key)
+      }
+    })
+    element.className = list.join(' ')
   }
-}
-
-/**
- * Remove a class from a given element, assuming no duplication.
- *
- * @param  {HTMLElement} element  An element.
- * @return {String}               A class to remove.
- */
-Jymin.removeClass = function (element, className) {
-  var classes = Jymin.getClasses(element)
-  var index = classes.indexOf(className)
-  if (index > -1) {
-    classes.splice(index, 1)
-  }
-  classes = classes.join(' ')
-  Jymin.setClass(element, classes)
-}
-
-/**
- * Turn a class on or off on a given element.
- *
- * @param  {HTMLElement} element    An element.
- * @param  {String}      className  A class to add or remove.
- * @param  {boolean}     flipOn     Whether to add, rather than removing.
- */
-Jymin.flipClass = function (element, className, flipOn) {
-  var method = flipOn ? Jymin.addClass : Jymin.removeClass
-  method(element, className)
-}
-
-/**
- * Turn a class on if it's off, or off if it's on.
- *
- * @param  {HTMLElement} element    An element.
- * @param  {String}      className  A class to toggle.
- * @return {boolean}                True if the class was turned on.
- */
-Jymin.toggleClass = function (element, className) {
-  var flipOn = !Jymin.hasClass(element, className)
-  Jymin.flipClass(element, className, flipOn)
-  return flipOn
+  return result
 }
 
 /**
@@ -983,27 +889,27 @@ Jymin.toggleClass = function (element, className) {
  * Selectors are not fully querySelector compatible.
  * Selectors only support commas, spaces, IDs, tags & classes.
  *
- * @param  {HTMLElement}    parentElement  An optional element under which to find elements.
- * @param  {String}         selector       A simple selector for finding elements.
- * @param  {Function}       fn             An optional function to run on matching elements.
- * @return {HTMLCollection}                The matching elements (if any).
+ * @param  {HTMLElement}    parent    An optional element under which to find elements.
+ * @param  {String}         selector  A simple selector for finding elements.
+ * @param  {Function}       fn        An optional function to run on matching elements.
+ * @return {HTMLCollection}           The matching elements (if any).
  */
-Jymin.all = function (parentElement, selector, fn) {
-  if (!selector || Jymin.isFunction(selector)) {
+Cute.all = function (parent, selector, fn) {
+  if (!selector || Cute.isFunction(selector)) {
     fn = selector
-    selector = parentElement
-    parentElement = document
+    selector = parent
+    parent = document
   }
-  if (!parentElement) {
-    parentElement = document
+  if (!parent) {
+    parent = document
   }
   var elements
 
 
-  elements = parentElement.querySelectorAll(selector)
+  elements = parent.querySelectorAll(selector)
 
   if (fn) {
-    Jymin.each(elements, fn)
+    Cute.each(elements, fn)
   }
   return elements
 }
@@ -1011,21 +917,21 @@ Jymin.all = function (parentElement, selector, fn) {
 /**
  * Find an element matching a selector, optionally run a function on it, and return it.
  *
- * @param  {HTMLElement} parentElement  An optional element under which to find an element.
+ * @param  {HTMLElement} parent  An optional element under which to find an element.
  * @param  {String}      selector       A simple selector for finding an element.
  * @param  {Function}    fn             An optional function to run on a matching element.
  * @return {HTMLElement}                The matching element (if any).
  */
-Jymin.one = function (parentElement, selector, fn) {
-  if (!selector || Jymin.isFunction(selector)) {
+Cute.one = function (parent, selector, fn) {
+  if (!selector || Cute.isFunction(selector)) {
     fn = selector
-    selector = parentElement
-    parentElement = document
+    selector = parent
+    parent = document
   }
   var element
 
 
-  element = parentElement.querySelector(selector)
+  element = parent.querySelector(selector)
 
   if (element && fn) {
     fn(element)
@@ -1039,7 +945,7 @@ Jymin.one = function (parentElement, selector, fn) {
  * @param  {String} html     A string of HTML.
  * @param  {String} selector An optional selector (default: "body").
  */
-Jymin.pushHtml = function (html, selector) {
+Cute.pushHtml = function (html, selector) {
   var content = html
   selector = selector || 'body'
 
@@ -1048,40 +954,25 @@ Jymin.pushHtml = function (html, selector) {
   }
 
   // Set the HTML of an element.
-  return Jymin.all(selector, function (element) {
+  return Cute.all(selector, function (element) {
 
-    Jymin.startTime('virtual')
-    var virtualDom = Jymin.create('m', content)
-    Jymin.endTime('virtual')
-    Jymin.startTime('diff')
-    Jymin.diffDom(element, virtualDom)
-    Jymin.endTime('diff')
-    Jymin.isReady(element, 1)
+    Cute.startTime('virtual')
+    var virtualDom = Cute.create('m', content)
+    Cute.endTime('virtual')
+    Cute.startTime('diff')
+    Cute.diffDom(element, virtualDom)
+    Cute.endTime('diff')
+    Cute.isReady(element, 1)
 
-    Jymin.setTimer(function () {
-      Jymin.all(virtualDom, 'script', function (script) {
-        script = Jymin.html(script)
-        Jymin.execute(script)
+    Cute.timer(function () {
+      Cute.all(virtualDom, 'script', function (script) {
+        script = Cute.html(script)
+        Cute.execute(script)
       })
-      Jymin.all('script', Jymin.remove)
+      Cute.all('script', Cute.remove)
     })
 
   })[0]
-}
-
-/**
- * Set HTML by DOM merging.
- *
- * @param  {HTMLElement} element  The element to merge HTML into.
- * @param  {String}      html     A string of HTML to merge.
- */
-Jymin.diffHtml = function (element, html) {
-  Jymin.startTime('virtual')
-  var virtualDom = Jymin.create('p', html)
-  Jymin.endTime('virtual')
-  Jymin.startTime('diff')
-  Jymin.diffDom(element, virtualDom)
-  Jymin.endTime('diff')
 }
 
 /**
@@ -1090,7 +981,7 @@ Jymin.diffHtml = function (element, html) {
  * @param  {HTMLElement} domNode     The DOM node to merge into.
  * @param  {HTMLElement} newNode     The virtual DOM to merge from.
  */
-Jymin.diffDom = function (domNode, newNode, isTopLevel) {
+Cute.diffDom = function (domNode, newNode, isTopLevel) {
   var domChild = domNode.firstChild || 0
   var newChild = newNode.firstChild || 0
   while (newChild) {
@@ -1098,7 +989,7 @@ Jymin.diffDom = function (domNode, newNode, isTopLevel) {
     var newTag = newChild.tagName
     var domNext = domChild.nextSibling || 0
     var newNext = newChild.nextSibling || 0
-    if ((domTag !== newTag) || Jymin.lower(newTag) === 'svg') {
+    if ((domTag !== newTag) || Cute.lower(newTag) === 'svg') {
       domNode.insertBefore(newChild, domChild || null)
       if (domChild) {
         domNode.removeChild(domChild)
@@ -1106,10 +997,12 @@ Jymin.diffDom = function (domNode, newNode, isTopLevel) {
       domChild = domNext
     } else {
       if (newTag) {
-        Jymin.diffDom(domChild, newChild)
-        Jymin.diffAttributes(domChild, newChild)
-      } else {
+        Cute.diffDom(domChild, newChild)
+        Cute.diffAttributes(domChild, newChild)
+      } else if (domChild && newChild) {
         domChild.textContent = newChild.textContent
+      } else if (newChild) {
+        domNode.appendChild(newChild)
       }
       domChild = domNext
     }
@@ -1125,27 +1018,27 @@ Jymin.diffDom = function (domNode, newNode, isTopLevel) {
 /**
  * Merge attributes from a virtual DOM.
  *
- * @param  {HTMLElement} domNode     The DOM node to merge into.
- * @param  {HTMLElement} newNode     The virtual DOM to merge from.
+ * @param  {HTMLElement} domNode  The DOM node to merge into.
+ * @param  {HTMLElement} newNode  The virtual DOM to merge from.
  */
-Jymin.diffAttributes = function (domNode, newNode) {
+Cute.diffAttributes = function (domNode, newNode) {
   var map = {}
-  Jymin.each([domNode, newNode], function (element, index) {
-    Jymin.each(element.attributes, function (attribute) {
+  Cute.each([domNode, newNode], function (element, index) {
+    Cute.each(element.attributes, function (attribute) {
       if (attribute) {
         map[attribute.name] = index ? attribute.value : null
       }
     })
   })
-  Jymin.each(map, function (value, name) {
-    Jymin.setAttribute(domNode, name, value)
+  Cute.each(map, function (value, name) {
+    Cute.attr(domNode, name, value)
   })
 }
 /**
  * Event Handlers
  * @type {Object}
  */
-Jymin.handlers = {}
+Cute.handlers = {}
 
 /**
  * Listen for one or more events, optionally on a given element.
@@ -1154,23 +1047,23 @@ Jymin.handlers = {}
  * @param  {String|Array}       eventTypes         A list of events to listen for.
  * @param  {Function}           listener           A function to execute when an event occurs.
  */
-Jymin.on = function (selectorOrElement, eventTypes, listener) {
+Cute.on = function (selectorOrElement, eventTypes, listener) {
   if (!listener) {
     listener = eventTypes
     eventTypes = selectorOrElement
     selectorOrElement = document
   }
-  var element = Jymin.isString(selectorOrElement) ? document : selectorOrElement
-  Jymin.each(eventTypes, function (eventType) {
-    var handlers = Jymin.handlers[eventType]
+  var element = Cute.isString(selectorOrElement) ? document : selectorOrElement
+  Cute.each(eventTypes, function (eventType) {
+    var handlers = Cute.handlers[eventType]
     if (!handlers) {
-      handlers = Jymin.handlers[eventType] = []
+      handlers = Cute.handlers[eventType] = []
       if (element.addEventListener) {
-        element.addEventListener(eventType, Jymin.emit, false)
+        element.addEventListener(eventType, Cute.emit, false)
       } else if (element.attachEvent) {
-        element.attachEvent('on' + eventType, Jymin.emit)
+        element.attachEvent('on' + eventType, Cute.emit)
       } else {
-        element['on' + eventType] = Jymin.emit
+        element['on' + eventType] = Cute.emit
       }
     }
     handlers.push([selectorOrElement, listener])
@@ -1180,15 +1073,15 @@ Jymin.on = function (selectorOrElement, eventTypes, listener) {
 /**
  * Remove a listener for one event type.
  *
- * @param  {String|Array} eventType   An event to stop listening for.
- * @param  {Function}     listener    A listener function to remove.
+ * @param  {String|Array} eventType  An event to stop listening for.
+ * @param  {Function}     listener   A listener function to remove.
  */
-Jymin.off = function (eventType, listener) {
-  var handlers = Jymin.handlers[eventType]
-  var index = handlers.indexOf(listener)
-  if (index > -1) {
-    handlers.splice(index, 1)
-  }
+Cute.off = function (eventType, listener) {
+  var handlers = Cute.handlers[eventType]
+  handlers = Cute.each(handlers, function (item) {
+    return item[1] !== listener
+  })
+  Cute.handlers[eventType] = handlers
 }
 
 /**
@@ -1198,7 +1091,7 @@ Jymin.off = function (eventType, listener) {
  * @param  {String|Array}       eventTypes         A list of events to listen for.
  * @param  {Function}           listener           A function to execute when an event occurs.
  */
-Jymin.once = function (selectorOrElement, eventTypes, listener) {
+Cute.once = function (selectorOrElement, eventTypes, listener) {
   if (!listener) {
     listener = eventTypes
     eventTypes = selectorOrElement
@@ -1206,9 +1099,9 @@ Jymin.once = function (selectorOrElement, eventTypes, listener) {
   }
   var fn = function (element, event, type) {
     listener(element, event, type)
-    Jymin.off(type, fn)
+    Cute.off(type, fn)
   }
-  Jymin.on(selectorOrElement, eventTypes, fn)
+  Cute.on(selectorOrElement, eventTypes, fn)
 }
 
 /**
@@ -1218,13 +1111,13 @@ Jymin.once = function (selectorOrElement, eventTypes, listener) {
  * @param  {HTMLElement}   target  An optional target to start propagation from.
  * @param  {Object}        data    Optional data to report with the event.
  */
-Jymin.emit = function (event, target, data) {
+Cute.emit = function (event, target, data) {
 
   // Get the window-level event if an event isn't passed.
   event = event || window.event
 
   // Construct an event object if necessary.
-  if (Jymin.isString(event)) {
+  if (Cute.isString(event)) {
     event = {type: event}
   }
 
@@ -1234,13 +1127,13 @@ Jymin.emit = function (event, target, data) {
   // Extract the event type.
   var type = event.type
 
-  var handlers = Jymin.handlers[type]
+  var handlers = Cute.handlers[type]
   while (element && !event._stopped) {
-    Jymin.each(handlers, function (handler) {
+    Cute.each(handlers, function (handler) {
       var selector = handler[0]
       var fn = handler[1]
-      var isMatch = Jymin.isString(selector) ?
-        Jymin.matches(element, selector) :
+      var isMatch = Cute.isString(selector) ?
+        Cute.matches(element, selector) :
         (element === selector)
       if (isMatch) {
         fn(data || element, event, type)
@@ -1250,7 +1143,7 @@ Jymin.emit = function (event, target, data) {
     if (element === document) {
       break
     }
-    element = Jymin.parent(element)
+    element = Cute.parent(element)
   }
 }
 
@@ -1261,7 +1154,7 @@ Jymin.emit = function (event, target, data) {
  * @param  {String}      selector  A CSS selector to check against an element.
  * @return {boolean}               True if the element (this) matches the selector.
  */
-Jymin.matches = function (element, selector, type) {
+Cute.matches = function (element, selector, type) {
   var self = this
   var matches =
     element.webkitMatchesSelector ||
@@ -1269,7 +1162,7 @@ Jymin.matches = function (element, selector, type) {
     element.mozMatchesSelector ||
     element.oMatchesSelector ||
     element.matchesSelector ||
-    element.matches || Jymin.no
+    element.matches || Cute.no
   var isMatch = matches.call(element, selector)
   return isMatch
 }
@@ -1279,8 +1172,8 @@ Jymin.matches = function (element, selector, type) {
  *
  * @param  {Event} event  Event to prevent from doing its default action.
  */
-Jymin.preventDefault = function (event) {
-  Jymin.apply(event, 'preventDefault')
+Cute.prevent = function (event) {
+  Cute.apply(event, 'preventDefault')
 }
 
 /**
@@ -1288,18 +1181,19 @@ Jymin.preventDefault = function (event) {
  *
  * @param  {Event} event  Event to stop.
  */
-Jymin.stopEvent = function (event) {
+Cute.stop = function (event) {
   event._stopped = 1
-  Jymin.preventDefault(event)
+  Cute.prevent(event)
 }
 
 /**
  * Focus on a specified element.
  *
  * @param  {HTMLElement} element  The element to focus on.
+ * @param  {Boolean}     blur     Whether to blur instead.
  */
-Jymin.focusElement = function (element) {
-  Jymin.apply(element, 'focus')
+Cute.focus = function (element, blur) {
+  Cute.apply(element, blur ? 'blur' : 'focus')
 }
 /**
  * Get or set the value of a form element.
@@ -1308,42 +1202,39 @@ Jymin.focusElement = function (element) {
  * @param  {String}      newValue  An optional new value for the element.
  * @return {String|Array}          A value or values to set on the form element.
  */
-Jymin.value = function (input, newValue) {
-  input = Jymin.byId(input)
-  if (input) {
-    var type = input.type[0]
-    var value = input.value
-    var checked = input.checked
-    var options = input.options
-    var setNew = !Jymin.isUndefined(newValue)
-    if (type === 'c' || type === 'r') {
-      if (setNew) {
-        input.checked = newValue ? true : false
-      } else {
-        value = checked ? value : null
-      }
-    } else if (options) {
-      if (setNew) {
-        var selected = {}
-        if (input.multiple) {
-          newValue = Jymin.isArray(newValue) ? newValue : [newValue]
-          Jymin.each(newValue, function (optionValue) {
-            selected[optionValue] = 1
-          })
-        } else {
-          selected[newValue] = 1
-        }
-        Jymin.each(options, function (option) {
-          option.selected = !!selected[option.value]
+Cute.value = function (input, newValue) {
+  var type = input.type[0]
+  var value = input.value
+  var checked = input.checked
+  var options = input.options
+  var setNew = !Cute.isUndefined(newValue)
+  if (type === 'c' || type === 'r') {
+    if (setNew) {
+      input.checked = newValue ? true : false
+    } else {
+      value = checked ? value : null
+    }
+  } else if (options) {
+    if (setNew) {
+      var selected = {}
+      if (input.multiple) {
+        newValue = Cute.isArray(newValue) ? newValue : [newValue]
+        Cute.each(newValue, function (optionValue) {
+          selected[optionValue] = 1
         })
       } else {
-        value = Jymin.value(options[input.selectedIndex])
+        selected[newValue] = 1
       }
-    } else if (setNew) {
-      input.value = newValue
+      Cute.each(options, function (option) {
+        option.selected = !!selected[option.value]
+      })
+    } else {
+      value = Cute.value(options[input.selectedIndex])
     }
-    return value
+  } else if (setNew) {
+    input.value = newValue
   }
+  return value
 }
 /**
  * Apply arguments to an object method.
@@ -1353,22 +1244,22 @@ Jymin.value = function (input, newValue) {
  * @param  {Arguments|Array} args        An arguments object or array to apply to the method.
  * @return {Object}                      The result returned by the object method.
  */
-Jymin.apply = function (object, methodName, args) {
-  return ((object || 0)[methodName] || Jymin.no).apply(object, args)
+Cute.apply = function (object, methodName, args) {
+  return ((object || 0)[methodName] || Cute.no).apply(object, args)
 }
 /**
  * Get the head element from the document.
  */
-Jymin.getHead = function () {
-  var head = Jymin.all('head')[0]
+Cute.getHead = function () {
+  var head = Cute.all('head')[0]
   return head
 }
 
 /**
  * Get the body element from the document.
  */
-Jymin.getBody = function () {
-  var body = Jymin.all('body')[0]
+Cute.getBody = function () {
+  var body = Cute.all('body')[0]
   return body
 }
 
@@ -1378,11 +1269,11 @@ Jymin.getBody = function () {
  * @param  {String}   src  A source URL of a script to insert.
  * @param  {function} fn   An optional function to run when the script loads.
  */
-Jymin.js = function (src, fn) {
-  var head = Jymin.getHead()
-  var script = Jymin.add(head, 'script')
+Cute.js = function (src, fn) {
+  var head = Cute.getHead()
+  var script = Cute.add(head, 'script')
   if (fn) {
-    Jymin.ready(script, fn)
+    Cute.ready(script, fn)
   }
   script.async = 1
   script.src = src
@@ -1393,17 +1284,17 @@ Jymin.js = function (src, fn) {
  *
  * @param  {String} css  CSS text to be inserted.
  */
-Jymin.css = function (css) {
+Cute.css = function (css) {
 
   // Allow CSS pixel sizes to be scaled using a window property.
   var zoom = window._zoom
   if (zoom && zoom > 1) {
-    css = Jymin.zoomCss(css)
+    css = Cute.zoomCss(css)
   }
 
   // Insert CSS into the document head.
-  var head = Jymin.getHead()
-  var style = Jymin.add(head, 'style?type=text/css', css)
+  var head = Cute.getHead()
+  var style = Cute.add(head, 'style?type=text/css', css)
   var sheet = style.styleSheet
   if (sheet) {
     sheet.cssText = css
@@ -1415,56 +1306,32 @@ Jymin.css = function (css) {
  *
  * @param  {String} css  CSS text to be zoomed.
  */
-Jymin.zoomCss = function (css) {
+Cute.zoomCss = function (css) {
   var zoom = window._zoom || 1
   return css.replace(/([\.\d]+)px\b/g, function (match, n) {
     return Math.floor(n * zoom) + 'px'
   })
 }
 /**
- * Return a history object.
+ * Push, replace or pop a history item.
+ *
+ * @param  {String}  href   An href, if not popping.
+ * @param  {Boolean} isNew  Whether the URL should be pushed as a new entry.
  */
-Jymin.getHistory = function () {
-  var history = window.history || {}
-  Jymin.each(['push', 'replace'], function (key) {
-    var fn = history[key + 'State']
-    history[key] = function (href) {
+Cute.history = function (href, isNew) {
+  var history = window.history
+  if (history) {
+    if (href) {
       try {
-        fn.apply(history, [null, null, href])
-      } catch (e) {
-        // TODO: Create a backward-compatible history push.
+        var method = isNew ? 'push' : 'replace'
+        history[method + 'State'](null, null, href)
+      } catch (ignore) {
+        // TODO: Create a hash-based history push for old browsers.
       }
+    } else {
+      history.back()
     }
-  })
-  return history
-}
-
-/**
- * Push an item into the history.
- */
-Jymin.historyPush = function (href) {
-  Jymin.getHistory().push(href)
-}
-
-/**
- * Replace the current item in the history.
- */
-Jymin.historyReplace = function (href) {
-  Jymin.getHistory().replace(href)
-}
-
-/**
- * Go back.
- */
-Jymin.historyPop = function () {
-  Jymin.getHistory().back()
-}
-
-/**
- * Listen for a history change.
- */
-Jymin.onHistoryPop = function (callback) {
-  Jymin.on(window, 'popstate', callback)
+  }
 }
 /**
  * The values in this file can be overridden externally.
@@ -1475,7 +1342,7 @@ Jymin.onHistoryPop = function (callback) {
  * Month names in English.
  * @type {Array}
  */
-Jymin.i18nMonths = [
+Cute.i18nMonths = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'
 ]
@@ -1484,39 +1351,39 @@ Jymin.i18nMonths = [
  * The word "at" in English (for separating date & time).
  * @type {String}
  */
-Jymin.i18nAt = 'at'
+Cute.i18nAt = 'at'
 
 /**
  * Whether to show dates in DD/MM/YYYY format.
  * @type {Booly}
  */
-Jymin.i18nDayMonthYear = 0
+Cute.i18nDayMonthYear = 0
 
 /**
  * Whether to show times in 24-hour format.
  * @type {Booly}
  */
-Jymin.i18n24Hour = 0
+Cute.i18n24Hour = 0
 
 /**
  * Why oh why did I have to learn different units than the rest of the world?
  * @type {String}
  */
-Jymin.i18nTemperature = 'F'
+Cute.i18nTemperature = 'F'
 /**
  * Create a circular-safe JSON string.
  */
-Jymin.safeStringify = function (data, quote, stack) {
-  if (Jymin.isString(data)) {
+Cute.safeStringify = function (data, quote, stack) {
+  if (Cute.isString(data)) {
     data = quote + data.replace(/\n\r"'/g, function (c) {
       return c === '\n' ? '\\n' : c === '\r' ? '\\r' : c === quote ? '\\' + c : c === '"' ? '&quot;' : "'"
     }) + quote
-  } else if (Jymin.isFunction(data) || Jymin.isUndefined(data)) {
+  } else if (Cute.isFunction(data) || Cute.isUndefined(data)) {
     return null
-  } else if (data && Jymin.isObject(data)) {
+  } else if (data && Cute.isObject(data)) {
     stack = stack || []
     var isCircular
-    Jymin.each(stack, function (item) {
+    Cute.each(stack, function (item) {
       if (item === data) {
         isCircular = 1
       }
@@ -1527,17 +1394,17 @@ Jymin.safeStringify = function (data, quote, stack) {
     stack.push(data)
     var parts = []
     var before, after
-    if (Jymin.isArray(data)) {
+    if (Cute.isArray(data)) {
       before = '['
       after = ']'
-      Jymin.each(data, function (value) {
-        parts.push(Jymin.safeStringify(value, quote, stack))
+      Cute.each(data, function (value) {
+        parts.push(Cute.safeStringify(value, quote, stack))
       })
     } else {
       before = '{'
       after = '}'
-      Jymin.each(data, function (value, key) {
-        parts.push(Jymin.stringify(key) + ':' + Jymin.safeStringify(value, stack))
+      Cute.each(data, function (value, key) {
+        parts.push(Cute.stringify(key) + ':' + Cute.safeStringify(value, stack))
       })
     }
     stack.pop()
@@ -1553,27 +1420,27 @@ Jymin.safeStringify = function (data, quote, stack) {
  */
 
 
-Jymin.stringify = JSON.stringify
+Cute.stringify = JSON.stringify
 
 
 /**
  * Create a JSON-ish string.
  */
-Jymin.attrify = function (data) {
-  return Jymin.safeStringify(data, "'")
+Cute.attrify = function (data) {
+  return Cute.safeStringify(data, "'")
 }
 
 /**
  * Parse JavaScript and return a value.
  */
-Jymin.parse = function (value, alternative) {
+Cute.parse = function (value, alternative) {
   try {
     var evil = window.eval; // jshint ignore:line
     evil('eval.J=' + value)
     value = evil.J
   } catch (e) {
     //+env:debug
-    Jymin.error('[Jymin] Could not parse JS: ' + value)
+    Cute.error('[Cute] Could not parse JS: ' + value)
     //-env:debug
     value = alternative
   }
@@ -1583,97 +1450,97 @@ Jymin.parse = function (value, alternative) {
 /**
  * Execute JavaScript.
  */
-Jymin.execute = function (text) {
-  Jymin.parse('0;' + text)
+Cute.execute = function (text) {
+  Cute.parse('0;' + text)
 }
 
 /**
  * Parse a value and return a boolean no matter what.
  */
-Jymin.parseBoolean = function (value, alternative) {
-  value = Jymin.parse(value)
-  return Jymin.isBoolean(value) ? value : (alternative || false)
+Cute.parseBoolean = function (value, alternative) {
+  value = Cute.parse(value)
+  return Cute.isBoolean(value) ? value : (alternative || false)
 }
 
 /**
  * Parse a value and return a number no matter what.
  */
-Jymin.parseNumber = function (value, alternative) {
-  value = Jymin.parse(value)
-  return Jymin.isNumber(value) ? value : (alternative || 0)
+Cute.parseNumber = function (value, alternative) {
+  value = Cute.parse(value)
+  return Cute.isNumber(value) ? value : (alternative || 0)
 }
 
 /**
  * Parse a value and return a string no matter what.
  */
-Jymin.parseString = function (value, alternative) {
-  value = Jymin.parse(value)
-  return Jymin.isString(value) ? value : (alternative || '')
+Cute.parseString = function (value, alternative) {
+  value = Cute.parse(value)
+  return Cute.isString(value) ? value : ('' + alternative)
 }
 
 /**
  * Parse a value and return an object no matter what.
  */
-Jymin.parseObject = function (value, alternative) {
-  value = Jymin.parse(value)
-  return Jymin.isObject(value) ? value : (alternative || {})
+Cute.parseObject = function (value, alternative) {
+  value = Cute.parse(value)
+  return Cute.isObject(value) ? value : (alternative || {})
 }
 
 /**
  * Parse a value and return a number no matter what.
  */
-Jymin.parseArray = function (value, alternative) {
-  value = Jymin.parse(value)
-  return Jymin.isObject(value) ? value : (alternative || [])
+Cute.parseArray = function (value, alternative) {
+  value = Cute.parse(value)
+  return Cute.isObject(value) ? value : (alternative || [])
 }
 // When not in debug mode, make the logging functions do nothing.
-Jymin.error = Jymin.no
-Jymin.warn = Jymin.no
-Jymin.info = Jymin.no
-Jymin.log = Jymin.no
-Jymin.trace = Jymin.no
+Cute.error = Cute.no
+Cute.warn = Cute.no
+Cute.info = Cute.no
+Cute.log = Cute.no
+Cute.trace = Cute.no
 
 //+env:debug
 
 /**
  * Log values to the console, if it's available.
  */
-Jymin.error = function () {
-  Jymin.ifConsole('error', arguments)
+Cute.error = function () {
+  Cute.ifConsole('error', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
-Jymin.warn = function () {
-  Jymin.ifConsole('warn', arguments)
+Cute.warn = function () {
+  Cute.ifConsole('warn', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
-Jymin.info = function () {
-  Jymin.ifConsole('info', arguments)
+Cute.info = function () {
+  Cute.ifConsole('info', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
-Jymin.log = function () {
-  Jymin.ifConsole('log', arguments)
+Cute.log = function () {
+  Cute.ifConsole('log', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
-Jymin.trace = function () {
-  Jymin.ifConsole('trace', arguments)
+Cute.trace = function () {
+  Cute.ifConsole('trace', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
-Jymin.ifConsole = function (method, args) {
+Cute.ifConsole = function (method, args) {
   var console = window.console
   if (console && console[method]) {
     console[method].apply(console, args)
@@ -1686,7 +1553,7 @@ Jymin.ifConsole = function (method, args) {
  *
  * @param  {Integer} top  A specified Y position, in pixels.
  */
-Jymin.scrollTop = function (top) {
+Cute.scrollTop = function (top) {
   document.body.scrollTop = (document.documentElement || 0).scrollTop = top
 }
 
@@ -1696,18 +1563,18 @@ Jymin.scrollTop = function (top) {
  * @param  {String} name  The name of an HTML anchor.
  * @return {String}
  */
-Jymin.scrollToAnchor = function (name) {
+Cute.scrollToAnchor = function (name) {
   var offset = 0
   var element
 
 
-  element = Jymin.all('a[name=' + name + ']')[0]
+  element = Cute.all('a[name=' + name + ']')[0]
 
   while (element) {
     offset += element.offsetTop || 0
     element = element.offsetParent || 0
   }
-  Jymin.scrollTop(offset - (document._menuOffset || 0))
+  Cute.scrollTop(offset - (document._menuOffset || 0))
 }
 
 /**
@@ -1715,8 +1582,8 @@ Jymin.scrollToAnchor = function (name) {
  *
  * @param {String} unit  CSS positioning unit (px/em/rem).
  */
-Jymin.setUnit = function (unit) {
-  Jymin.setUnit._unit = unit
+Cute.setUnit = function (unit) {
+  Cute.setUnit._unit = unit
 }
 
 /**
@@ -1724,7 +1591,7 @@ Jymin.setUnit = function (unit) {
  *
  * @param  {HTMLElement} element  Element to measure.
  */
-Jymin.size = function (element) {
+Cute.size = function (element) {
   element = element || 0
   return [element.offsetWidth, element.offsetHeight]
 }
@@ -1739,8 +1606,8 @@ Jymin.size = function (element) {
  * @param  {Number}      height   New height for the element.
  * @param  {String}      unit     An optional unit (px/em/rem).
  */
-Jymin.moveElement = function (element, left, top, width, height, unit) {
-  unit = unit || Jymin.setUnit._unit || ''
+Cute.moveElement = function (element, left, top, width, height, unit) {
+  unit = unit || Cute.setUnit._unit || ''
 }
 
 /**
@@ -1748,7 +1615,7 @@ Jymin.moveElement = function (element, left, top, width, height, unit) {
  *
  * @return {Array} [width, height]
  */
-Jymin.getViewport = function () {
+Cute.getViewport = function () {
   function dim (key) {
     return Math.max(document.documentElement['client' + key], window['inner' + key] || 0)
   }
@@ -1760,7 +1627,7 @@ Jymin.getViewport = function () {
  * @param  {Object} number  An object to convert to a number, if necessary.
  * @return {number}         The number, or zero.
  */
-Jymin.ensureNumber = function (number) {
+Cute.ensureNumber = function (number) {
   return isNaN(number *= 1) ? 0 : number
 }
 
@@ -1771,7 +1638,7 @@ Jymin.ensureNumber = function (number) {
  * @param  {number} length  A length to pad to.
  * @return {String}         The zero-padded number.
  */
-Jymin.zeroFill = function (number, length) {
+Cute.zeroFill = function (number, length) {
   number = '' + number
   // Repurpose the lenth variable to count how much padding we need.
   length = Math.max(length - number.length, 0)
@@ -1782,7 +1649,7 @@ Jymin.zeroFill = function (number, length) {
  *
  * @param  {Function}  listener  A function which will receive a ready element.
  */
-Jymin.ready = function (object, listener) {
+Cute.ready = function (object, listener) {
   if (!listener) {
     listener = object
     object = document
@@ -1795,19 +1662,19 @@ Jymin.ready = function (object, listener) {
 
   // Create a function that replaces itself so it will only run once.
   var fn = function () {
-    if (Jymin.isReady(object)) {
-      Jymin.isReady(object, 1)
+    if (Cute.isReady(object)) {
+      Cute.isReady(object, 1)
       listener(object)
-      listener = Jymin.no
+      listener = Cute.no
     }
   }
 
   // Bind using multiple methods for a variety of browsers.
-  Jymin.on(object, 'readystatechange,DOMContentLoaded', fn)
-  Jymin.on(object === document ? window : object, 'load', fn)
+  Cute.on(object, 'readystatechange,DOMContentLoaded', fn)
+  Cute.on(object === document ? window : object, 'load', fn)
 
-  // Bind to the Jymin-triggered ready event.
-  Jymin.on(object, '_ready', fn)
+  // Bind to the Cute-triggered ready event.
+  Cute.on(object, '_ready', fn)
 }
 
 /**
@@ -1817,11 +1684,11 @@ Jymin.ready = function (object, listener) {
  * @param  {Boolean} setReady  Whether to .
  * @return {Boolean}           Whether the object is currently ready.
  */
-Jymin.isReady = function (object, setReady) {
+Cute.isReady = function (object, setReady) {
   // Declare an object to be ready, and run events that have been bound to it.
   if (setReady && !object._ready) {
     object._ready = true
-    Jymin.emit('_ready', object)
+    Cute.emit('_ready', object)
   }
   // AJAX requests have readyState 4 when loaded.
   // All documents will reach readyState=="complete".
@@ -1836,12 +1703,12 @@ Jymin.isReady = function (object, setReady) {
  * @param  {Function} fn      [description]
  * @return {Array}            [description]
  */
-Jymin.tagContents = function (html, tagName, fn) {
-  var pattern = Jymin.tagPatterns[tagName]
+Cute.tagContents = function (html, tagName, fn) {
+  var pattern = Cute.tagPatterns[tagName]
   if (!pattern) {
     var flags = /^(html|head|title|body)$/.test(tagName) ? 'i' : 'gi'
     pattern = new RegExp('<' + tagName + '.*?>([\\s\\S]*?)<\\/' + tagName + '>', flags)
-    Jymin.tagPatterns[tagName] = pattern
+    Cute.tagPatterns[tagName] = pattern
   }
   var contents = []
   html.replace(pattern, function (match, content) {
@@ -1853,164 +1720,82 @@ Jymin.tagContents = function (html, tagName, fn) {
   return contents
 }
 
-Jymin.tagPatterns = {}
+Cute.tagPatterns = {}
 /**
- * Get the local storage object.
+ * Get or set an item in local storage.
  *
- * @return {Object}  The local storage object.
+ * @param  {String} key    A key to fetch an object by.
+ * @param  {Any}    value  A value to be stringified and stored.
+ * @return {Any}           The object that was fetched and deserialized
  */
-Jymin.getStorage = function () {
-  return window.localStorage
-}
-
-/**
- * Fetch an item from local storage.
- *
- * @param  {String} key  A key to fetch an object by
- * @return {Any}         The object that was fetched and deserialized
- */
-Jymin.fetch = function (key) {
-  var storage = Jymin.getStorage()
-  return storage ? Jymin.parse(storage.getItem(key)) : 0
-}
-
-/**
- * Store an item in local storage.
- *
- * @param  {String} key    A key to store and fetch an object by
- * @param  {Any}    value  A value to be stringified and stored
- */
-Jymin.store = function (key, value) {
-  var storage = Jymin.getStorage()
+Cute.persist = function (key, value) {
+  var storage = window.localStorage
   if (storage) {
-    storage.setItem(key, Jymin.stringify(value))
+    if (Cute.isUndefined(value)) {
+      value = Cute.parse(storage.getItem(key))
+    } else {
+      storage.setItem(key, Cute.stringify(value))
+    }
   }
+  return value
 }
-/**
- * Ensure a value is a string.
- */
-Jymin.ensureString = function (value) {
-  return Jymin.isString(value) ? value : '' + value
-}
-
 /**
  * Return true if the string contains the given substring.
  */
-Jymin.contains = function (string, substring) {
-  return Jymin.ensureString(string).indexOf(substring) > -1
+Cute.contains = function (string, substring) {
+  return ('' + string).indexOf(substring) > -1
 }
 
 /**
  * Return true if the string starts with the given substring.
  */
-Jymin.startsWith = function (string, substring) {
-  return Jymin.ensureString(string).indexOf(substring) === 0; // jshint ignore:line
+Cute.startsWith = function (string, substring) {
+  return ('' + string).indexOf(substring) === 0; // jshint ignore:line
 }
 
 /**
  * Trim the whitespace from a string.
  */
-Jymin.trim = function (string) {
-  return Jymin.ensureString(string).replace(/^\s+|\s+$/g, '')
+Cute.trim = function (string) {
+  return ('' + string).replace(/^\s+|\s+$/g, '')
 }
 
 /**
  * Split a string by commas.
  */
-Jymin.splitByCommas = function (string) {
-  return Jymin.ensureString(string).split(',')
+Cute.split = function (string) {
+  return ('' + string).split(',')
 }
 
 /**
- * Split a string by spaces.
+ * Return a lowercase string.
  */
-Jymin.splitBySpaces = function (string) {
-  return Jymin.ensureString(string).split(' ')
+Cute.lower = function (object) {
+  return ('' + object).toLowerCase()
 }
 
 /**
- * Return a string, with asterisks replaced by values from a replacements array.
+ * Return an uppercase string.
  */
-Jymin.decorateString = function (string, replacements) {
-  string = Jymin.ensureString(string)
-  Jymin.each(replacements, function(replacement) {
-    string = string.replace('*', replacement)
-  })
-  return string
-}
-
-/**
- * Perform a RegExp Jymin.match, and call a callback on the result
-  */
-Jymin.match = function (string, pattern, callback) {
-  var result = string.match(pattern)
-  if (result) {
-    callback.apply(string, result)
-  }
-}
-
-/**
- * Reduce a string to its alphabetic characters.
- */
-Jymin.extractLetters = function (string) {
-  return Jymin.ensureString(string).replace(/[^a-z]/ig, '')
-}
-
-/**
- * Reduce a string to its numeric characters.
- */
-Jymin.extractNumbers = function (string) {
-  return Jymin.ensureString(string).replace(/[^0-9]/g, '')
-}
-
-/**
- * Returns a lowercase string.
- */
-Jymin.lower = function (object) {
-  return Jymin.ensureString(object).toLowerCase()
-}
-
-/**
- * Returns an uppercase string.
- */
-Jymin.upper = function (object) {
-  return Jymin.ensureString(object).toUpperCase()
+Cute.upper = function (object) {
+  return ('' + object).toUpperCase()
 }
 
 /**
  * Return an escaped value for URLs.
  */
-Jymin.escape = function (value) {
-  return '' + encodeURIComponent('' + value)
+Cute.escape = function (value) {
+  return encodeURIComponent('' + value)
 }
 
 /**
  * Return an unescaped value from an escaped URL.
  */
-Jymin.unescape = function (value) {
-  return '' + decodeURIComponent('' + value)
-}
-
-/**
- * Returns a query string generated by serializing an object and joined using a delimiter (defaults to '&')
- */
-Jymin.buildQueryString = function (object) {
-  var queryParams = []
-  Jymin.each(object, function (value, key) {
-    queryParams.push(Jymin.escape(key) + '=' + Jymin.escape(value))
-  })
-  return queryParams.join('&')
-}
-
-/**
- * Return the browser version if the browser name matches or zero if it doesn't.
- */
-Jymin.getBrowserVersionOrZero = function (browserName) {
-  var match = new RegExp(browserName + '[ /](\\d+(\\.\\d+)?)', 'i').exec(navigator.userAgent)
-  return match ? +Jymin.match[1] : 0
+Cute.unescape = function (value) {
+  return decodeURIComponent('' + value)
 }
 /**
- * Set or reset a timeout or interval, and save it for possible cancellation.
+ * Set or clear a timeout or interval. If set, save it for possible clearing.
  * The timer can either be added to the setTimer method itself, or it can
  * be added to an object provided (such as an HTMLElement).
  *
@@ -2018,78 +1803,40 @@ Jymin.getBrowserVersionOrZero = function (browserName) {
  * @param {Function}      fn              A function to run if the timer is reached.
  * @param {Integer}       delay           An optional delay in milliseconds.
  */
-Jymin.setTimer = function (objectOrString, fn, delay, isInterval) {
-  var useString = Jymin.isString(objectOrString)
-  var object = useString ? Jymin.setTimer : objectOrString
+Cute.timer = function (objectOrString, fn, delay, isInterval) {
+  var useString = Cute.isString(objectOrString)
+  var object = useString ? Cute.timer : objectOrString
   var key = useString ? objectOrString : '_timeout'
   clearTimeout(object[key])
   if (fn) {
-    if (Jymin.isUndefined(delay)) {
+    if (Cute.isUndefined(delay)) {
       delay = 9
     }
     object[key] = (isInterval ? setInterval : setTimeout)(fn, delay)
   }
 }
 
-/**
- * Remove a timer from an element or from the Jymin.setTimer method.
- *
- * @param {Object|String} objectOrString  An object or a timer name.
- */
-Jymin.clearTimer = function (objectOrString) {
-  Jymin.setTimer(objectOrString)
-}
+Cute.times = {}
 
-/**
- * Throttle a function by preventing it from being called again soon.
- *
- * @param {Function}        fn            The function to throttle.
- * @param {Array|Arguments} args          Arguments to pass to the function.
- * @param {Number}          milliseconds  Number of milliseconds to throttle.
- */
-Jymin.throttle = function (fn, args, milliseconds) {
-  if (Jymin.isNumber(args)) {
-    milliseconds = args
-    args = []
-  }
-  milliseconds = milliseconds || 9
-  var now = Jymin.getTime()
-  var until = fn._throttleUntil || now
-  if (until <= now) {
-    fn.apply(fn, args)
-  }
-  fn._throttleUntil = now + milliseconds
-}
-
-Jymin.times = {}
-
-Jymin.now = function () {
+Cute.now = function () {
   var perf = window.performance
   return perf && perf.now ? perf.now() : Date.now()
 }
 
-Jymin.startTime = function (label) {
-  Jymin.times[label] = Jymin.getTime()
+Cute.startTime = function (label) {
+  Cute.times[label] = Cute.now()
 }
 
-Jymin.endTime = function (label) {
-  Jymin.times[label] = Jymin.getTime() - Jymin.times[label]
+Cute.endTime = function (label) {
+  Cute.times[label] = Cute.now() - Cute.times[label]
 }
 
-Jymin.beamTimes = function (label) {
+Cute.beamTimes = function (label) {
   var times = []
-  Jymin.each(Jymin.times, function (value, key) {
-    times.push(key + ' ' + value + 'ms')
+  Cute.each(Cute.times, function (value, key) {
+    times.push(key + ' ' + value.toFixed(3) + 'ms')
   })
   Beams.log(times.join(', '))
-}
-
-Jymin.logTimes = function (label) {
-  var times = []
-  Jymin.each(Jymin.times, function (value, key) {
-    times.push(key + ' ' + value + 'ms')
-  })
-  console.log(times.join(', '))
 }
 /**
  * Check whether a value is undefined.
@@ -2097,7 +1844,7 @@ Jymin.logTimes = function (label) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is undefined.
  */
-Jymin.isUndefined = function (value) {
+Cute.isUndefined = function (value) {
   return typeof value === 'undefined'
 }
 
@@ -2107,7 +1854,7 @@ Jymin.isUndefined = function (value) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is a boolean.
  */
-Jymin.isBoolean = function (value) {
+Cute.isBoolean = function (value) {
   return typeof value === 'boolean'
 }
 
@@ -2117,7 +1864,7 @@ Jymin.isBoolean = function (value) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is a number.
  */
-Jymin.isNumber = function (value) {
+Cute.isNumber = function (value) {
   return typeof value === 'number'
 }
 
@@ -2127,7 +1874,7 @@ Jymin.isNumber = function (value) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is a string.
  */
-Jymin.isString = function (value) {
+Cute.isString = function (value) {
   return typeof value === 'string'
 }
 
@@ -2137,7 +1884,7 @@ Jymin.isString = function (value) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is a function.
  */
-Jymin.isFunction = function (value) {
+Cute.isFunction = function (value) {
   return typeof value === 'function'
 }
 
@@ -2147,7 +1894,7 @@ Jymin.isFunction = function (value) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is an object.
  */
-Jymin.isObject = function (value) {
+Cute.isObject = function (value) {
   return typeof value === 'object'
 }
 
@@ -2157,19 +1904,8 @@ Jymin.isObject = function (value) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is null.
  */
-Jymin.isNull = function (value) {
+Cute.isNull = function (value) {
   return value === null
-}
-
-/**
- * Check whether a value is an instance of a given type.
- *
- * @param  {Any}      value        A value to check.
- * @param  {Function} Constructor  A constructor for a type of object.
- * @return {boolean}               True if the value is an instance of a given type.
- */
-Jymin.isInstance = function (value, Constructor) {
-  return value instanceof Constructor
 }
 
 /**
@@ -2178,8 +1914,8 @@ Jymin.isInstance = function (value, Constructor) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is an array.
  */
-Jymin.isArray = function (value) {
-  return Jymin.isInstance(value, Array)
+Cute.isArray = function (value) {
+  return value instanceof Array
 }
 
 /**
@@ -2188,64 +1924,6 @@ Jymin.isArray = function (value) {
  * @param  {Any}     value  A value to check.
  * @return {boolean}        True if the value is a date.
  */
-Jymin.isDate = function (value) {
-  return Jymin.isInstance(value, Date)
-}
-
-/**
- * Check whether a value is an error.
- *
- * @param  {Any}     value  A value to check.
- * @return {boolean}        True if the value is an error.
- */
-Jymin.isError = function (value) {
-  return Jymin.isInstance(value, Error)
-}
-
-/**
- * Check whether a value is a regular expression.
- *
- * @param  {Any}     value  A value to check.
- * @return {boolean}        True if the value is a regular expression.
- */
-Jymin.isRegExp = function (value) {
-  return Jymin.isInstance(value, RegExp)
-}
-/**
- * Get the current location host.
- */
-Jymin.getHost = function () {
-  return location.host
-}
-
-/**
- * Get the base of the current URL.
- */
-Jymin.getBaseUrl = function () {
-  return location.protocol + '//' + Jymin.getHost()
-}
-
-/**
- * Get the query parameters from a URL.
- */
-Jymin.getQueryParams = function (url) {
-  url = url || location.href
-  var query = url.substr(url.indexOf('?') + 1).split('#')[0]
-  var pairs = query.split('&')
-  query = {}
-  Jymin.each(pairs, function (pair) {
-    var eqPos = pair.indexOf('=')
-    var name = pair.substr(0, eqPos)
-    var value = pair.substr(eqPos + 1)
-    query[name] = value
-  })
-  return query
-}
-
-/**
- * Get the query parameters from the hash of a URL.
- */
-Jymin.getHashParams = function (hash) {
-  hash = (hash || location.hash).replace(/^#/, '')
-  return hash ? Jymin.getQueryParams(hash) : {}
+Cute.isDate = function (value) {
+  return value instanceof Date
 }

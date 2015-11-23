@@ -6,6 +6,6 @@
  * @param  {Arguments|Array} args        An arguments object or array to apply to the method.
  * @return {Object}                      The result returned by the object method.
  */
-Jymin.apply = function (object, methodName, args) {
-  return ((object || 0)[methodName] || Jymin.no).apply(object, args)
+Cute.apply = function (object, methodName, args) {
+  return ((object || 0)[methodName] || Cute.no).apply(object, args)
 }
