@@ -16,4 +16,5 @@ results
 coverage
 node_modules
 build
-cute.min.js
+cute.js
+cute.compat.js
