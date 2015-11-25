@@ -1,3 +1,5 @@
+/* global Cute */
+
 /**
  * Get an element by its ID (if the argument is an ID).
  * If you pass in an element, it just returns it.
@@ -420,12 +422,12 @@ Cute.pushHtml = function (html, selector) {
   // Set the HTML of an element.
   return Cute.all(selector, function (element) {
 
-    Cute.startTime('virtual')
+    Cute.start('virtual')
     var virtualDom = Cute.create('m', content)
-    Cute.endTime('virtual')
-    Cute.startTime('diff')
+    Cute.end('virtual')
+    Cute.start('diff')
     Cute.diffDom(element, virtualDom)
-    Cute.endTime('diff')
+    Cute.end('diff')
     Cute.isReady(element, 1)
 
     Cute.timer(function () {

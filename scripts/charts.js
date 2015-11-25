@@ -1,3 +1,5 @@
+/* global Cute */
+
 /**
  * Get 100 consistent colors for charting.
  * These colors are designed to maximize visual distance.

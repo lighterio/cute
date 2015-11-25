@@ -1,3 +1,5 @@
+/* global Cute */
+
 /**
  * Event Handlers
  * @type {Object}

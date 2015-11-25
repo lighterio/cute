@@ -1,3 +1,5 @@
+/* global Cute */
+
 /**
  * Read cookies, and optionally get or set one.
  *
@@ -7,7 +9,6 @@
  * @return {Object}          A cookie, or a map of cookie names and values.
  */
 Cute.cookie = function (name, value, options) {
-
   // Build a map of key-value pairs of all cookies.
   var result = {}
   var list = Cute.trim(document.cookie)
@@ -21,9 +22,8 @@ Cute.cookie = function (name, value, options) {
 
   // If a cookie is named, get or set it.
   if (name) {
-
     // If no value is provided, return the existing value.
-    if (Cute.isUndefined) {
+    if (Cute.isUndefined(value)) {
       result = result[name]
 
     // If a value is provided, set the cookie to that value.
@@ -39,15 +39,14 @@ Cute.cookie = function (name, value, options) {
       var ttl = (value === null) ? -1 : options.ttl
       var expires = ttl ? new Date(Date.now() + ttl) : 0
 
-      document.cookie = pair
-        + (path ? ';path=' + path : '')
-        + (domain ? ';domain=' + domain : '')
-        + (expires ? ';expires=' + expires.toUTCString() : '')
-        + (secure ? ';secure' : '')
+      document.cookie = pair +
+        (path ? ';path=' + path : '') +
+        (domain ? ';domain=' + domain : '') +
+        (expires ? ';expires=' + expires.toUTCString() : '') +
+        (secure ? ';secure' : '')
 
       result = value
     }
-
   }
   return result
 }

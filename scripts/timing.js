@@ -1,3 +1,5 @@
+/* global Cute */
+
 /**
  * Set or clear a timeout or interval. If set, save it for possible clearing.
  * The timer can either be added to the setTimer method itself, or it can
@@ -27,11 +29,11 @@ Cute.now = function () {
   return perf && perf.now ? perf.now() : Date.now()
 }
 
-Cute.startTime = function (label) {
+Cute.start = function (label) {
   Cute.times[label] = Cute.now()
 }
 
-Cute.endTime = function (label) {
+Cute.end = function (label) {
   Cute.times[label] = Cute.now() - Cute.times[label]
 }
 

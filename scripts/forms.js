@@ -1,3 +1,5 @@
+/* global Cute */
+
 /**
  * Get or set the value of a form element.
  *

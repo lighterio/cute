@@ -1,3 +1,5 @@
+/* global Cute */
+
 /**
  * Get Unix epoch milliseconds from a date.
  *

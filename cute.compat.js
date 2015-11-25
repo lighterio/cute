@@ -67,8 +67,10 @@ Cute.no = function () {}
 Cute.xhr = function () {
   var xhr
 
+  xhr = window.XMLHttpRequest ? new XMLHttpRequest()
+    : window.ActiveXObject ? new ActiveXObject('Microsoft.XMLHTTP')
+    : 0
 
-  xhr = new XMLHttpRequest()
 
   return xhr
 }
@@ -96,6 +98,10 @@ Cute.get = function (url, data, fn) {
     data = 0
   }
   var request = Cute.xhr()
+
+  if (!request) {
+    return 0
+  }
 
   request.onreadystatechange = function () {
     if (request.readyState === 4) {
@@ -501,8 +507,13 @@ Cute.getTime = function (date) {
 Cute.getIsoDate = function (date) {
   date = date || new Date()
 
-  date = date.toISOString()
 
+  var utcPattern = /^.*?(\d+) (\w+) (\d+) ([\d:]+).*?$/
+  date = date.toUTCString().replace(utcPattern, function (a, day, m, y, t) {
+    m = Cute.zeroFill(date.getMonth(), 2)
+    t += '.' + Cute.zeroFill(date.getMilliseconds(), 3)
+    return y + '-' + m + '-' + day + 'T' + t + 'Z'
+  })
 
   return date
 }
@@ -905,8 +916,47 @@ Cute.all = function (parent, selector, fn) {
   }
   var elements
 
+  elements = []
+  if (Cute.contains(selector, ',')) {
+    Cute.each(selector, function (selector) {
+      Cute.all(parent, selector, function (element) {
+        elements.push(element)
+      })
+    })
+  } else if (Cute.contains(selector, ' ')) {
+    var pos = selector.indexOf(' ')
+    var preSelector = selector.substr(0, pos)
+    var postSelector = selector.substr(pos + 1)
+    elements = []
+    Cute.all(parent, preSelector, function (element) {
+      var children = Cute.all(element, postSelector)
+      Cute.merge(elements, children)
+    })
+  } else if (selector[0] === '#') {
+    var id = selector.substr(1)
+    var child = Cute.byId(parent.ownerDocument || document, id)
+    if (child) {
+      var up = Cute.parent(child)
+      while (up) {
+        if (up === parent) {
+          elements = [child]
+          break
+        }
+        up = Cute.parent(up)
+      }
+    }
+  } else {
+    selector = selector.split('.')
+    var tagName = selector[0]
+    var className = selector[1]
+    var tagElements = parent.getElementsByTagName(tagName)
+    Cute.each(tagElements, function (element) {
+      if (!className || Cute.classes(element, className)) {
+        elements.push(element)
+      }
+    })
+  }
 
-  elements = parent.querySelectorAll(selector)
 
   if (fn) {
     Cute.each(elements, fn)
@@ -930,8 +980,8 @@ Cute.one = function (parent, selector, fn) {
   }
   var element
 
+  element = Cute.all(parent, selector)[0]
 
-  element = parent.querySelector(selector)
 
   if (element && fn) {
     fn(element)
@@ -1440,8 +1490,8 @@ Cute.safeStringify = function (data, quote, stack) {
  * Create a JSON string.
  */
 
+Cute.stringify = Cute.safeStringify
 
-Cute.stringify = JSON.stringify
 
 
 /**
@@ -1595,8 +1645,12 @@ Cute.scrollToAnchor = function (name) {
   var offset = 0
   var element
 
+  Cute.all('a', function (anchor) {
+    if (anchor.name === name) {
+      element = anchor
+    }
+  })
 
-  element = Cute.all('a[name=' + name + ']')[0]
 
   while (element) {
     offset += element.offsetTop || 0

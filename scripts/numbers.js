@@ -1,8 +1,10 @@
+/* global Cute */
+
 /**
  * If the argument is numeric, return a number, otherwise return zero.
  *
  * @param  {Object} number  An object to convert to a number, if necessary.
- * @return {number}         The number, or zero.
+ * @return {Number}         The number, or zero.
  */
 Cute.ensureNumber = function (number) {
   return isNaN(number *= 1) ? 0 : number
@@ -11,8 +13,8 @@ Cute.ensureNumber = function (number) {
 /**
  * Left-pad a number with zeros if it's shorter than the desired length.
  *
- * @param  {number} number  A number to pad.
- * @param  {number} length  A length to pad to.
+ * @param  {Number} number  A number to pad.
+ * @param  {Number} length  A length to pad to.
  * @return {String}         The zero-padded number.
  */
 Cute.zeroFill = function (number, length) {

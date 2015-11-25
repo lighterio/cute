@@ -1,3 +1,5 @@
+/* global Cute */
+
 // When not in debug mode, make the logging functions do nothing.
 Cute.error = Cute.no
 Cute.warn = Cute.no
@@ -5,7 +7,7 @@ Cute.info = Cute.no
 Cute.log = Cute.no
 Cute.trace = Cute.no
 
-//+env:debug
+// +env:debug
 
 /**
  * Log values to the console, if it's available.
@@ -52,4 +54,4 @@ Cute.ifConsole = function (method, args) {
   }
 }
 
-//-env:debug
+// -env:debug

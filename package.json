@@ -1,25 +1,40 @@
 {
   "name": "cute",
   "version": "0.0.1",
-  "description": "Minifier-friendly JavaScript built for speed and usefulness.",
+  "description": "Minifier-friendly JavaScript built for speed and power.",
   "dependencies": {},
   "devDependencies": {
-    "exam": ">=1.3.0 <2",
     "chug": ">=0.4.1",
-    "figlet": "1.0.9"
+    "exam": ">=1.3.0 <2",
+    "figlet": "1.0.9",
+    "jsdom": "^7.0.2"
   },
   "keywords": [
     "cute",
+    "jymin",
     "javascript",
     "you",
     "minify",
     "fast",
     "minifiable",
+    "lightweight",
+    "speed",
+    "power",
+    "uglify",
+    "closure",
+    "compiler",
     "jquery",
     "zepto",
-    "alternative"
+    "alternative",
+    "angular",
+    "react",
+    "ember",
+    "frontend",
+    "ui",
+    "ux",
+    "lodash"
   ],
-  "main": "cute.node.js",
+  "main": "cute.js",
   "engines": {
     "node": ">=0.8.28"
   },

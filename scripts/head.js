@@ -1,3 +1,5 @@
+/* global Cute */
+
 /**
  * Get the head element from the document.
  */
@@ -18,7 +20,7 @@ Cute.getBody = function () {
  * Insert an external JavaScript file.
  *
  * @param  {String}   src  A source URL of a script to insert.
- * @param  {function} fn   An optional function to run when the script loads.
+ * @param  {Function} fn   An optional function to run when the script loads.
  */
 Cute.js = function (src, fn) {
   var head = Cute.getHead()

@@ -1,3 +1,5 @@
+/* global Cute */
+
 /**
  * Create a circular-safe JSON string.
  */
@@ -46,12 +48,12 @@ Cute.safeStringify = function (data, quote, stack) {
 /**
  * Create a JSON string.
  */
-//+browser:old
+// +browser:old
 Cute.stringify = Cute.safeStringify
-//-browser:old
-//+browser:ok
+// -browser:old
+// +browser:ok
 Cute.stringify = JSON.stringify
-//-browser:ok
+// -browser:ok
 
 /**
  * Create a JSON-ish string.
@@ -65,13 +67,14 @@ Cute.attrify = function (data) {
  */
 Cute.parse = function (value, alternative) {
   try {
-    var evil = window.eval; // jshint ignore:line
-    evil('eval.J=' + value)
-    value = evil.J
+    /* eslint-disable */
+    eval('eval.J=' + value)
+    /* eslint-enable */
+    value = eval.J
   } catch (e) {
-    //+env:debug
+    // +env:debug
     Cute.error('[Cute] Could not parse JS: ' + value)
-    //-env:debug
+    // -env:debug
     value = alternative
   }
   return value

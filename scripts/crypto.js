@@ -1,3 +1,5 @@
+/* global Cute */
+
 /**
  * Calculate an MD5 hash for a string (useful for things like Gravatars).
  *
@@ -5,7 +7,6 @@
  * @return {String}    The MD5 hash for the given string.
  */
 Cute.md5 = function (str) {
-
   // Encode as UTF-8.
   str = decodeURIComponent(encodeURIComponent(str))
 
@@ -166,5 +167,4 @@ Cute.md5 = function (str) {
   function ii (a, b, c, d, x, s, t) {
     return cmn(c ^ (b | (~d)), a, b, x, s, t)
   }
-
 }

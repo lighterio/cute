@@ -1,3 +1,5 @@
+/* global Cute */
+
 /**
  * Check whether a value is undefined.
  *

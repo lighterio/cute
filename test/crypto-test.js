@@ -1,19 +1,26 @@
-describe('Cute.md5', function () {
+'use strict'
+/* global describe it */
+var bench = global.bench || require('exam/lib/bench')
+var is = global.is || require('exam/lib/is')
+var crypto = require('crypto')
+var Cute = require('../cute')
 
-  var crypto = require('crypto')
+describe('Cute', function () {
   var json = JSON.stringify(JSON.stringify(this.fn.toString()))
-  var md5 = function (text) {
-    return crypto.createHash('md5').update(text).digest('hex')
-  }
 
-  it('hashes strings', function () {
-    is(Cute.md5('hello'), md5('hello'))
-    is(Cute.md5('WTF!?'), md5('WTF!?'))
-    is(Cute.md5(json), md5(json))
+  describe('.md5', function () {
+    var md5 = function (text) {
+      return crypto.createHash('md5').update(text).digest('hex')
+    }
+
+    it('hashes strings', function () {
+      is(Cute.md5('hello'), md5('hello'))
+      is(Cute.md5('WTF!?'), md5('WTF!?'))
+      is(Cute.md5(json), md5(json))
+    })
   })
 
-  bench('Benchmark', function () {
-
+  bench('.md5', function () {
     var a, b
 
     it('Cute', function () {
@@ -25,7 +32,5 @@ describe('Cute.md5', function () {
     })
 
     is(a, b)
-
   })
-
 })
