@@ -263,26 +263,30 @@ Cute.merge = function (array) {
  *
  * @param  {String} name     An optional cookie name to get or set. If not provided, return a map.
  * @param  {Object} value    A value to be set as a string, or null if the cookie is to be deleted.
- * @param  {Object} options  Optional cookie settings, including "ttl", "expires", "path", "domain" and "secure".
+ * @param  {Object} options  Optional cookie settings, including "maxAge", "expires", "path", "domain" and "secure".
  * @return {Object}          A cookie, or a map of cookie names and values.
  */
 Cute.cookie = function (name, value, options) {
-  // Build a map of key-value pairs of all cookies.
-  var result = {}
-  var list = Cute.trim(document.cookie)
-  if (list) {
-    var cookies = list.split(/\s*;\s*/)
-    Cute.each(cookies, function (cookie) {
-      var pair = cookie.split(/\s*=\s*/)
-      result[Cute.unescape(pair[0])] = Cute.unescape(pair[1])
-    })
+  // Initialize a cookie map.
+  var map = Cute.cookie.map
+  if (!map) {
+    map = Cute.cookie.map = {}
+    var parts = document.cookie.split(/; |=/)
+    for (var i = 0, l = parts.length; i < l; i++) {
+      map[Cute.unescape(parts[i])] = Cute.unescape(parts[++i])
+    }
+    alert(map)
   }
 
-  // If a cookie is named, get or set it.
-  if (name) {
+  // If no cookie is named, return the map.
+  if (!name) {
+    value = map
+
+  // Otherwise, get or set one.
+  } else {
     // If no value is provided, return the existing value.
     if (Cute.isUndefined(value)) {
-      result = result[name]
+      value = map[name]
 
     // If a value is provided, set the cookie to that value.
     } else {
@@ -294,8 +298,8 @@ Cute.cookie = function (name, value, options) {
       var secure = options.secure
 
       // If the value is null, expire it as of one millisecond ago.
-      var ttl = (value === null) ? -1 : options.ttl
-      var expires = ttl ? new Date(Date.now() + ttl) : 0
+      var maxAge = (value === null) ? -1 : options.maxAge
+      var expires = maxAge ? new Date(Date.now() + maxAge) : 0
 
       document.cookie = pair +
         (path ? ';path=' + path : '') +
@@ -303,10 +307,10 @@ Cute.cookie = function (name, value, options) {
         (expires ? ';expires=' + expires.toUTCString() : '') +
         (secure ? ';secure' : '')
 
-      result = value
+      map[name] = value
     }
   }
-  return result
+  return value
 }
 
 /* global Cute */

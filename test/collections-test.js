@@ -1,6 +1,6 @@
 'use strict'
 /* global describe it */
-var is = global.is || require('exam/lib/is')
+var is = global.is || require('exam-is')
 var Cute = require('../cute')
 
 describe('Cute', function () {
@@ -99,6 +99,29 @@ describe('Cute', function () {
         return n !== 1
       })
       is.same(x, {a: 0, c: 2})
+    })
+  })
+
+  describe('.merge', function () {
+    it('leaves one array alone', function () {
+      var a = [1, 2, 3]
+      a = Cute.merge(a)
+      is.same(a, [1, 2, 3])
+    })
+
+    it('merges a second array into the first', function () {
+      var a = [1, 2, 3]
+      var b = [4, 5]
+      Cute.merge(a, b)
+      is.same(a, [1, 2, 3, 4, 5])
+    })
+
+    it('merges many arrays into the first', function () {
+      var a = ['a', 'b', 'c']
+      var b = ['easy', 'as']
+      var c = [1, 2, 3]
+      Cute.merge(a, b, c)
+      is.same(a, ['a', 'b', 'c', 'easy', 'as', 1, 2, 3])
     })
   })
 })

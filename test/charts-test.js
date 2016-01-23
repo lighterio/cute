@@ -1,6 +1,6 @@
 'use strict'
 /* global describe it */
-var is = global.is || require('exam/lib/is')
+var is = global.is || require('exam-is')
 var Cute = require('../cute')
 
 describe('Cute', function () {

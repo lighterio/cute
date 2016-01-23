@@ -1,8 +1,6 @@
 'use strict'
 /* global describe it */
-var is = global.is || require('exam/lib/is')
-var mock = global.mock || require('exam/lib/mock')
-var unmock = mock.unmock()
+var is = global.is || require('exam-is')
 var jsdom = require('jsdom')
 var Cute = require('../cute')
 var http = require('http')
