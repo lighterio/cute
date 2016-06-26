@@ -1,13 +1,24 @@
 /* global Cute */
 
 /**
+ * Returns a Date object.
+ *
+ * @param {Date|Number|String}  date  An optional Date or Date constructor
+ *                                    argument (default: now).
+ * @return {Date}                     A Date object.
+ */
+Cute.getDate = function (date) {
+  return Cute.isDate(date) ? date : date ? new Date(date) : new Date()
+}
+
+/**
  * Get Unix epoch milliseconds from a date.
  *
  * @param {Date}    date  An optional Date object (default: now).
  * @return {Number}       Epoch milliseconds.
  */
 Cute.getTime = function (date) {
-  return date ? date.getTime() : Date.now()
+  return date ? Cute.getDate(date).getTime() : Date.now()
 }
 
 /**
@@ -17,7 +28,7 @@ Cute.getTime = function (date) {
  * @return {String}       ISO date string.
  */
 Cute.getIsoDate = function (date) {
-  date = date || new Date()
+  date = Cute.getDate(date)
   //+browser:ok
   date = date.toISOString()
   //-browser:ok
@@ -37,65 +48,70 @@ Cute.getIsoDate = function (date) {
  * - Short: "8/26/14 7:42pm"
  * - Long: "August 26, 2014 at 7:42pm"
  *
- * @param  {Object}  date    An optional Date object or constructor argument.
- * @param  {Boolean} isLong  Whether to output the short or long format.
- * @param  {Boolean} isTime  Whether to append the time.
- * @return {String}          The formatted date string.
+ * @param  {Object}  date         An optional Date object or argument for the
+ *                                Date constructor.
+ * @param  {Boolean} isLong       Whether to output the short or long format.
+ * @param  {Boolean} includeTime  Whether to append the time.
+ * @return {String}               The formatted date string.
  */
-Cute.formatDate = function (date, isLong, isTime) {
-  if (!Cute.isDate(date)) {
-    date = new Date(+date || date)
-  }
-  var m = date.getMonth()
+Cute.formatDate = function (date, isLong, includeTime) {
+  date = Cute.getDate(date)
+  var month = date.getMonth()
   var day = date.getDate()
-  var y = date.getFullYear()
+  var year = date.getFullYear()
   if (isLong) {
-    m = Cute.i18nMonths[m]
+    month = Cute.i18n.months[month]
   } else {
-    m++
-    y = ('' + y).substr(2)
-  }
-  var isAm = 1
-  var hour = +date.getHours()
-  var minute = date.getMinutes()
-  minute = minute > 9 ? minute : '0' + minute
-  if (!Cute.i18n24Hour) {
-    if (hour > 12) {
-      isAm = 0
-      hour -= 12
-    } else if (!hour) {
-      hour = 12
-    }
+    month++
+    year = ('' + year).substr(2)
   }
   var string
-  if (Cute.i18nDayMonthYear) {
-    string = m
-    m = day
+  if (!Cute.i18n.monthDay) {
+    string = month
+    month = day
     day = string
   }
   if (isLong) {
-    string = m + ' ' + day + ', ' + y
+    string = month + ' ' + day + ', ' + year
   } else {
-    string = m + '/' + day + '/' + y
+    string = month + '/' + day + '/' + year
   }
-  if (isTime) {
+  if (includeTime) {
     if (isLong) {
-      string += ' ' + Cute.i18nAt
+      string += ' ' + Cute.i18n.at
     }
-    string += ' ' + hour + ':' + minute
-    if (Cute.i18n24Hour) {
-      string += (isAm ? 'am' : 'pm')
-    }
+    string += ' ' + Cute.formatTime(date)
   }
   return string
 }
 
 /**
- * Taka a date object and return a formatted time string.
+ * Take a date object and return a formatted time string.
  *
  * @param  {Object}  date    An optional Date object or constructor argument.
- * @return {[type]}
+ * @return {String}          A formatted time value.
  */
 Cute.formatTime = function (date) {
-  date = Cute.formatDate(date).replace(/^.* /, '')
+  date = Cute.getDate(date)
+  var hour = +date.getHours()
+  var minute = +date.getMinutes()
+  var isAm = 1
+  minute = minute > 9 ? minute : '0' + minute
+  if (Cute.i18n.twelveHour) {
+    if (hour > 11) {
+      isAm = 0
+      if (hour > 12) {
+        hour -= 12
+      }
+    } else if (!hour) {
+      hour = 12
+    }
+  } else {
+    hour = hour > 9 ? hour : '0' + hour
+  }
+  var string = hour + ':' + minute
+  if (Cute.i18n.twelveHour) {
+    string += (isAm ? 'am' : 'pm')
+  }
+  return string
 }

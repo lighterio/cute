@@ -17,7 +17,6 @@ Cute.cookie = function (name, value, options) {
     for (var i = 0, l = parts.length; i < l; i++) {
       map[Cute.unescape(parts[i])] = Cute.unescape(parts[++i])
     }
-    alert(map)
   }
 
   // If no cookie is named, return the map.

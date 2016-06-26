@@ -9,6 +9,7 @@ describe('Cute', function () {
       var colors = Cute.colors()
       is.array(colors)
     })
+
     it('returns from cache the 2nd time', function () {
       var cached = Cute.colors()
       var colors = Cute.colors()

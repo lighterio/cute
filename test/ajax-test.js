@@ -48,7 +48,7 @@ function domTests (window) {
   })
 
   describe('.get', function () {
-    it('gets json', function (done) {
+    it('gets JSON', function (done) {
       Cute.get(host + '/ok.json', function (json, status) {
         is(json.method, 'GET')
         is(status, 200)

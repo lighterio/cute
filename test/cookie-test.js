@@ -18,7 +18,7 @@ describe('Cute', function () {
         user: '1234',
         lang: 'en-US'
       })
-      unmock()
+      unmock(document)
     })
 
     it('parses a cookie by name', function () {
@@ -29,7 +29,7 @@ describe('Cute', function () {
       })
       var user = Cute.cookie('user')
       is(user, '1234')
-      unmock()
+      unmock(document)
     })
 
     it('sets a cookie', function () {
@@ -42,7 +42,38 @@ describe('Cute', function () {
       is(lang, 'fr-FR')
       lang = Cute.cookie('lang')
       is(lang, 'fr-FR')
-      unmock()
+      unmock(document)
+    })
+
+    it('unsets a cookie', function () {
+      mock(global, {
+        document: {
+          cookie: 'user: 1234; lang: en-US'
+        }
+      })
+      var lang = Cute.cookie('lang', null)
+      lang = Cute.cookie('lang')
+      is(lang, null)
+      unmock(document)
+    })
+
+    it('sets a cookie with a options', function () {
+      mock(global, {
+        document: {
+          cookie: ''
+        }
+      })
+      var lang = Cute.cookie('lang', 'en-US', {
+        path: '/',
+        domain: 'lighter.io',
+        secure: true,
+        maxAge: 1e4
+      })
+      var soon = new Date(Date.now() + 1e4).toUTCString()
+      lang = Cute.cookie('lang')
+      is(lang, 'en-US')
+      is(document.cookie, 'lang=en-US;path=/;domain=lighter.io;expires=' + soon + ';secure')
+      unmock(document)
     })
   })
 })

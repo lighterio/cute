@@ -5,35 +5,22 @@
  * The default locale is US. Sorry, World.
  */
 
-/**
- * Month names in English.
- * @type {Array}
- */
-Cute.i18nMonths = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-]
+Cute.i18n = {
+  // Names of months.
+  months: [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ],
 
-/**
- * The word "at" in English (for separating date & time).
- * @type {String}
- */
-Cute.i18nAt = 'at'
+  // A word for separating date & time in long format.
+  at: 'at',
 
-/**
- * Whether to show dates in DD/MM/YYYY format.
- * @type {Booly}
- */
-Cute.i18nDayMonthYear = 0
+  // Whether to use American-style MM/DD/YY.
+  monthDay: 1,
 
-/**
- * Whether to show times in 24-hour format.
- * @type {Booly}
- */
-Cute.i18n24Hour = 0
+  // Whether to use 12-hour instead of 24-hour times.
+  twelveHour: 1,
 
-/**
- * Why oh why did I have to learn different units than the rest of the world?
- * @type {String}
- */
-Cute.i18nTemperature = 'F'
+  // Whether to use Fahrenheit.
+  fahrenheit: 1
+}
