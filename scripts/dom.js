@@ -9,7 +9,7 @@
  * @param  {string|HTMLElement} idOrElement    ID of an element, or the element itself.
  * @return {HTMLElement}                       The matching element, or undefined.
  */
-Cute.byId = function (parent, idOrElement) {
+Cute.id = function (parent, idOrElement) {
   if (!idOrElement) {
     idOrElement = parent
     parent = document
@@ -43,7 +43,7 @@ Cute.parent = function (element, parent, before) {
  */
 Cute.up = function (element, selector) {
   var ancestors = []
-  while (element = Cute.parent(element)) { // jshint ignore:line
+  while (element = Cute.parent(element)) { // eslint-disable-line
     ancestors.push(element)
   }
   ancestors = Cute.filter(ancestors, function (element) {
@@ -86,10 +86,9 @@ Cute.index = function (element) {
  * Each part of the identifier is optional.
  *
  * @param  {HTMLElement|String} elementOrString  An element or a string used to create an element (default: div).
- * @param  {String}             innerHtml        An optional string of HTML to populate the element.
  * @return {HTMLElement}                         The existing or created element.
  */
-Cute.create = function (elementOrString, innerHtml) {
+Cute.create = function (elementOrString) {
   var element = elementOrString
   if (Cute.isString(elementOrString)) {
     var tagAndAttributes = elementOrString.split('?')
@@ -119,53 +118,34 @@ Cute.create = function (elementOrString, innerHtml) {
         Cute.attr(element, key, value)
       })
     }
-    if (innerHtml) {
-      Cute.html(element, innerHtml)
-    }
   }
   return element
 }
 
 /**
- * Add an element to a parent element, creating it first if necessary.
+ * Add a child element under a parent element, optionally before another element.
  *
- * @param  {HTMLElement}        parent    An optional parent element (default: document).
- * @param  {HTMLElement|String} elementOrString  An element or a string used to create an element (default: div).
- * @param  {String}             innerHtml        An optional string of HTML to populate the element.
- * @return {HTMLElement}                         The element that was added.
- */
-Cute.add = function (parent, elementOrString, innerHtml) {
-  if (Cute.isString(parent)) {
-    elementOrString = parent
-    parent = document.body
-  }
-  var element = Cute.create(elementOrString, innerHtml)
-  parent.appendChild(element)
-  return element
-}
-
-/**
- * Insert a child element under a parent element, optionally before another element.
- *
- * @param  {HTMLElement}         parent    An optional parent element (default: document).
+ * @param  {HTMLElement}         parent           An optional parent element (default: document).
  * @param  {HTMLElement|String}  elementOrString  An element or a string used to create an element (default: div).
  * @param  {HTMLElement}         beforeSibling    An optional child to insert the element before.
  * @return {HTMLElement}                          The element that was inserted.
  */
-Cute.insert = function (parent, elementOrString, beforeSibling) {
+Cute.add = function (parent, elementOrString, beforeSibling) {
   if (Cute.isString(parent)) {
     beforeSibling = elementOrString
     elementOrString = parent
     parent = document.body
   }
   var element = Cute.create(elementOrString)
-  if (parent) {
-    // If the beforeSibling value is a number, get the (future) sibling at that index.
-    if (Cute.isNumber(beforeSibling)) {
-      beforeSibling = Cute.children(parent)[beforeSibling]
-    }
-    // Insert the element, optionally before an existing sibling.
-    parent.insertBefore(element, beforeSibling || parent.firstChild || null)
+  // If the beforeSibling value is a number, get the (future) sibling at that index.
+  if (Cute.isNumber(beforeSibling)) {
+    beforeSibling = Cute.children(parent)[beforeSibling]
+  }
+  // Insert the element, optionally before an existing sibling.
+  if (beforeSibling) {
+    parent.insertBefore(element, beforeSibling)
+  } else {
+    parent.appendChild(element)
   }
   return element
 }
@@ -176,12 +156,10 @@ Cute.insert = function (parent, elementOrString, beforeSibling) {
  * @param  {HTMLElement} element  An element to remove.
  */
 Cute.remove = function (element) {
-  if (element) {
-    // Remove the element from its parent, provided that it has a parent.
-    var parent = Cute.parent(element)
-    if (parent) {
-      parent.removeChild(element)
-    }
+  // Remove the element from its parent, provided that it has a parent.
+  var parent = Cute.parent(element)
+  if (parent) {
+    parent.removeChild(element)
   }
 }
 
@@ -220,6 +198,7 @@ Cute.text = function (element, text) {
     Cute.html(element, '')
     Cute.addText(element, text)
   }
+  // Get the full text, but fall back to visible text for older browsers.
   return element.textContent || element.innerText
 }
 
@@ -346,7 +325,7 @@ Cute.all = function (parent, selector, fn) {
     })
   } else if (selector[0] === '#') {
     var id = selector.substr(1)
-    var child = Cute.byId(parent.ownerDocument || document, id)
+    var child = Cute.id(parent.ownerDocument || document, id)
     if (child) {
       var up = Cute.parent(child)
       while (up) {

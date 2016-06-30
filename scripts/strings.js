@@ -11,7 +11,7 @@ Cute.contains = function (string, substring) {
  * Return true if the string starts with the given substring.
  */
 Cute.startsWith = function (string, substring) {
-  return ('' + string).indexOf(substring) === 0; // jshint ignore:line
+  return ('' + string).indexOf(substring) === 0; // eslint-disable-line
 }
 
 /**

@@ -2,7 +2,9 @@
   "name": "cute",
   "version": "0.0.1",
   "description": "Minifier-friendly JavaScript built for speed and power.",
-  "dependencies": {},
+  "dependencies": {
+    "jsdom": "^7.2.2"
+  },
   "devDependencies": {
     "chug": ">=0.4.1",
     "exam": ">=1.3.0 <2",

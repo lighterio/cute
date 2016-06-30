@@ -1,13 +1,14 @@
 'use strict'
-/* global describe it */
+/* global describe it after */
 var is = global.is || require('exam-is')
 var jsdom = require('jsdom')
 var Cute = require('../cute')
 var http = require('http')
 var port = 15478
-var host = 'http://localhost:' + port
+var host = 'http://127.0.0.1:' + port
 
-http.createServer(function (request, response) {
+// Create the HTTP server that AJAX requests will go through.
+var server = http.createServer(function (request, response) {
   var url = request.url
   var status = /error/.test(url) ? 500 : 200
   var data = '{"method":"' + request.method + '"}'
@@ -16,6 +17,11 @@ http.createServer(function (request, response) {
 }).listen(port)
 
 describe('Cute', function (done) {
+  // Kill the HTTP server.
+  after(function () {
+    server.close()
+  })
+
   var html = '<html><head></head><body></body></html>'
   jsdom.env(html, function (e, window) {
     domTests(window)

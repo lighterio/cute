@@ -52,15 +52,16 @@ Cute.get = function (url, data, fn) {
     return 0
   }
   // -browser:old
-  request.onreadystatechange = function () {
+  request.onreadystatechange = function (event) {
     if (request.readyState === 4) {
       var status = request.status
       var text = request.responseText
-      var response = Cute.parse(text, 0)
-      fn(response, status)
+      var data = Cute.parse(text, 0)
+      fn(data, status)
     }
   }
-  request.open(data ? 'POST' : 'GET', url, true)
+  var method = data ? 'POST' : 'GET'
+  request.open(method, url, true)
   if (data) {
     request.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
     if (Cute.isObject(data)) {
