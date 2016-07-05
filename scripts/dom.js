@@ -190,7 +190,7 @@ Cute.tag = function (element) {
 /**
  * Get or set the text of an element.
  *
- * @param  {HTMLElement} element  An element.
+ * @param  {HTMLElement} element  An optional element.
  * @return {String}      text     A text string to set.
  */
 Cute.text = function (element, text) {
@@ -208,8 +208,8 @@ Cute.text = function (element, text) {
  * @param  {HTMLElement} element  An element.
  * @return {String}      text     A text string to add.
  */
-Cute.addText = function (element, text) {
-  Cute.add(element, document.createTextNode(text))
+Cute.addText = function (element, text, beforeSibling) {
+  Cute.add(element, document.createTextNode(text), beforeSibling)
 }
 
 /**
@@ -235,42 +235,38 @@ Cute.attr = function (element, name, value) {
 }
 
 /**
- * Get, set, or delete a data attribute of an element.
- *
- * @param  {HTMLElement} element  An element.
- * @param  {String}      key      A data attribute key.
- * @param  {String}      value    A value to set the data attribute to.
- * @return {String}               The value of the attribute.
- */
-Cute.data = function (element, key, value) {
-  return Cute.attr(element, 'data-' + key, value)
-}
-
-/**
  * Add, remove or check classes on an element.
  *
  * @param  {HTMLElement} element     An element to change or read classes from.
- * @param  {String}      operations  Operations to perform on classes.
- * @return {Object}                  The map of classes, or truthy if the last queried class was found.
+ * @param  {String}      operations  Space-delimited operations to perform on
+ *                                   an element's className.
+ *                                     * "!name" adds the "name" class if not
+ *                                       present, or removes it if present.
+ *                                     * "+name" adds the "name" class.
+ *                                     * "-name" removes the "name" class.
+ *                                     * "?name" returns 1 if the "name" class
+ *                                       is present, or undefined if it isn't.
+ * @return {Object}                  The map of all classes in the element's
+ *                                   className, or 1 or undefined if the last queried class was found.
  */
 Cute.classes = function (element, operations) {
   var map = {}
   var result = map
-  var list = '' + element.className
-  list.replace(/\S+/g, function (key) {
-    map[key] = true
+  var list = Cute.string(element.className).match(/\S+/g)
+  Cute.each(list, function (key) {
+    map[key] = 1
   })
   if (operations) {
-    operations.replace(/(!\+-\?)?(\S+)/, function (match, op, key) {
+    operations.replace(/([!\+-\?]*)?(\S+)/g, function (match, op, key) {
       var value = map[key]
       if (op === '!') {
         value = !value
       } else if (op === '+') {
-        value = true
+        value = 1
       } else if (op === '-') {
-        value = false
+        value = 0
       } else if (op === '?') {
-        result = value
+        result = value ? 1 : 0
       }
       map[key] = value
     })

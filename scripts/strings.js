@@ -1,57 +1,61 @@
 /* global Cute */
 
+Cute.string = function (value) {
+  return (typeof value === 'string') ? value : '' + value
+}
+
 /**
  * Return true if the string contains the given substring.
  */
 Cute.contains = function (string, substring) {
-  return ('' + string).indexOf(substring) > -1
+  return Cute.string(string).indexOf(substring) > -1
 }
 
 /**
  * Return true if the string starts with the given substring.
  */
 Cute.startsWith = function (string, substring) {
-  return ('' + string).indexOf(substring) === 0; // eslint-disable-line
+  return Cute.string(string).indexOf(substring) === 0; // eslint-disable-line
 }
 
 /**
  * Trim the whitespace from a string.
  */
 Cute.trim = function (string) {
-  return ('' + string).replace(/^\s+|\s+$/g, '')
+  return Cute.string(string).replace(/^\s+|\s+$/g, '')
 }
 
 /**
  * Split a string by commas.
  */
 Cute.split = function (string) {
-  return ('' + string).split(',')
+  return Cute.string(string).split(',')
 }
 
 /**
  * Return a lowercase string.
  */
-Cute.lower = function (object) {
-  return ('' + object).toLowerCase()
+Cute.lower = function (string) {
+  return Cute.string(string).toLowerCase()
 }
 
 /**
  * Return an uppercase string.
  */
-Cute.upper = function (object) {
-  return ('' + object).toUpperCase()
+Cute.upper = function (string) {
+  return Cute.string(string).toUpperCase()
 }
 
 /**
  * Return an escaped value for URLs.
  */
 Cute.escape = function (value) {
-  return encodeURIComponent('' + value)
+  return encodeURIComponent(Cute.string(value))
 }
 
 /**
  * Return an unescaped value from an escaped URL.
  */
 Cute.unescape = function (value) {
-  return decodeURIComponent('' + value)
+  return decodeURIComponent(Cute.string(value))
 }

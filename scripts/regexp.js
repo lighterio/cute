@@ -3,10 +3,10 @@
 /**
  * Get the contents of a specified type of tag within a string of HTML.
  *
- * @param  {String}   html    [description]
- * @param  {String}   tagName [description]
- * @param  {Function} fn      [description]
- * @return {Array}            [description]
+ * @param  {String}   html     A string of HTML.
+ * @param  {String}   tagName  The type of tag to find.
+ * @param  {Function} fn       A function to call on each content block.
+ * @return {Array}             The array of contents.
  */
 Cute.tagContents = function (html, tagName, fn) {
   var pattern = Cute.tagPatterns[tagName]

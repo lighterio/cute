@@ -218,4 +218,75 @@ describe('Cute', function () {
       done()
     })
   })
+
+  describe('.attr', function (done) {
+    dom('<a name="top"/>', function () {
+      it('gets the value of an attribute', function () {
+        var a = Cute.one('a')
+        var name = Cute.attr(a, 'name')
+        is(name, 'top')
+      })
+
+      it('sets the value of an attribute', function () {
+        var a = Cute.one('a')
+        var name = Cute.attr(a, 'name')
+        is(name, 'top')
+        name = Cute.attr(a, 'name', 'main')
+        is(name, 'main')
+        name = Cute.attr(a, 'name')
+        is(name, 'main')
+        Cute.attr(a, 'name', 'top')
+        name = Cute.attr(a, 'name')
+        is(name, 'top')
+      })
+
+      it('removes an attribute', function () {
+        var a = Cute.one('a')
+        Cute.attr(a, 'title', 'Lord of Winterfell and Warden of the North')
+        var title = Cute.attr(a, 'title')
+        is(title, 'Lord of Winterfell and Warden of the North')
+        Cute.attr(a, 'title', null)
+        title = Cute.attr(a, 'title')
+        is(title, null)
+      })
+      done()
+    })
+  })
+
+  describe('.classes', function (done) {
+    dom('<a class="more link">Read more...</a>', function () {
+      it('returns a map of classes', function () {
+        var a = Cute.one('a.more')
+        var map = Cute.classes(a)
+        is.same(map, {more: 1, link: 1})
+      })
+
+      it('adds and removes classes with "+" and "-"', function () {
+        var a = Cute.one('a.more')
+        is.notIn(a.className, 'hidden')
+        Cute.classes(a, '+hidden')
+        is.in(a.className, 'hidden')
+        Cute.classes(a, '-hidden')
+        is.notIn(a.className, 'hidden')
+      })
+
+      it('toggles classes with "!"', function () {
+        var a = Cute.one('a.more')
+        is.notIn(a.className, 'hidden')
+        Cute.classes(a, '!hidden')
+        is.in(a.className, 'hidden')
+        Cute.classes(a, '!hidden')
+        is.notIn(a.className, 'hidden')
+      })
+
+      it('returns class truthiness with "?"', function () {
+        var a = Cute.one('a.more')
+        var isLink = Cute.classes(a, '?link')
+        var isHidden = Cute.classes(a, '?hidden')
+        is(isHidden, 0)
+        is(isLink, 1)
+      })
+      done()
+    })
+  })
 })
