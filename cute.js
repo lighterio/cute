@@ -500,7 +500,7 @@ Cute.getDate = function (date) {
 /**
  * Get Unix epoch milliseconds from a date.
  *
- * @param {Date}    date  An optional Date object (default: now).
+ * @param  {Date}   date  An optional Date object (default: now).
  * @return {Number}       Epoch milliseconds.
  */
 Cute.getTime = function (date) {

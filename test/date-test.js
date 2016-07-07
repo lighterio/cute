@@ -4,6 +4,7 @@ var is = global.is || require('exam-is')
 var mock = global.mock || require('exam-mock')
 var unmock = mock.unmock
 var Cute = require('../cute')
+var offset = (new Date(0)).getTimezoneOffset() * 6e4
 
 describe('Cute', function () {
   describe('.getDate', function () {
@@ -51,7 +52,12 @@ describe('Cute', function () {
   })
 
   describe('.formatDate', function () {
-    var date = new Date(1466911972488)
+    var date = new Date('2016-06-25 20:32:00')
+
+    it('returns the epoch date', function () {
+      var epoch = new Date(0 + offset)
+      is(Cute.formatDate(epoch, true, true), 'January 1, 1970 at 12:00am')
+    })
 
     it('returns the current formatted date', function () {
       var now = new Date()
