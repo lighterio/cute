@@ -255,6 +255,14 @@ describe('Cute', function () {
 
   describe('.classes', function (done) {
     dom('<a class="more link">Read more...</a>', function () {
+      it('returns class truthiness', function () {
+        var a = Cute.one('a.more')
+        var isLink = Cute.classes(a, 'link')
+        var isHidden = Cute.classes(a, 'hidden')
+        is(isHidden, 0)
+        is(isLink, 1)
+      })
+
       it('returns a map of classes', function () {
         var a = Cute.one('a.more')
         var map = Cute.classes(a)
@@ -278,13 +286,119 @@ describe('Cute', function () {
         Cute.classes(a, '!hidden')
         is.notIn(a.className, 'hidden')
       })
+      done()
+    })
+  })
 
-      it('returns class truthiness with "?"', function () {
-        var a = Cute.one('a.more')
-        var isLink = Cute.classes(a, '?link')
-        var isHidden = Cute.classes(a, '?hidden')
-        is(isHidden, 0)
-        is(isLink, 1)
+  describe('.all', function (done) {
+    dom('<a name="a1"></a><p><a name="a2"></a></p>', function () {
+      it('returns all matching elements', function () {
+        var list = Cute.all('a')
+        is(list.length, 2)
+      })
+
+      it('returns matching elements under a parent', function () {
+        var parent = Cute.one('p')
+        var list = Cute.all(parent, 'a')
+        is(list.length, 1)
+      })
+
+      it('calls callbacks on matching elements', function () {
+        var names = []
+        Cute.all('a', function (link) {
+          names.push(link.name)
+        })
+        is.same(names, ['a1', 'a2'])
+      })
+      done()
+    })
+  })
+
+  describe('.one', function (done) {
+    dom('<a name="a1"></a><p><a name="a2"></a></p>', function () {
+      it('returns one matching element', function () {
+        var link = Cute.one('a')
+        is(link.name, 'a1')
+      })
+
+      it('returns a matching element under a parent', function () {
+        var parent = Cute.one('p')
+        var link = Cute.one(parent, 'a')
+        is(link.name, 'a2')
+      })
+
+      it('calls a callback on a matching elements', function () {
+        var names = []
+        Cute.one('a', function (link) {
+          names.push(link.name)
+        })
+        is.same(names, ['a1'])
+      })
+      done()
+    })
+  })
+
+  describe('.update', function (done) {
+    dom('<p><b>B</b><i>I</i></p><ul><li>1</li></ul>' +
+      '<a name="top">Top</a>', function () {
+      it('adds and removes same-type elements', function () {
+        var original = Cute.one('ul')
+        var virtual = Cute.create('ul')
+        Cute.html(virtual, '<li>1</li><li>2</li>')
+        Cute.update(original, virtual)
+        var items = Cute.html(original)
+        is(items, '<li>1</li><li>2</li>')
+
+        virtual = Cute.create('ul')
+        Cute.html(virtual, '')
+        Cute.update(original, virtual)
+        items = Cute.html(original)
+        is(items, '')
+
+        virtual = Cute.create('ul')
+        Cute.html(virtual, '<li>1</li>')
+        Cute.update(original, virtual)
+        items = Cute.html(original)
+        is(items, '<li>1</li>')
+      })
+
+      it('adds and removes different type elements', function () {
+        var original = Cute.one('p')
+        var virtual = Cute.create('p')
+        Cute.html(virtual, '<i>I</i><b>B</b>')
+        Cute.update(original, virtual)
+        var content = Cute.html(original)
+        is(content, '<i>I</i><b>B</b>')
+
+        virtual = Cute.create('p')
+        Cute.html(virtual, '<b>B</b><i>I</i>')
+        Cute.update(original, virtual)
+        content = Cute.html(original)
+        is(content, '<b>B</b><i>I</i>')
+      })
+
+      it('adds and removes attributes', function () {
+        var link = Cute.one('a')
+        var virtual = Cute.create('a')
+        Cute.text(virtual, 'Top')
+        Cute.update(link, virtual)
+        is.falsy(link.name)
+
+        virtual = Cute.create('a?name=top')
+        Cute.update(link, virtual)
+        is(link.name, 'top')
+      })
+
+      it('adds and removes text', function () {
+        var link = Cute.one('a')
+        var virtual = Cute.create('a')
+        Cute.update(link, virtual)
+        is.falsy(link.name)
+
+        virtual = Cute.create('a?name=top')
+        Cute.text(virtual, 'Top')
+        Cute.update(link, virtual)
+        is(link.name, 'top')
       })
       done()
     })

@@ -841,7 +841,7 @@ Cute.attr = function (element, name, value) {
  *                                       present, or removes it if present.
  *                                     * "+name" adds the "name" class.
  *                                     * "-name" removes the "name" class.
- *                                     * "?name" returns 1 if the "name" class
+ *                                     * "name" returns 1 if the "name" class
  *                                       is present, or undefined if it isn't.
  * @return {Object}                  The map of all classes in the element's
  *                                   className, or 1 or undefined if the last queried class was found.
@@ -854,7 +854,7 @@ Cute.classes = function (element, operations) {
     map[key] = 1
   })
   if (operations) {
-    operations.replace(/([!\+-\?]*)?(\S+)/g, function (match, op, key) {
+    operations.replace(/([!\+-]*)?(\S+)/g, function (match, op, key) {
       var value = map[key]
       if (op === '!') {
         value = !value
@@ -862,7 +862,7 @@ Cute.classes = function (element, operations) {
         value = 1
       } else if (op === '-') {
         value = 0
-      } else if (op === '?') {
+      } else {
         result = value ? 1 : 0
       }
       map[key] = value
@@ -893,9 +893,6 @@ Cute.all = function (parent, selector, fn) {
   if (!selector || Cute.isFunction(selector)) {
     fn = selector
     selector = parent
-    parent = document
-  }
-  if (!parent) {
     parent = document
   }
   var elements
@@ -950,7 +947,6 @@ Cute.pushHtml = function (html, selector) {
 
   // Set the HTML of an element.
   return Cute.all(selector, function (element) {
-
     Cute.start('virtual')
     var virtualDom = Cute.create('m', content)
     Cute.end('virtual')
@@ -966,17 +962,16 @@ Cute.pushHtml = function (html, selector) {
       })
       Cute.all('script', Cute.remove)
     })
-
   })[0]
 }
 
 /**
- * Merge children from a virtual DOM.
+ * Update a DOM node based on the contents of another.
  *
  * @param  {HTMLElement} domNode     The DOM node to merge into.
  * @param  {HTMLElement} newNode     The virtual DOM to merge from.
  */
-Cute.diffDom = function (domNode, newNode, isTopLevel) {
+Cute.update = function (domNode, newNode) {
   var domChild = domNode.firstChild || 0
   var newChild = newNode.firstChild || 0
   while (newChild) {
@@ -992,11 +987,10 @@ Cute.diffDom = function (domNode, newNode, isTopLevel) {
       domChild = domNext
     } else {
       if (newTag) {
-        Cute.diffDom(domChild, newChild)
-        Cute.diffAttributes(domChild, newChild)
-      } else if (domChild && newChild) {
+        Cute.update(domChild, newChild)
+      } else if (domChild) {
         domChild.textContent = newChild.textContent
-      } else if (newChild) {
+      } else {
         domNode.appendChild(newChild)
       }
       domChild = domNext
@@ -1008,23 +1002,14 @@ Cute.diffDom = function (domNode, newNode, isTopLevel) {
     domNode.removeChild(domChild)
     domChild = domNext
   }
-}
-
-/**
- * Merge attributes from a virtual DOM.
- *
- * @param  {HTMLElement} domNode  The DOM node to merge into.
- * @param  {HTMLElement} newNode  The virtual DOM to merge from.
- */
-Cute.diffAttributes = function (domNode, newNode) {
   var map = {}
-  Cute.each([domNode, newNode], function (element, index) {
+  function mapAttributes (element, index) {
     Cute.each(element.attributes, function (attribute) {
-      if (attribute) {
-        map[attribute.name] = index ? attribute.value : null
-      }
+      map[attribute.name] = index ? attribute.value : null
     })
-  })
+  }
+  mapAttributes(domNode, 0)
+  mapAttributes(newNode, 1)
   Cute.each(map, function (value, name) {
     Cute.attr(domNode, name, value)
   })
