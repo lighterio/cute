@@ -937,6 +937,7 @@ Cute.one = function (parent, selector, fn) {
  * @param  {String} html     A string of HTML.
  * @param  {String} selector An optional selector (default: "body").
  */
+/*
 Cute.pushHtml = function (html, selector) {
   var content = html
   selector = selector || 'body'
@@ -964,6 +965,7 @@ Cute.pushHtml = function (html, selector) {
     })
   })[0]
 }
+*/
 
 /**
  * Update a DOM node based on the contents of another.
@@ -1026,102 +1028,121 @@ Cute.handlers = {}
 /**
  * Listen for one or more events, optionally on a given element.
  *
- * @param  {String|HTMLElement} selectorOrElement  An optional selector or element.
- * @param  {String|Array}       eventTypes         A list of events to listen for.
- * @param  {Function}           listener           A function to execute when an event occurs.
+ * @param  {String|HTMLElement} target    An optional selector or element.
+ * @param  {String|Array}       types     A list of events to listen for.
+ * @param  {Function}           listener  A callback function.
  */
-Cute.on = function (selectorOrElement, eventTypes, listener) {
+Cute.on = function (target, types, listener) {
   if (!listener) {
-    listener = eventTypes
-    eventTypes = selectorOrElement
-    selectorOrElement = document
+    listener = types
+    types = target
+    target = document
   }
-  var element = Cute.isString(selectorOrElement) ? document : selectorOrElement
-  Cute.each(eventTypes, function (eventType) {
-    var handlers = Cute.handlers[eventType]
+  var element = Cute.isString(target) ? document : target
+  types = types.split(/\s+/)
+  Cute.each(types, function (type) {
+    var handlers = Cute.handlers[type]
     if (!handlers) {
-      handlers = Cute.handlers[eventType] = []
+      handlers = Cute.handlers[type] = []
+      /* istanbul ignore next */
       if (element.addEventListener) {
-        element.addEventListener(eventType, Cute.emit, false)
+        element.addEventListener(type, Cute.propagate)
       } else if (element.attachEvent) {
-        element.attachEvent('on' + eventType, Cute.emit)
+        element.attachEvent('on' + type, Cute.propagate)
       } else {
-        element['on' + eventType] = Cute.emit
+        element['on' + type] = Cute.propagate
       }
     }
-    handlers.push([selectorOrElement, listener])
+    handlers.push({t: target, f: listener})
   })
 }
 
 /**
  * Remove a listener for one event type.
  *
- * @param  {String|Array} eventType  An event to stop listening for.
- * @param  {Function}     listener   A listener function to remove.
+ * @param  {String}    types     Types of event to stop listening for.
+ * @param  {Function}  listener  A listener function to remove.
  */
-Cute.off = function (eventType, listener) {
-  var handlers = Cute.handlers[eventType]
-  handlers = Cute.each(handlers, function (item) {
-    return item[1] !== listener
+Cute.off = function (types, listener) {
+  types = types.split(/\s+/)
+  Cute.each(types, function (type) {
+    var handlers = Cute.handlers[type]
+    Cute.each(handlers, function (item, index) {
+      if (item && (item.f === listener)) {
+        delete handlers[index]
+      }
+    })
   })
-  Cute.handlers[eventType] = handlers
 }
 
 /**
- * Listen for one or more events just once, optionally on a given element.
+ * Listen for one or more events, optionally on a given element, and ensure that the
+ * listener will only be executed once.
  *
- * @param  {String|HTMLElement} selectorOrElement  An optional selector or element.
- * @param  {String|Array}       eventTypes         A list of events to listen for.
- * @param  {Function}           listener           A function to execute when an event occurs.
+ * @param  {String|HTMLElement} target    An optional selector or element.
+ * @param  {String|Array}       types     A list of events to listen for.
+ * @param  {Function}           listener  A function to execute when an event occurs.
  */
-Cute.once = function (selectorOrElement, eventTypes, listener) {
-  if (!listener) {
-    listener = eventTypes
-    eventTypes = selectorOrElement
-    selectorOrElement = document
+Cute.once = function (target, types, listener) {
+  var onceFn = function () {
+    Cute.off(types, onceFn)
+    listener.apply(target, arguments)
   }
-  var fn = function (element, event, type) {
-    listener(element, event, type)
-    Cute.off(type, fn)
-  }
-  Cute.on(selectorOrElement, eventTypes, fn)
+  //alert(target.tagName, types, onceFn)
+  Cute.on(target, types, onceFn)
 }
 
 /**
- * Simulate an event, or propagate an event up the DOM.
+ * Simulate an event.
  *
- * @param  {String|Object} event   An event or event type to propagate.
- * @param  {HTMLElement}   target  An optional target to start propagation from.
- * @param  {Object}        data    Optional data to report with the event.
+ * @param  {HTMLElement} target  A target to start propagation from.
+ * @param  {String}      event   A type of event.
+ * @param  {Object}      data    Optional data to report with the event.
  */
-Cute.emit = function (event, target, data) {
+Cute.emit = function (target, type, data) {
+  Cute.propagate({
+    type: type,
+    target: target,
+    data: data
+  })
+}
 
+/**
+ * Propagate an event from a target element up to the DOM root.
+ *
+ * @param  {Object} event   An event to propagate:
+ *                          {
+ *                            type: String,   // An event type (e.g.) "click".
+ *                            target: Object, // The element where the event occurred.
+ *                            data: Object    // Optional event data.
+ *                          }
+ */
+Cute.propagate = function (event) {
   // Get the window-level event if an event isn't passed.
   event = event || window.event
 
-  // Construct an event object if necessary.
-  if (Cute.isString(event)) {
-    event = {type: event}
-  }
-
-  // Reference an element if possible.
-  var element = event.target = target || event.target || event.srcElement || document
+  // Reference the event target.
+  var eventTarget = event.target || event.srcElement || document
 
   // Extract the event type.
   var type = event.type
 
+  // Propagate the event up through the target's DOM parents.
+  var element = eventTarget
   var handlers = Cute.handlers[type]
   while (element && !event._stopped) {
     Cute.each(handlers, function (handler) {
-      var selector = handler[0]
-      var fn = handler[1]
-      var isMatch = Cute.isString(selector) ?
-        Cute.matches(element, selector) :
-        (element === selector)
-      if (isMatch) {
-        fn(data || element, event, type)
+      if (handler) {
+        var target = handler.t
+        var fn = handler.f
+        var isMatch = Cute.isString(target)
+          ? Cute.matches(element, target)
+          : (element === target)
+        if (isMatch) {
+          fn(eventTarget, type, event)
+        }
+        return !event._stopped
       }
-      return !event._stopped
     })
     if (element === document) {
       break
@@ -1137,8 +1158,7 @@ Cute.emit = function (event, target, data) {
  * @param  {String}      selector  A CSS selector to check against an element.
  * @return {boolean}               True if the element (this) matches the selector.
  */
-Cute.matches = function (element, selector, type) {
-  var self = this
+Cute.matches = function (element, selector) {
   var matches =
     element.webkitMatchesSelector ||
     element.msMatchesSelector ||

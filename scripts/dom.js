@@ -383,6 +383,7 @@ Cute.one = function (parent, selector, fn) {
  * @param  {String} html     A string of HTML.
  * @param  {String} selector An optional selector (default: "body").
  */
+/*
 Cute.pushHtml = function (html, selector) {
   var content = html
   selector = selector || 'body'
@@ -410,6 +411,7 @@ Cute.pushHtml = function (html, selector) {
     })
   })[0]
 }
+*/
 
 /**
  * Update a DOM node based on the contents of another.
