@@ -65,11 +65,10 @@ Cute.off = function (types, listener) {
  * @param  {Function}           listener  A function to execute when an event occurs.
  */
 Cute.once = function (target, types, listener) {
-  var onceFn = function () {
+  var onceFn = function (target, type, event) {
     Cute.off(types, onceFn)
     listener.apply(target, arguments)
   }
-  //alert(target.tagName, types, onceFn)
   Cute.on(target, types, onceFn)
 }
 
@@ -111,7 +110,7 @@ Cute.propagate = function (event) {
   // Propagate the event up through the target's DOM parents.
   var element = eventTarget
   var handlers = Cute.handlers[type]
-  while (element && !event._stopped) {
+  while (element && !event.stop) {
     Cute.each(handlers, function (handler) {
       if (handler) {
         var target = handler.t
@@ -122,7 +121,7 @@ Cute.propagate = function (event) {
         if (isMatch) {
           fn(eventTarget, type, event)
         }
-        return !event._stopped
+        return !event.stop
       }
     })
     if (element === document) {
@@ -166,7 +165,7 @@ Cute.prevent = function (event) {
  * @param  {Event} event  Event to stop.
  */
 Cute.stop = function (event) {
-  event._stopped = 1
+  event.stop = 1
   Cute.prevent(event)
 }
 
@@ -174,8 +173,7 @@ Cute.stop = function (event) {
  * Focus on a specified element.
  *
  * @param  {HTMLElement} element  The element to focus on.
- * @param  {Boolean}     blur     Whether to blur instead.
  */
-Cute.focus = function (element, blur) {
-  Cute.apply(element, blur ? 'blur' : 'focus')
+Cute.focus = function (element) {
+  Cute.apply(element, 'focus')
 }

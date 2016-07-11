@@ -53,12 +53,12 @@ Cute.up = function (element, selector) {
 }
 
 /**
- * Get the children of a parent element.
+ * Get the child nodes of a parent element.
  *
- * @param  {HTMLElement}    element  A parent element who might have children.
- * @return {HTMLCollection}          The collection of children.
+ * @param  {HTMLElement}    element  A parent element who might have child nodes.
+ * @return {HTMLCollection}          The collection of child nodes.
  */
-Cute.children = function (element) {
+Cute.nodes = function (element) {
   return element.childNodes
 }
 
@@ -139,7 +139,7 @@ Cute.add = function (parent, elementOrString, beforeSibling) {
   var element = Cute.create(elementOrString)
   // If the beforeSibling value is a number, get the (future) sibling at that index.
   if (Cute.isNumber(beforeSibling)) {
-    beforeSibling = Cute.children(parent)[beforeSibling]
+    beforeSibling = Cute.nodes(parent)[beforeSibling]
   }
   // Insert the element, optionally before an existing sibling.
   if (beforeSibling) {

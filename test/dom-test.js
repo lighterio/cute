@@ -68,12 +68,12 @@ describe('Cute', function () {
     })
   })
 
-  describe('.children', function (done) {
+  describe('.nodes', function (done) {
     dom('<ul><li>A</li><li>B</li></ul>', function () {
       it('gets child nodes', function () {
         var list = Cute.one('ul')
         is(list.tagName, 'UL')
-        var items = Cute.children(list)
+        var items = Cute.nodes(list)
         is(items.length, 2)
       })
       done()
@@ -155,7 +155,7 @@ describe('Cute', function () {
       it('adds an element before a child', function () {
         var a = Cute.add('a', 0)
         var b = Cute.add('b', a)
-        var c = Cute.children(document.body)
+        var c = Cute.nodes(document.body)
         is(c[0].tagName, 'B')
         is(c[1].tagName, 'A')
         Cute.remove(a)
