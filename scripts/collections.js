@@ -105,3 +105,13 @@ Cute.merge = function (array) {
   })
   return array
 }
+
+/**
+ * Make a singleton array if an object isn't already an array.
+ *
+ * @param  {Any}     value  A value that might be an array.
+ * @return {Array}          An array that is or contains the value passed in.
+ */
+Cute.array = function (value) {
+  return Cute.isArray(value) ? value : [value]
+}
