@@ -1,12 +1,6 @@
 /* global Cute window XMLHttpRequest ActiveXObject */
 
 /**
- * Empty handler.
- * @type {Function}
- */
-Cute.no = function () {}
-
-/**
  * Get an XMLHttpRequest object (or ActiveX object in old IE).
  *
  * @return {XMLHttpRequest}  The request object.

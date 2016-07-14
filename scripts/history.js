@@ -3,21 +3,15 @@
 /**
  * Push, replace or pop a history item.
  *
- * @param  {String}  href   An href, if not popping.
- * @param  {Boolean} isNew  Whether the URL should be pushed as a new entry.
+ * @param  {String}  href     An optional href to visit (or falsy to go back).
+ * @param  {Boolean} inPlace  Whether to just replace the current state.
  */
-Cute.history = function (href, isNew) {
+Cute.go = function (href, inPlace) {
   var history = window.history
-  if (history) {
-    if (href) {
-      try {
-        var method = isNew ? 'push' : 'replace'
-        history[method + 'State'](null, null, href)
-      } catch (ignore) {
-        // TODO: Create a hash-based history push for old browsers.
-      }
-    } else {
-      history.back()
-    }
-  }
+  var method =
+    href === -1 ? 'back'
+    : href === 1 ? 'forward'
+    : (inPlace ? 'replace' : 'push') + 'State'
+  Cute.attempt(history, method, [undefined, undefined, href])
+  return history
 }

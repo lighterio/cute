@@ -16,13 +16,13 @@
  *   https://github.com/lighterio/cute/blob/master/scripts/events.js
  *   https://github.com/lighterio/cute/blob/master/scripts/forms.js
  *   https://github.com/lighterio/cute/blob/master/scripts/functions.js
- *   https://github.com/lighterio/cute/blob/master/scripts/head.js
  *   https://github.com/lighterio/cute/blob/master/scripts/history.js
  *   https://github.com/lighterio/cute/blob/master/scripts/i18n.js
  *   https://github.com/lighterio/cute/blob/master/scripts/json.js
  *   https://github.com/lighterio/cute/blob/master/scripts/logging.js
  *   https://github.com/lighterio/cute/blob/master/scripts/move.js
  *   https://github.com/lighterio/cute/blob/master/scripts/numbers.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/page.js
  *   https://github.com/lighterio/cute/blob/master/scripts/ready.js
  *   https://github.com/lighterio/cute/blob/master/scripts/regexp.js
  *   https://github.com/lighterio/cute/blob/master/scripts/storage.js
@@ -52,12 +52,6 @@ else {
 //-env:window
 
 /* global Cute window XMLHttpRequest ActiveXObject */
-
-/**
- * Empty handler.
- * @type {Function}
- */
-Cute.no = function () {}
 
 /**
  * Get an XMLHttpRequest object (or ActiveX object in old IE).
@@ -1314,83 +1308,36 @@ Cute.value = function (input, newValue) {
 /* global Cute */
 
 /**
+ * Empty handler.
+ * @type {Function}
+ */
+Cute.no = function () {}
+
+/**
  * Apply arguments to an object method.
  *
- * @param  {Object}          object      An object with methods.
- * @param  {String}          methodName  A method name, which may exist on the object.
- * @param  {Arguments|Array} args        An arguments object or array to apply to the method.
- * @return {Object}                      The result returned by the object method.
+ * @param  {Object} object      An object with methods.
+ * @param  {String} methodName  A method name, which may exist on the object.
+ * @param  {Array}  args        An array to apply to the method.
+ * @return {Object}             The result returned by the object method.
  */
 Cute.apply = function (object, methodName, args) {
   return ((object || 0)[methodName] || Cute.no).apply(object, args)
 }
 
-/* global Cute */
-
 /**
- * Get the head element from the document.
- */
-Cute.getHead = function () {
-  var head = Cute.all('head')[0]
-  return head
-}
-
-/**
- * Get the body element from the document.
- */
-Cute.getBody = function () {
-  var body = Cute.all('body')[0]
-  return body
-}
-
-/**
- * Insert an external JavaScript file.
+ * Try to apply arguments to an object method.
  *
- * @param  {String}   src  A source URL of a script to insert.
- * @param  {Function} fn   An optional function to run when the script loads.
+ * @param  {Object} object      An object with methods.
+ * @param  {String} methodName  A method name, which may exist on the object.
+ * @param  {Array}  args        An array to apply to the method.
+ * @return {Object}             The result returned by the object method.
  */
-Cute.js = function (src, fn) {
-  var head = Cute.getHead()
-  var script = Cute.add(head, 'script')
-  if (fn) {
-    Cute.ready(script, fn)
+Cute.attempt = function (object, methodName, args) {
+  try {
+    Cute.apply(object, methodName, args)
+  } catch (ignore) {
   }
-  script.async = 1
-  script.src = src
-}
-
-/**
- * Insert CSS text to the page.
- *
- * @param  {String} css  CSS text to be inserted.
- */
-Cute.css = function (css) {
-
-  // Allow CSS pixel sizes to be scaled using a window property.
-  var zoom = window._zoom
-  if (zoom && zoom > 1) {
-    css = Cute.zoomCss(css)
-  }
-
-  // Insert CSS into the document head.
-  var head = Cute.getHead()
-  var style = Cute.add(head, 'style?type=text/css', css)
-  var sheet = style.styleSheet
-  if (sheet) {
-    sheet.cssText = css
-  }
-}
-
-/**
- * Scale CSS pixel sizes using a window property.
- *
- * @param  {String} css  CSS text to be zoomed.
- */
-Cute.zoomCss = function (css) {
-  var zoom = window._zoom || 1
-  return css.replace(/([\.\d]+)px\b/g, function (match, n) {
-    return Math.floor(n * zoom) + 'px'
-  })
 }
 
 /* global Cute */
@@ -1398,23 +1345,17 @@ Cute.zoomCss = function (css) {
 /**
  * Push, replace or pop a history item.
  *
- * @param  {String}  href   An href, if not popping.
- * @param  {Boolean} isNew  Whether the URL should be pushed as a new entry.
+ * @param  {String}  href     An optional href to visit (or falsy to go back).
+ * @param  {Boolean} inPlace  Whether to just replace the current state.
  */
-Cute.history = function (href, isNew) {
+Cute.go = function (href, inPlace) {
   var history = window.history
-  if (history) {
-    if (href) {
-      try {
-        var method = isNew ? 'push' : 'replace'
-        history[method + 'State'](null, null, href)
-      } catch (ignore) {
-        // TODO: Create a hash-based history push for old browsers.
-      }
-    } else {
-      history.back()
-    }
-  }
+  var method =
+    href === -1 ? 'back'
+    : href === 1 ? 'forward'
+    : (inPlace ? 'replace' : 'push') + 'State'
+  Cute.attempt(history, method, [undefined, undefined, href])
+  return history
 }
 
 /* global Cute */
@@ -1733,6 +1674,68 @@ Cute.zeroFill = function (number, length) {
   // Repurpose the lenth variable to count how much padding we need.
   length = Math.max(length - number.length, 0)
   return (new Array(length + 1)).join('0') + number
+}
+
+/* global Cute */
+
+/**
+ * Get the <head> element from the document.
+ *
+ * @return {DOMElement}   The <head> element.
+ */
+Cute.head = function () {
+  return Cute.one('head')
+}
+
+/**
+ * Get the <head> element from the document.
+ *
+ * @return {DOMElement}   The <head> element.
+ */
+Cute.body = function () {
+  return Cute.one('body')
+}
+
+/**
+ * Insert an external JavaScript file.
+ *
+ * @param  {String}   src  A source URL of a script to insert.
+ * @param  {Function} fn   An optional function to run when the script loads.
+ */
+Cute.js = function (src, fn) {
+  var head = Cute.head()
+  var script = Cute.add(head, 'script')
+  if (fn) {
+    Cute.ready(script, fn)
+  }
+  script.async = 1
+  script.src = src
+}
+
+/**
+ * Insert CSS text to the page.
+ *
+ * @param  {String} css  CSS text to be inserted.
+ */
+Cute.css = function (css) {
+  var head = Cute.head()
+  var style = Cute.add(head, 'style?type=text/css', css)
+  var sheet = style.styleSheet
+  if (sheet) {
+    sheet.cssText = css
+  }
+}
+
+/**
+ * Scale CSS pixel sizes using a window property.
+ *
+ * @param  {String} css  CSS text to be zoomed.
+ */
+Cute.zoom = function (css) {
+  var zoom = window._zoom || 1
+  return css.replace(/([\.\d]+)px\b/g, function (match, n) {
+    return Math.floor(n * zoom) + 'px'
+  })
 }
 
 /* global Cute */
