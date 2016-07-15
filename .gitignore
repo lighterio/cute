@@ -17,4 +17,3 @@ coverage
 node_modules
 build
 cute.js
-cute.compat.js

@@ -1,4 +1,4 @@
-/* global Cute */
+
 
 /**
  * Returns a Date object.
@@ -27,20 +27,9 @@ Cute.getTime = function (date) {
  * @param {Date}    date  Date object (default: now).
  * @return {String}       ISO date string.
  */
-Cute.getIsoDate = function (date) {
+Cute.stamp = function (date) {
   date = Cute.getDate(date)
-  //+browser:ok
-  date = date.toISOString()
-  //-browser:ok
-  //+browser:old
-  var utcPattern = /^.*?(\d+) (\w+) (\d+) ([\d:]+).*?$/
-  date = date.toUTCString().replace(utcPattern, function (a, day, m, y, t) {
-    m = Cute.zeroFill(date.getMonth(), 2)
-    t += '.' + Cute.zeroFill(date.getMilliseconds(), 3)
-    return y + '-' + m + '-' + day + 'T' + t + 'Z'
-  })
-  //-browser:old
-  return date
+  return date.toISOString()
 }
 
 /**

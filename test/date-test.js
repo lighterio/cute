@@ -1,9 +1,9 @@
 'use strict'
-/* global describe it */
+
 var is = global.is || require('exam-is')
 var mock = global.mock || require('exam-mock')
 var unmock = mock.unmock
-var Cute = require('../cute')
+var Cute = require('../cute.test')
 var offset = (new Date(0)).getTimezoneOffset() * 6e4
 
 describe('Cute', function () {
@@ -44,9 +44,9 @@ describe('Cute', function () {
     })
   })
 
-  describe('.getIsoDate', function () {
+  describe('.stamp', function () {
     it('returns an ISO date string', function () {
-      var iso = Cute.getIsoDate()
+      var iso = Cute.stamp()
       is.in(iso, /^[\d]{4}-[\d]{2}-[\d]{2}T[\d]{2}:[\d]{2}:[\d]{2}.[\d]{3}Z$/)
     })
   })

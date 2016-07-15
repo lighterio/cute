@@ -1,4 +1,4 @@
-/* global Cute */
+
 
 /**
  * Get or set an item in local storage.

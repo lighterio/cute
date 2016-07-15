@@ -1,4 +1,4 @@
-/* global Cute */
+
 
 /**
  * Event Handlers
@@ -27,11 +27,11 @@ Cute.on = function (target, types, listener) {
       handlers = Cute.handlers[type] = []
       /* istanbul ignore next */
       if (element.addEventListener) {
-        element.addEventListener(type, Cute.propagate)
+        element.addEventListener(type, Cute._propagate)
       } else if (element.attachEvent) {
-        element.attachEvent('on' + type, Cute.propagate)
+        element.attachEvent('on' + type, Cute._propagate)
       } else {
-        element['on' + type] = Cute.propagate
+        element['on' + type] = Cute._propagate
       }
     }
     handlers.push({t: target, f: listener})
@@ -80,7 +80,7 @@ Cute.once = function (target, types, listener) {
  * @param  {Object}      data    Optional data to report with the event.
  */
 Cute.emit = function (target, type, data) {
-  Cute.propagate({
+  Cute._propagate({
     type: type,
     target: target,
     data: data
@@ -97,7 +97,7 @@ Cute.emit = function (target, type, data) {
  *                            data: Object    // Optional event data.
  *                          }
  */
-Cute.propagate = function (event) {
+Cute._propagate = function (event) {
   // Get the window-level event if an event isn't passed.
   event = event || window.event
 
@@ -136,7 +136,7 @@ Cute.propagate = function (event) {
  *
  * @param  {HTMLElement} element   An element to pretend the event occurred on.
  * @param  {String}      selector  A CSS selector to check against an element.
- * @return {boolean}               True if the element (this) matches the selector.
+ * @return {Boolean}               True if the element (this) matches the selector.
  */
 Cute.matches = function (element, selector) {
   var matches =

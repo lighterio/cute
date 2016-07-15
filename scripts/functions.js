@@ -1,4 +1,4 @@
-/* global Cute */
+
 
 /**
  * Empty handler.

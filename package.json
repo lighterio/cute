@@ -2,7 +2,9 @@
   "name": "cute",
   "version": "0.0.1",
   "description": "Minifier-friendly JavaScript built for speed and power.",
-  "dependencies": {},
+  "dependencies": {
+    "standard": "^7.1.2"
+  },
   "devDependencies": {
     "chug": ">=0.4.1",
     "exam": "1.4.1",
@@ -53,5 +55,15 @@
   "contributors": [
     "Sam Eubank <sameubank@gmail.com>"
   ],
-  "license": "ISC"
+  "license": "ISC",
+  "standard": {
+    "globals": [
+      "Cute",
+      "window",
+      "document",
+      "location",
+      "XMLHttpRequest",
+      "ActiveXObject"
+    ]
+  }
 }

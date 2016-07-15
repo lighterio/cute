@@ -1,4 +1,4 @@
-/* global Cute */
+
 
 /**
  * Read cookies, and optionally get or set one.

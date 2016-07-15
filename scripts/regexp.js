@@ -1,4 +1,4 @@
-/* global Cute */
+
 
 /**
  * Get the contents of a specified type of tag within a string of HTML.

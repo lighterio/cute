@@ -1,4 +1,4 @@
-/* global Cute */
+
 
 /**
  * Scroll the top of the page to a specified Y position.
@@ -18,16 +18,11 @@ Cute.scrollTop = function (top) {
 Cute.scrollToAnchor = function (name) {
   var offset = 0
   var element
-  //+browser:old
   Cute.all('a', function (anchor) {
     if (anchor.name === name) {
       element = anchor
     }
   })
-  //-browser:old
-  //+browser:ok
-  element = Cute.all('a[name=' + name + ']')[0]
-  //-browser:ok
   while (element) {
     offset += element.offsetTop || 0
     element = element.offsetParent || 0

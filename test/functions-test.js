@@ -1,7 +1,7 @@
 'use strict'
-/* global describe it */
+
 var is = global.is || require('exam-is')
-var Cute = require('../cute')
+var Cute = require('../cute.test')
 
 describe('Cute', function () {
   describe('.apply', function () {

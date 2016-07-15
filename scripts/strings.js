@@ -1,8 +1,4 @@
-/* global Cute */
 
-Cute.string = function (value) {
-  return (typeof value === 'string') ? value : '' + value
-}
 
 /**
  * Return true if the string contains the given substring.

@@ -1,21 +1,10 @@
-/* global Cute window XMLHttpRequest ActiveXObject */
-
 /**
  * Get an XMLHttpRequest object (or ActiveX object in old IE).
  *
  * @return {XMLHttpRequest}  The request object.
  */
-Cute.xhr = function () {
-  var xhr
-  // +browser:old
-  xhr = window.XMLHttpRequest ? new XMLHttpRequest()
-    : window.ActiveXObject ? new ActiveXObject('Microsoft.XMLHTTP')
-    : 0
-  // -browser:old
-  // +browser:ok
-  xhr = new XMLHttpRequest()
-  // -browser:ok
-  return xhr
+Cute._xhr = function () {
+  return new XMLHttpRequest()
 }
 
 /**
@@ -24,7 +13,7 @@ Cute.xhr = function () {
  * @return {XMLHttpRequestUpload}  The request upload object.
  */
 Cute.upload = function () {
-  return Cute.xhr().upload
+  return Cute._xhr().upload
 }
 
 /**
@@ -40,12 +29,7 @@ Cute.get = function (url, data, fn) {
     fn = data
     data = 0
   }
-  var request = Cute.xhr()
-  // +browser:old
-  if (!request) {
-    return 0
-  }
-  // -browser:old
+  var request = Cute._xhr()
   request.onreadystatechange = function (event) {
     if (request.readyState === 4) {
       var status = request.status

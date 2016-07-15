@@ -1,9 +1,9 @@
 'use strict'
-/* global describe it */
+
 var bench = global.bench || require('exam/lib/bench')
 var is = global.is || require('exam-is')
 var crypto = require('crypto')
-var Cute = require('../cute')
+var Cute = require('../cute.test')
 
 describe('Cute', function () {
   var json = JSON.stringify(JSON.stringify(this.fn.toString()))

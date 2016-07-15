@@ -1,4 +1,4 @@
-/* global Cute */
+
 
 /**
  * Get an element by its ID (if the argument is an ID).
@@ -298,52 +298,7 @@ Cute.all = function (parent, selector, fn) {
     selector = parent
     parent = document
   }
-  var elements
-  // +browser:old
-  elements = []
-  if (Cute.contains(selector, ',')) {
-    Cute.each(selector, function (selector) {
-      Cute.all(parent, selector, function (element) {
-        elements.push(element)
-      })
-    })
-  } else if (Cute.contains(selector, ' ')) {
-    var pos = selector.indexOf(' ')
-    var preSelector = selector.substr(0, pos)
-    var postSelector = selector.substr(pos + 1)
-    elements = []
-    Cute.all(parent, preSelector, function (element) {
-      var children = Cute.all(element, postSelector)
-      Cute.merge(elements, children)
-    })
-  } else if (selector[0] === '#') {
-    var id = selector.substr(1)
-    var child = Cute.id(parent.ownerDocument || document, id)
-    if (child) {
-      var up = Cute.parent(child)
-      while (up) {
-        if (up === parent) {
-          elements = [child]
-          break
-        }
-        up = Cute.parent(up)
-      }
-    }
-  } else {
-    selector = selector.split('.')
-    var tagName = selector[0]
-    var className = selector[1]
-    var tagElements = parent.getElementsByTagName(tagName)
-    Cute.each(tagElements, function (element) {
-      if (!className || Cute.classes(element, className)) {
-        elements.push(element)
-      }
-    })
-  }
-  // -browser:old
-  // +browser:ok
-  elements = parent.querySelectorAll(selector)
-  // -browser:ok
+  var elements = parent.querySelectorAll(selector)
   if (fn) {
     Cute.each(elements, fn)
   }
@@ -364,13 +319,7 @@ Cute.one = function (parent, selector, fn) {
     selector = parent
     parent = document
   }
-  var element
-  // +browser:old
-  element = Cute.all(parent, selector)[0]
-  // -browser:old
-  // +browser:ok
-  element = parent.querySelector(selector)
-  // -browser:ok
+  var element = parent.querySelector(selector)
   if (element && fn) {
     fn(element)
   }

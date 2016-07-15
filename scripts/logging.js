@@ -1,4 +1,4 @@
-/* global Cute */
+
 
 // When not in debug mode, make the logging functions do nothing.
 Cute.error = Cute.no
@@ -13,45 +13,35 @@ Cute.trace = Cute.no
  * Log values to the console, if it's available.
  */
 Cute.error = function () {
-  Cute.ifConsole('error', arguments)
+  Cute.apply(window.console, 'error', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
 Cute.warn = function () {
-  Cute.ifConsole('warn', arguments)
+  Cute.apply(window.console, 'warn', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
 Cute.info = function () {
-  Cute.ifConsole('info', arguments)
+  Cute.apply(window.console, 'info', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
 Cute.log = function () {
-  Cute.ifConsole('log', arguments)
+  Cute.apply(window.console, 'log', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
 Cute.trace = function () {
-  Cute.ifConsole('trace', arguments)
-}
-
-/**
- * Log values to the console, if it's available.
- */
-Cute.ifConsole = function (method, args) {
-  var console = window.console
-  if (console && console[method]) {
-    console[method].apply(console, args)
-  }
+  Cute.apply(window.console, 'trace', arguments)
 }
 
 // -env:debug

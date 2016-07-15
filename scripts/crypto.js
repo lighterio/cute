@@ -1,4 +1,4 @@
-/* global Cute */
+
 
 /**
  * Calculate an MD5 hash for a string (useful for things like Gravatars).

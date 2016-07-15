@@ -51,7 +51,7 @@ else {
 }
 //-env:window
 
-/* global Cute window XMLHttpRequest ActiveXObject */
+/* global Cute window XMLHttpRequest */
 
 /**
  * Get an XMLHttpRequest object (or ActiveX object in old IE).
@@ -59,12 +59,7 @@ else {
  * @return {XMLHttpRequest}  The request object.
  */
 Cute.xhr = function () {
-  var xhr
-
-
-  xhr = new XMLHttpRequest()
-
-  return xhr
+  return new XMLHttpRequest()
 }
 
 /**
@@ -90,7 +85,6 @@ Cute.get = function (url, data, fn) {
     data = 0
   }
   var request = Cute.xhr()
-
   request.onreadystatechange = function (event) {
     if (request.readyState === 4) {
       var status = request.status
@@ -249,16 +243,6 @@ Cute.merge = function (array) {
     }
   })
   return array
-}
-
-/**
- * Make a singleton array if an object isn't already an array.
- *
- * @param  {Any}     value  A value that might be an array.
- * @return {Array}          An array that is or contains the value passed in.
- */
-Cute.array = function (value) {
-  return Cute.isArray(value) ? value : [value]
 }
 
 /* global Cute */
@@ -517,13 +501,9 @@ Cute.getTime = function (date) {
  * @param {Date}    date  Date object (default: now).
  * @return {String}       ISO date string.
  */
-Cute.getIsoDate = function (date) {
+Cute.stamp = function (date) {
   date = Cute.getDate(date)
-
-  date = date.toISOString()
-
-
-  return date
+  return date.toISOString()
 }
 
 /**
@@ -899,11 +879,7 @@ Cute.all = function (parent, selector, fn) {
     selector = parent
     parent = document
   }
-  var elements
-
-
-  elements = parent.querySelectorAll(selector)
-
+  var elements = parent.querySelectorAll(selector)
   if (fn) {
     Cute.each(elements, fn)
   }
@@ -924,11 +900,7 @@ Cute.one = function (parent, selector, fn) {
     selector = parent
     parent = document
   }
-  var element
-
-
-  element = parent.querySelector(selector)
-
+  var element = parent.querySelector(selector)
   if (element && fn) {
     fn(element)
   }
@@ -1159,7 +1131,7 @@ Cute.propagate = function (event) {
  *
  * @param  {HTMLElement} element   An element to pretend the event occurred on.
  * @param  {String}      selector  A CSS selector to check against an element.
- * @return {boolean}               True if the element (this) matches the selector.
+ * @return {Boolean}               True if the element (this) matches the selector.
  */
 Cute.matches = function (element, selector) {
   var matches =
@@ -1338,16 +1310,25 @@ Cute.i18n = {
 /* global Cute */
 
 /**
- * Create a circular-safe JSON string.
+ * Create a circular-safe JSON (or JSON-like) string.
+ *
+ * @param  {Any}    data   Data to stringify.
+ * @param  {String} quote  Double quote or single quote.
+ * @param  {Array}  stack
+ * @return {String}
  */
-Cute.safeStringify = function (data, quote, stack) {
+Cute.stringify = function (data, quote, stack) {
+  quote = quote || '"'
   if (Cute.isString(data)) {
     data = quote + data.replace(/\n\r"'/g, function (c) {
-      return c === '\n' ? '\\n' : c === '\r' ? '\\r' : c === quote ? '\\' + c : c === '"' ? '&quot;' : "'"
+      return c === '\n' ? '\\n'
+        : c === '\r' ? '\\r'
+        : c === quote ? '\\' + c
+        : c === '"' ? '&quot;' : "'"
     }) + quote
   } else if (Cute.isFunction(data) || Cute.isUndefined(data)) {
-    return null
-  } else if (data && Cute.isObject(data)) {
+    return stack ? null : undefined
+  } else if (data && Cute.isObject(data) && !(data instanceof Boolean) && !(data instanceof Number)) {
     stack = stack || []
     var isCircular
     Cute.each(stack, function (item) {
@@ -1365,13 +1346,13 @@ Cute.safeStringify = function (data, quote, stack) {
       before = '['
       after = ']'
       Cute.each(data, function (value) {
-        parts.push(Cute.safeStringify(value, quote, stack))
+        parts.push(Cute.stringify(value, quote, stack))
       })
     } else {
       before = '{'
       after = '}'
       Cute.each(data, function (value, key) {
-        parts.push(Cute.stringify(key) + ':' + Cute.safeStringify(value, stack))
+        parts.push(Cute.stringify(key, quote) + ':' + Cute.stringify(value, quote, stack))
       })
     }
     stack.pop()
@@ -1383,18 +1364,10 @@ Cute.safeStringify = function (data, quote, stack) {
 }
 
 /**
- * Create a JSON string.
- */
-
-
-Cute.stringify = JSON.stringify
-
-
-/**
  * Create a JSON-ish string.
  */
 Cute.attrify = function (data) {
-  return Cute.safeStringify(data, "'")
+  return Cute.stringify(data, "'")
 }
 
 /**
@@ -1406,7 +1379,7 @@ Cute.parse = function (value, alternative) {
     eval('eval.J=' + value)
     /* eslint-enable */
     value = eval.J
-  } catch (e) {
+  } catch (ignore) {
     //+env:debug
     Cute.error('[Cute] Could not parse JS: ' + value)
     //-env:debug
@@ -1455,7 +1428,7 @@ Cute.parseObject = function (value, alternative) {
 }
 
 /**
- * Parse a value and return a number no matter what.
+ * Parse a value and return an Array no matter what.
  */
 Cute.parseArray = function (value, alternative) {
   value = Cute.parse(value)
@@ -1477,45 +1450,35 @@ Cute.trace = Cute.no
  * Log values to the console, if it's available.
  */
 Cute.error = function () {
-  Cute.ifConsole('error', arguments)
+  Cute.apply(window.console, 'error', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
 Cute.warn = function () {
-  Cute.ifConsole('warn', arguments)
+  Cute.apply(window.console, 'warn', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
 Cute.info = function () {
-  Cute.ifConsole('info', arguments)
+  Cute.apply(window.console, 'info', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
 Cute.log = function () {
-  Cute.ifConsole('log', arguments)
+  Cute.apply(window.console, 'log', arguments)
 }
 
 /**
  * Log values to the console, if it's available.
  */
 Cute.trace = function () {
-  Cute.ifConsole('trace', arguments)
-}
-
-/**
- * Log values to the console, if it's available.
- */
-Cute.ifConsole = function (method, args) {
-  var console = window.console
-  if (console && console[method]) {
-    console[method].apply(console, args)
-  }
+  Cute.apply(window.console, 'trace', arguments)
 }
 
 //-env:debug
@@ -1540,10 +1503,11 @@ Cute.scrollTop = function (top) {
 Cute.scrollToAnchor = function (name) {
   var offset = 0
   var element
-
-
-  element = Cute.all('a[name=' + name + ']')[0]
-
+  Cute.all('a', function (anchor) {
+    if (anchor.name === name) {
+      element = anchor
+    }
+  })
   while (element) {
     offset += element.offsetTop || 0
     element = element.offsetParent || 0
@@ -1790,10 +1754,6 @@ Cute.persist = function (key, value) {
 
 /* global Cute */
 
-Cute.string = function (value) {
-  return (typeof value === 'string') ? value : '' + value
-}
-
 /**
  * Return true if the string contains the given substring.
  */
@@ -1903,7 +1863,7 @@ Cute.beamTimes = function (label) {
  * Check whether a value is undefined.
  *
  * @param  {Any}     value  A value to check.
- * @return {boolean}        True if the value is undefined.
+ * @return {Boolean}        True if the value is undefined.
  */
 Cute.isUndefined = function (value) {
   return typeof value === 'undefined'
@@ -1913,37 +1873,37 @@ Cute.isUndefined = function (value) {
  * Check whether a value is a boolean.
  *
  * @param  {Any}     value  A value to check.
- * @return {boolean}        True if the value is a boolean.
+ * @return {Boolean}        True if the value is a boolean.
  */
 Cute.isBoolean = function (value) {
-  return typeof value === 'boolean'
+  return typeof value === 'boolean' || value instanceof Boolean
 }
 
 /**
  * Check whether a value is a number.
  *
  * @param  {Any}     value  A value to check.
- * @return {boolean}        True if the value is a number.
+ * @return {Boolean}        True if the value is a number.
  */
 Cute.isNumber = function (value) {
-  return typeof value === 'number'
+  return typeof value === 'number' || value instanceof Number
 }
 
 /**
  * Check whether a value is a string.
  *
  * @param  {Any}     value  A value to check.
- * @return {boolean}        True if the value is a string.
+ * @return {Boolean}        True if the value is a string.
  */
 Cute.isString = function (value) {
-  return typeof value === 'string'
+  return typeof value === 'string' || value instanceof String
 }
 
 /**
  * Check whether a value is a function.
  *
  * @param  {Any}     value  A value to check.
- * @return {boolean}        True if the value is a function.
+ * @return {Boolean}        True if the value is a function.
  */
 Cute.isFunction = function (value) {
   return typeof value === 'function'
@@ -1953,7 +1913,7 @@ Cute.isFunction = function (value) {
  * Check whether a value is an object.
  *
  * @param  {Any}     value  A value to check.
- * @return {boolean}        True if the value is an object.
+ * @return {Boolean}        True if the value is an object.
  */
 Cute.isObject = function (value) {
   return typeof value === 'object'
@@ -1963,7 +1923,7 @@ Cute.isObject = function (value) {
  * Check whether a value is null.
  *
  * @param  {Any}     value  A value to check.
- * @return {boolean}        True if the value is null.
+ * @return {Boolean}        True if the value is null.
  */
 Cute.isNull = function (value) {
   return value === null
@@ -1973,7 +1933,7 @@ Cute.isNull = function (value) {
  * Check whether a value is an array.
  *
  * @param  {Any}     value  A value to check.
- * @return {boolean}        True if the value is an array.
+ * @return {Boolean}        True if the value is an array.
  */
 Cute.isArray = function (value) {
   return value instanceof Array
@@ -1983,9 +1943,30 @@ Cute.isArray = function (value) {
  * Check whether a value is a date.
  *
  * @param  {Any}     value  A value to check.
- * @return {boolean}        True if the value is a date.
+ * @return {Boolean}        True if the value is a date.
  */
 Cute.isDate = function (value) {
   return value instanceof Date
+}
+
+/**
+ * Turn a value into a string if it isn't already.
+ *
+ * @param  {Any}    value  A value that might be a string.
+ * @return {String}        A string made from appending the given value to the
+ *                         empty string.
+ */
+Cute.string = function (value) {
+  return Cute.isString(value) ? value : '' + value
+}
+
+/**
+ * Turn a value into an array if it isn't already.
+ *
+ * @param  {Any}     value  A value that might be an array.
+ * @return {Array}          An array that is or contains the value passed in.
+ */
+Cute.array = function (value) {
+  return Cute.isArray(value) ? value : (Cute.isUndefined(value) ? [] : [value])
 }
 

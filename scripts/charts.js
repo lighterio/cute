@@ -1,4 +1,4 @@
-/* global Cute */
+
 
 /**
  * Get 100 consistent colors for charting.

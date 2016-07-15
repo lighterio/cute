@@ -1,8 +1,8 @@
 'use strict'
-/* global describe it after */
+
 var is = global.is || require('exam-is')
 var jsdom = require('jsdom')
-var Cute = require('../cute')
+var Cute = require('../cute.test')
 var http = require('http')
 var port = 15478
 var host = 'http://127.0.0.1:' + port
@@ -39,9 +39,9 @@ function domTests (window) {
     })
   })
 
-  describe('.xhr', function () {
+  describe('._xhr', function () {
     it('returns an XMLHttpRequest object', function () {
-      var request = Cute.xhr()
+      var request = Cute._xhr()
       is(request.constructor.name, 'XMLHttpRequest')
     })
   })

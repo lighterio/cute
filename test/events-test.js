@@ -1,10 +1,10 @@
 'use strict'
-/* global describe it */
+
 var is = global.is || require('exam-is')
 var mock = global.mock || require('exam-mock')
 // var unmock = mock.unmock
 var dom = require('./helpers/dom-helper')
-var Cute = require('../cute')
+var Cute = require('../cute.test')
 
 describe('Cute', function () {
   describe('.on', function (done) {
@@ -71,12 +71,12 @@ describe('Cute', function () {
     })
   })
 
-  describe('.propagate', function () {
+  describe('._propagate', function () {
     it('works with window.event if an event is not passed', function () {
       global.window.event = {
         type: 'load'
       }
-      Cute.propagate()
+      Cute._propagate()
     })
   })
 

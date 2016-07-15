@@ -1,4 +1,4 @@
-/* global Cute */
+
 
 /**
  * Iterate over a string, array or object.
@@ -53,10 +53,11 @@ Cute.decorate = function (object, decorations) {
 }
 
 /**
- * Return a property if it is defined, otherwise set and return a default if provided.
+ * Get the value of an object property, and optionally set it to a default
+ * value if it's not defined.
  *
  * @param  {Object} object        An object to get/set a property on.
- * @param  {String} property      A property name.
+ * @param  {String} property      The property name.
  * @param  {Any}    defaultValue  An optional default value for the property.
  * @return {Any}                  The resulting property value.
  */
@@ -104,14 +105,4 @@ Cute.merge = function (array) {
     }
   })
   return array
-}
-
-/**
- * Make a singleton array if an object isn't already an array.
- *
- * @param  {Any}     value  A value that might be an array.
- * @return {Array}          An array that is or contains the value passed in.
- */
-Cute.array = function (value) {
-  return Cute.isArray(value) ? value : [value]
 }

@@ -1,4 +1,4 @@
-/* global Cute */
+
 
 /**
  * The values in this file can be overridden externally.

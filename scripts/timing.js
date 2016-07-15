@@ -1,4 +1,4 @@
-/* global Cute */
+
 
 /**
  * Set or clear a timeout or interval. If set, save it for possible clearing.

@@ -45,16 +45,8 @@ figlet.text('Cute v' + pkg.version, {font: 'Small'}, function (e, art) {
     })
     .replace(/\/\/ (\+|-)/g, '//$1')
     .each(function (asset) {
-      var content = asset.getContent()
-      write(asset, content, 'ok', 'cute.js')
-      write(asset, content, 'old', 'cute.compat.js')
+      asset
+        .replace(/ +\n/g, '\n')
+        .write(dir, 'cute.js')
     })
 })
-
-function write (asset, content, browser, file) {
-  asset.setContent(content)
-  asset
-    .cull('browser', browser)
-    .replace(/ +\n/g, '\n')
-    .write(dir, file)
-}
