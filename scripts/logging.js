@@ -1,5 +1,3 @@
-
-
 // When not in debug mode, make the logging functions do nothing.
 Cute.error = Cute.no
 Cute.warn = Cute.no

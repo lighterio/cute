@@ -1,5 +1,3 @@
-
-
 /**
  * Return true if the string contains the given substring.
  */

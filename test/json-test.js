@@ -26,11 +26,15 @@ describe('Cute', function () {
       is(json, undefined)
     })
 
-    it('handles undefined', function () {
-      var json = stringify(undefined)
-      is(json, undefined)
-      json = stringify()
-      is(json, undefined)
+    it('handles toJSON methods', function () {
+      var value = function () {
+        return 1
+      }
+      value.toJSON = value
+      var json = stringify(value)
+      is(json, '1')
+      json = stringify([value])
+      is(json, '[1]')
     })
   })
 })

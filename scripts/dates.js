@@ -1,5 +1,3 @@
-
-
 /**
  * Returns a Date object.
  *

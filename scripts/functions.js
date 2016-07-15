@@ -1,5 +1,3 @@
-
-
 /**
  * Empty handler.
  * @type {Function}

@@ -1,5 +1,3 @@
-
-
 /**
  * Iterate over a string, array or object.
  * Call a function on each value.

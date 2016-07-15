@@ -1,5 +1,3 @@
-
-
 /**
  * Scroll the top of the page to a specified Y position.
  *

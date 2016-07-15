@@ -1,5 +1,3 @@
-
-
 /**
  * Get the <head> element from the document.
  *

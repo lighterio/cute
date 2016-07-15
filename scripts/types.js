@@ -1,5 +1,3 @@
-
-
 /**
  * Check whether a value is undefined.
  *

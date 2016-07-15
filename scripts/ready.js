@@ -1,5 +1,3 @@
-
-
 /**
  * Execute a function when the page loads or new content is added.
  *

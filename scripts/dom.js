@@ -1,5 +1,3 @@
-
-
 /**
  * Get an element by its ID (if the argument is an ID).
  * If you pass in an element, it just returns it.

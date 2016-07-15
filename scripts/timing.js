@@ -1,5 +1,3 @@
-
-
 /**
  * Set or clear a timeout or interval. If set, save it for possible clearing.
  * The timer can either be added to the setTimer method itself, or it can

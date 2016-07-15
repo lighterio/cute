@@ -1,5 +1,3 @@
-
-
 /**
  * The values in this file can be overridden externally.
  * The default locale is US. Sorry, World.

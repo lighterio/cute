@@ -1,5 +1,3 @@
-
-
 /**
  * Create a circular-safe JSON (or JSON-like) string.
  *
@@ -10,6 +8,9 @@
  */
 Cute.stringify = function (data, quote, stack) {
   quote = quote || '"'
+  if (data && Cute.isFunction(data.toJSON)) {
+    return Cute.string(data.toJSON())
+  }
   if (Cute.isString(data)) {
     data = quote + data.replace(/\n\r"'/g, function (c) {
       return c === '\n' ? '\\n'
@@ -49,7 +50,7 @@ Cute.stringify = function (data, quote, stack) {
     stack.pop()
     data = before + parts.join(',') + after
   } else {
-    data = '' + data
+    data = Cute.string(data)
   }
   return data
 }

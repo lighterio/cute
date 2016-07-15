@@ -1,5 +1,3 @@
-
-
 /**
  * Push, replace or pop a history item.
  *

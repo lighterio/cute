@@ -1,5 +1,3 @@
-
-
 /**
  * If the argument is numeric, return a number, otherwise return zero.
  *

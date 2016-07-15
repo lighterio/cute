@@ -1,5 +1,3 @@
-
-
 /**
  * Event Handlers
  * @type {Object}
