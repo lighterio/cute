@@ -2,7 +2,7 @@
  * Event Handlers
  * @type {Object}
  */
-Cute.handlers = {}
+Cute._handlers = {}
 
 /**
  * Listen for one or more events, optionally on a given element.
@@ -20,10 +20,9 @@ Cute.on = function (target, types, listener) {
   var element = Cute.isString(target) ? document : target
   types = types.split(/\s+/)
   Cute.each(types, function (type) {
-    var handlers = Cute.handlers[type]
+    var handlers = Cute._handlers[type]
     if (!handlers) {
-      handlers = Cute.handlers[type] = []
-      /* istanbul ignore next */
+      handlers = Cute._handlers[type] = []
       if (element.addEventListener) {
         element.addEventListener(type, Cute._propagate)
       } else if (element.attachEvent) {
@@ -45,7 +44,7 @@ Cute.on = function (target, types, listener) {
 Cute.off = function (types, listener) {
   types = types.split(/\s+/)
   Cute.each(types, function (type) {
-    var handlers = Cute.handlers[type]
+    var handlers = Cute._handlers[type]
     Cute.each(handlers, function (item, index) {
       if (item && (item.f === listener)) {
         delete handlers[index]
@@ -107,7 +106,7 @@ Cute._propagate = function (event) {
 
   // Propagate the event up through the target's DOM parents.
   var element = eventTarget
-  var handlers = Cute.handlers[type]
+  var handlers = Cute._handlers[type]
   while (element && !event.stop) {
     Cute.each(handlers, function (handler) {
       if (handler) {

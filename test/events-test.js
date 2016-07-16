@@ -47,6 +47,26 @@ describe('Cute', function () {
         Cute.on('click', handle)
         link.click()
       })
+
+      it('binds using any method available', function () {
+        var a = {addEventListener: mock.args()}
+        var b = {attachEvent: mock.args()}
+        var c = {}
+        var f = function () {}
+
+        Cute.on(a, 'load', f)
+        delete Cute._handlers.load
+
+        Cute.on(b, 'load', f)
+        delete Cute._handlers.load
+
+        Cute.on(c, 'load', f)
+        delete Cute._handlers.load
+
+        is.same(a.addEventListener.value, [{0: 'load', 1: Cute._propagate}])
+        is.same(b.attachEvent.value, [{0: 'onload', 1: Cute._propagate}])
+        is(c.onload, Cute._propagate)
+      })
       done()
     })
   })
