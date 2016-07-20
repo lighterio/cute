@@ -1,54 +1,36 @@
 /**
- * Create a circular-safe JSON (or JSON-like) string.
+ * Creates a JSON string.
  *
- * @param  {Any}    data   Data to stringify.
- * @param  {String} quote  Double quote or single quote.
- * @param  {Array}  stack
- * @return {String}
+ * @param  {Any}    data  Data to stringify.
+ * @return {String}       A JSON string.
  */
-Cute.stringify = function (data, quote, stack) {
-  quote = quote || '"'
-  if (data && Cute.isFunction(data.toJSON)) {
-    return Cute.string(data.toJSON())
-  }
-  if (Cute.isString(data)) {
-    data = quote + data.replace(/\n\r"'/g, function (c) {
-      return c === '\n' ? '\\n'
-        : c === '\r' ? '\\r'
-        : c === quote ? '\\' + c
-        : c === '"' ? '&quot;' : "'"
-    }) + quote
+Cute.stringify = function (data, _stack) {
+  if (Cute.isDate(data) ||
+    data && Cute.isFunction(data.toJSON) ||
+    Cute.isString(data)) {
+    data = JSON.stringify(data)
   } else if (Cute.isFunction(data) || Cute.isUndefined(data)) {
-    return stack ? null : undefined
+    return _stack ? 'null' : undefined
   } else if (data && Cute.isObject(data) && !(data instanceof Boolean) && !(data instanceof Number)) {
-    stack = stack || []
+    _stack = _stack || []
     var isCircular
-    Cute.each(stack, function (item) {
+    Cute.each(_stack, function (item) {
       if (item === data) {
         isCircular = 1
       }
     })
     if (isCircular) {
-      return null
+      return '"[Circular ' + (_stack.length) + ']"'
     }
-    stack.push(data)
+    _stack.push(data)
+    var isArray = Cute.isArray(data)
     var parts = []
-    var before, after
-    if (Cute.isArray(data)) {
-      before = '['
-      after = ']'
-      Cute.each(data, function (value) {
-        parts.push(Cute.stringify(value, quote, stack))
-      })
-    } else {
-      before = '{'
-      after = '}'
-      Cute.each(data, function (value, key) {
-        parts.push(Cute.stringify(key, quote) + ':' + Cute.stringify(value, quote, stack))
-      })
-    }
-    stack.pop()
-    data = before + parts.join(',') + after
+    Cute.each(data, function (value, key) {
+      value = Cute.stringify(value, _stack)
+      parts.push(isArray ? value : Cute.stringify(key) + ':' + value)
+    })
+    _stack.pop()
+    data = (isArray ? '[' : '{') + parts.join(',') + (isArray ? ']' : '}')
   } else {
     data = Cute.string(data)
   }
@@ -56,33 +38,42 @@ Cute.stringify = function (data, quote, stack) {
 }
 
 /**
- * Create a JSON-ish string.
+ * Create a JSON string with its double quotes escaped.
+ *
+ * @param  {Any}    data  Data to stringify.
+ * @return {String}       A JSON string with escaped quotes.
  */
 Cute.attrify = function (data) {
-  return Cute.stringify(data, "'")
+  return Cute.stringify(data).replace(/"/g, '&quot;')
 }
 
 /**
- * Parse JavaScript and return a value.
+ * Parse JSON (or JavaScript) and return a value.
+ *
+ * @param  {String} js           JSON (or JavaScript).
+ * @param  {Any}    alternative  Fallback value if an error occurs.
+ * @return {Any}                 Value of the JSON/JS or fallback.
  */
-Cute.parse = function (value, alternative) {
+Cute.parse = function (js, alternative) {
   try {
     /* eslint-disable */
-    eval('eval.J=' + value)
+    eval('eval.J=' + js)
+    js = eval.J
     /* eslint-enable */
-    value = eval.J
   } catch (ignore) {
     // +env:debug
-    Cute.error('[Cute] Could not parse JS: ' + value)
+    Cute.error('[Cute] Could not parse JS: ' + js)
     // -env:debug
-    value = alternative
+    js = alternative
   }
-  return value
+  return js
 }
 
 /**
- * Execute JavaScript.
+ * Run some JavaScript.
+ *
+ * @param  {String} js  JavaScript code to run.
  */
-Cute.execute = function (js) {
+Cute.run = function (js) {
   Cute.parse('0;' + js)
 }
