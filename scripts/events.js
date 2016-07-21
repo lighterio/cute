@@ -7,7 +7,7 @@ Cute._handlers = {}
 /**
  * Listen for one or more events, optionally on a given element.
  *
- * @param  {String|HTMLElement} target    An optional selector or element.
+ * @param  {String|DOMElement} target    An optional selector or element.
  * @param  {String|Array}       types     A list of events to listen for.
  * @param  {Function}           listener  A callback function.
  */
@@ -57,7 +57,7 @@ Cute.off = function (types, listener) {
  * Listen for one or more events, optionally on a given element, and ensure that the
  * listener will only be executed once.
  *
- * @param  {String|HTMLElement} target    An optional selector or element.
+ * @param  {String|DOMElement} target    An optional selector or element.
  * @param  {String|Array}       types     A list of events to listen for.
  * @param  {Function}           listener  A function to execute when an event occurs.
  */
@@ -72,7 +72,7 @@ Cute.once = function (target, types, listener) {
 /**
  * Simulate an event.
  *
- * @param  {HTMLElement} target  A target to start propagation from.
+ * @param  {DOMElement} target  A target to start propagation from.
  * @param  {String}      event   A type of event.
  * @param  {Object}      data    Optional data to report with the event.
  */
@@ -131,7 +131,7 @@ Cute._propagate = function (event) {
 /**
  * Find out if an element matches a given selector.
  *
- * @param  {HTMLElement} element   An element to pretend the event occurred on.
+ * @param  {DOMElement} element   An element to pretend the event occurred on.
  * @param  {String}      selector  A CSS selector to check against an element.
  * @return {Boolean}               True if the element (this) matches the selector.
  */
@@ -169,7 +169,7 @@ Cute.stop = function (event) {
 /**
  * Focus on a specified element.
  *
- * @param  {HTMLElement} element  The element to focus on.
+ * @param  {DOMElement} element  The element to focus on.
  */
 Cute.focus = function (element) {
   Cute.apply(element, 'focus')

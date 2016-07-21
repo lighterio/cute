@@ -32,14 +32,14 @@ describe('Cute', function () {
         }
       })
       var now = Date.now()
-      var time = Cute.getTime()
+      var time = Cute.ms()
       is(now, time)
       unmock(Date)
     })
 
     it('returns epoch milliseconds for a given date', function () {
       var then = new Date(1e12)
-      var when = Cute.getTime(then)
+      var when = Cute.ms(then)
       is(then.getTime(), when)
     })
   })

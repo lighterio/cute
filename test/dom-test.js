@@ -1,8 +1,6 @@
 'use strict'
 
 var is = global.is || require('exam-is')
-// var mock = global.mock || require('exam-mock')
-// var unmock = mock.unmock
 var dom = require('./helpers/dom-helper')
 var Cute = require('../cute.test')
 

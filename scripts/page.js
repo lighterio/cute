@@ -28,7 +28,7 @@ Cute.js = function (src, fn) {
   if (fn) {
     Cute.ready(script, fn)
   }
-  script.async = 1
+  script.async = true
   script.src = src
 }
 
@@ -39,7 +39,8 @@ Cute.js = function (src, fn) {
  */
 Cute.css = function (css) {
   var head = Cute.head()
-  var style = Cute.add(head, 'style?type=text/css', css)
+  var style = Cute.add(head, 'style')
+  Cute.text(style, css)
   var sheet = style.styleSheet
   if (sheet) {
     sheet.cssText = css

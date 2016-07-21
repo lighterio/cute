@@ -55,6 +55,4 @@ describe('Cute', function () {
       is.same(console.trace.value, [{0: '!'}])
     })
   })
-
-  // TODO: Test everything!
 })

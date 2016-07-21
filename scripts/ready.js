@@ -10,25 +10,25 @@ Cute.ready = function (object, listener) {
   }
 
   // If the object is alreay ready, run the function now.
-  if (object._isReady) {
+  if (Cute.isReady(object)) {
     listener(object)
-  }
-
-  // Create a function that replaces itself so it will only run once.
-  var fn = function () {
-    if (Cute.isReady(object)) {
-      Cute.isReady(object, 1)
-      listener(object)
-      listener = Cute.no
+  } else {
+    // Create a function that replaces itself so it will only run once.
+    var fn = function () {
+      if (Cute.isReady(object)) {
+        Cute.isReady(object, 1)
+        listener(object)
+        listener = Cute.no
+      }
     }
+
+    // Bind using multiple methods for a variety of browsers.
+    Cute.on(object, 'readystatechange DOMContentLoaded', fn)
+    Cute.on(object === document ? window : object, 'load', fn)
+
+    // Bind to the Cute-triggered ready event.
+    Cute.on(object, '_ready', fn)
   }
-
-  // Bind using multiple methods for a variety of browsers.
-  Cute.on(object, 'readystatechange,DOMContentLoaded', fn)
-  Cute.on(object === document ? window : object, 'load', fn)
-
-  // Bind to the Cute-triggered ready event.
-  Cute.on(object, '_ready', fn)
 }
 
 /**
@@ -41,8 +41,8 @@ Cute.ready = function (object, listener) {
 Cute.isReady = function (object, setReady) {
   // Declare an object to be ready, and run events that have been bound to it.
   if (setReady && !object._ready) {
-    object._ready = true
-    Cute.emit('_ready', object)
+    object._ready = 1
+    Cute.emit(object, '_ready')
   }
   // AJAX requests have readyState 4 when loaded.
   // All documents will reach readyState=="complete".

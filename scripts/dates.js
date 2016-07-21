@@ -15,7 +15,7 @@ Cute.getDate = function (date) {
  * @param  {Date}   date  An optional Date object (default: now).
  * @return {Number}       Epoch milliseconds.
  */
-Cute.getTime = function (date) {
+Cute.ms = function (date) {
   return date ? Cute.getDate(date).getTime() : Date.now()
 }
 

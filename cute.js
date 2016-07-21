@@ -491,7 +491,7 @@ Cute.getDate = function (date) {
  * @param  {Date}   date  An optional Date object (default: now).
  * @return {Number}       Epoch milliseconds.
  */
-Cute.getTime = function (date) {
+Cute.ms = function (date) {
   return date ? Cute.getDate(date).getTime() : Date.now()
 }
 
@@ -586,9 +586,9 @@ Cute.formatTime = function (date) {
  * If you pass in an element, it just returns it.
  * This can be used to ensure that you have an element.
  *
- * @param  {HTMLElement}        parent  Optional element to call getElementById on (default: document).
- * @param  {string|HTMLElement} idOrElement    ID of an element, or the element itself.
- * @return {HTMLElement}                       The matching element, or undefined.
+ * @param  {DOMElement}        parent  Optional element to call getElementById on (default: document).
+ * @param  {string|DOMElement} idOrElement    ID of an element, or the element itself.
+ * @return {DOMElement}                       The matching element, or undefined.
  */
 Cute.id = function (parent, idOrElement) {
   if (!idOrElement) {
@@ -601,10 +601,10 @@ Cute.id = function (parent, idOrElement) {
 /**
  * Get or set the parent of an element.
  *
- * @param  {HTMLElement} element    A element whose parent we want to get/set.
+ * @param  {DOMElement} element    A element whose parent we want to get/set.
  * @param  {String}      parent     An optional parent to add the element to.
  * @param  {String}      before     An optional child to insert the element before.
- * @return {HTMLElement}            The parent of the element.
+ * @return {DOMElement}            The parent of the element.
  */
 Cute.parent = function (element, parent, before) {
   if (parent) {
@@ -618,7 +618,7 @@ Cute.parent = function (element, parent, before) {
 /**
  * Get an element's ancestors, optionally filtered by a selector.
  *
- * @param  {HTMLElement} element   An element to start from.
+ * @param  {DOMElement} element   An element to start from.
  * @param  {String}      selector  An optional selector to filter ancestors.
  * @return {Array}                 The array of ancestors.
  */
@@ -636,7 +636,7 @@ Cute.up = function (element, selector) {
 /**
  * Get the child nodes of a parent element.
  *
- * @param  {HTMLElement}    element  A parent element who might have child nodes.
+ * @param  {DOMElement}    element  A parent element who might have child nodes.
  * @return {HTMLCollection}          The collection of child nodes.
  */
 Cute.nodes = function (element) {
@@ -646,7 +646,7 @@ Cute.nodes = function (element) {
 /**
  * Get an element's index with respect to its parent.
  *
- * @param  {HTMLElement} element  An element with a parent, and potentially siblings.
+ * @param  {DOMElement} element  An element with a parent, and potentially siblings.
  * @return {Number}               The element's index, or -1 if there's no matching element.
  */
 Cute.index = function (element) {
@@ -666,8 +666,8 @@ Cute.index = function (element) {
  *
  * Each part of the identifier is optional.
  *
- * @param  {HTMLElement|String} elementOrString  An element or a string used to create an element (default: div).
- * @return {HTMLElement}                         The existing or created element.
+ * @param  {DOMElement|String} elementOrString  An element or a string used to create an element (default: div).
+ * @return {DOMElement}                         The existing or created element.
  */
 Cute.create = function (elementOrString) {
   var element = elementOrString
@@ -706,10 +706,10 @@ Cute.create = function (elementOrString) {
 /**
  * Add a child element under a parent element, optionally before another element.
  *
- * @param  {HTMLElement}         parent           An optional parent element (default: document).
- * @param  {HTMLElement|String}  elementOrString  An element or a string used to create an element (default: div).
- * @param  {HTMLElement}         beforeSibling    An optional child to insert the element before.
- * @return {HTMLElement}                          The element that was inserted.
+ * @param  {DOMElement}         parent           An optional parent element (default: document).
+ * @param  {DOMElement|String}  elementOrString  An element or a string used to create an element (default: div).
+ * @param  {DOMElement}         beforeSibling    An optional child to insert the element before.
+ * @return {DOMElement}                          The element that was inserted.
  */
 Cute.add = function (parent, elementOrString, beforeSibling) {
   if (Cute.isString(parent)) {
@@ -734,7 +734,7 @@ Cute.add = function (parent, elementOrString, beforeSibling) {
 /**
  * Remove an element from its parent.
  *
- * @param  {HTMLElement} element  An element to remove.
+ * @param  {DOMElement} element  An element to remove.
  */
 Cute.remove = function (element) {
   // Remove the element from its parent, provided that it has a parent.
@@ -747,7 +747,7 @@ Cute.remove = function (element) {
 /**
  * Get or set an element's inner HTML.
  *
- * @param  {HTMLElement} element  An element.
+ * @param  {DOMElement} element  An element.
  * @param  {String}      html     An optional string of HTML to set as the innerHTML.
  * @return {String}               The element's HTML.
  */
@@ -761,7 +761,7 @@ Cute.html = function (element, html) {
 /**
  * Get an element's lowercase tag name.
  *
- * @param  {HTMLElement} element  An element.
+ * @param  {DOMElement} element  An element.
  * @return {String}               The element's tag name.
  */
 Cute.tag = function (element) {
@@ -771,7 +771,7 @@ Cute.tag = function (element) {
 /**
  * Get or set the text of an element.
  *
- * @param  {HTMLElement} element  An optional element.
+ * @param  {DOMElement} element  An optional element.
  * @return {String}      text     A text string to set.
  */
 Cute.text = function (element, text) {
@@ -786,7 +786,7 @@ Cute.text = function (element, text) {
 /**
  * Add text to an element.
  *
- * @param  {HTMLElement} element  An element.
+ * @param  {DOMElement} element  An element.
  * @return {String}      text     A text string to add.
  */
 Cute.addText = function (element, text, beforeSibling) {
@@ -796,7 +796,7 @@ Cute.addText = function (element, text, beforeSibling) {
 /**
  * Get, set, or delete an attribute of an element.
  *
- * @param  {HTMLElement} element  An element.
+ * @param  {DOMElement} element  An element.
  * @param  {String}      name     An attribute name.
  * @param  {String}      value    A value to set the attribute to.
  * @return {String}               The value of the attribute.
@@ -818,7 +818,7 @@ Cute.attr = function (element, name, value) {
 /**
  * Add, remove or check classes on an element.
  *
- * @param  {HTMLElement} element     An element to change or read classes from.
+ * @param  {DOMElement} element     An element to change or read classes from.
  * @param  {String}      operations  Space-delimited operations to perform on
  *                                   an element's className.
  *                                     * "!name" adds the "name" class if not
@@ -868,7 +868,7 @@ Cute.classes = function (element, operations) {
  * Selectors are not fully querySelector compatible.
  * Selectors only support commas, spaces, IDs, tags & classes.
  *
- * @param  {HTMLElement}    parent    An optional element under which to find elements.
+ * @param  {DOMElement}    parent    An optional element under which to find elements.
  * @param  {String}         selector  A simple selector for finding elements.
  * @param  {Function}       fn        An optional function to run on matching elements.
  * @return {HTMLCollection}           The matching elements (if any).
@@ -889,10 +889,10 @@ Cute.all = function (parent, selector, fn) {
 /**
  * Find an element matching a selector, optionally run a function on it, and return it.
  *
- * @param  {HTMLElement} parent  An optional element under which to find an element.
+ * @param  {DOMElement} parent  An optional element under which to find an element.
  * @param  {String}      selector       A simple selector for finding an element.
  * @param  {Function}    fn             An optional function to run on a matching element.
- * @return {HTMLElement}                The matching element (if any).
+ * @return {DOMElement}                The matching element (if any).
  */
 Cute.one = function (parent, selector, fn) {
   if (!selector || Cute.isFunction(selector)) {
@@ -946,8 +946,8 @@ Cute.pushHtml = function (html, selector) {
 /**
  * Update a DOM node based on the contents of another.
  *
- * @param  {HTMLElement} domNode     The DOM node to merge into.
- * @param  {HTMLElement} newNode     The virtual DOM to merge from.
+ * @param  {DOMElement} domNode     The DOM node to merge into.
+ * @param  {DOMElement} newNode     The virtual DOM to merge from.
  */
 Cute.update = function (domNode, newNode) {
   var domChild = domNode.firstChild || 0
@@ -1004,7 +1004,7 @@ Cute._handlers = {}
 /**
  * Listen for one or more events, optionally on a given element.
  *
- * @param  {String|HTMLElement} target    An optional selector or element.
+ * @param  {String|DOMElement} target    An optional selector or element.
  * @param  {String|Array}       types     A list of events to listen for.
  * @param  {Function}           listener  A callback function.
  */
@@ -1055,7 +1055,7 @@ Cute.off = function (types, listener) {
  * Listen for one or more events, optionally on a given element, and ensure that the
  * listener will only be executed once.
  *
- * @param  {String|HTMLElement} target    An optional selector or element.
+ * @param  {String|DOMElement} target    An optional selector or element.
  * @param  {String|Array}       types     A list of events to listen for.
  * @param  {Function}           listener  A function to execute when an event occurs.
  */
@@ -1070,7 +1070,7 @@ Cute.once = function (target, types, listener) {
 /**
  * Simulate an event.
  *
- * @param  {HTMLElement} target  A target to start propagation from.
+ * @param  {DOMElement} target  A target to start propagation from.
  * @param  {String}      event   A type of event.
  * @param  {Object}      data    Optional data to report with the event.
  */
@@ -1129,7 +1129,7 @@ Cute.propagate = function (event) {
 /**
  * Find out if an element matches a given selector.
  *
- * @param  {HTMLElement} element   An element to pretend the event occurred on.
+ * @param  {DOMElement} element   An element to pretend the event occurred on.
  * @param  {String}      selector  A CSS selector to check against an element.
  * @return {Boolean}               True if the element (this) matches the selector.
  */
@@ -1167,7 +1167,7 @@ Cute.stop = function (event) {
 /**
  * Focus on a specified element.
  *
- * @param  {HTMLElement} element  The element to focus on.
+ * @param  {DOMElement} element  The element to focus on.
  */
 Cute.focus = function (element) {
   Cute.apply(element, 'focus')
@@ -1178,7 +1178,7 @@ Cute.focus = function (element) {
 /**
  * Get or set the value of a form element.
  *
- * @param  {HTMLElement}  input     A form element.
+ * @param  {DOMElement}  input     A form element.
  * @param  {String|Array} newValue  An optional new value for the element.
  * @return {String|Array}           The current or new value.
  */
@@ -1527,7 +1527,7 @@ Cute.setUnit = function (unit) {
 /**
  * Get the width and height of an element.
  *
- * @param  {HTMLElement} element  Element to measure.
+ * @param  {DOMElement} element  Element to measure.
  */
 Cute.size = function (element) {
   element = element || 0
@@ -1537,7 +1537,7 @@ Cute.size = function (element) {
 /**
  * Move, and potentially re-size, an element.
  *
- * @param  {HTMLElement} element  Element to move.
+ * @param  {DOMElement} element  Element to move.
  * @param  {Number}      left     New left position for the element.
  * @param  {Number}      top      New top position for the element.
  * @param  {Number}      width    New width for the element.
@@ -1815,7 +1815,7 @@ Cute.unescape = function (value) {
 /**
  * Set or clear a timeout or interval. If set, save it for possible clearing.
  * The timer can either be added to the setTimer method itself, or it can
- * be added to an object provided (such as an HTMLElement).
+ * be added to an object provided (such as an DOMElement).
  *
  * @param {Object|String} objectOrString  An object to bind a timer to, or a name to call it.
  * @param {Function}      fn              A function to run if the timer is reached.
