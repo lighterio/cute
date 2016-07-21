@@ -6,7 +6,7 @@ var Cute = require('../cute.test')
 
 describe('Cute', function () {
   describe('.ready', function () {
-    it('runs a function when the dom is loaded', function (done) {
+    it('runs a function when the DOM is loaded', function (done) {
       dom('<p></p>', function () {
         Cute.ready(document, done)
         Cute.emit(document, 'DOMContentLoaded')
