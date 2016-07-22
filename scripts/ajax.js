@@ -43,7 +43,7 @@ Cute.get = function (url, data, fn) {
   if (data) {
     request.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
     if (Cute.isObject(data)) {
-      data = 'json=' + Cute.escape(Cute.stringify(data))
+      data = 'json=' + Cute.encode(Cute.stringify(data))
     }
   }
   request.send(data || null)

@@ -1,4 +1,19 @@
 /**
+ * Set style properties on a given element.
+ *
+ * @param  {DOMElement} element  Element to set style properties on.
+ * @param  {Object}     map      Optional style property map.
+ * @return {Object}              Style property of the element.
+ */
+Cute.style = function (element, map) {
+  var style = Cute.prop(element, 'style', 0)
+  Cute.each(map, function (value, key) {
+    style[key] = value
+  })
+  return style
+}
+
+/**
  * Scroll a page to a position or element.
  *
  * @param  {Integer|String|Object} to         A name, ID, element or Top/Left.
@@ -26,21 +41,6 @@ Cute.scroll = function (to, direction) {
 }
 
 /**
- * Set style properties on a given element.
- *
- * @param  {DOMElement} element  Element to set style properties on.
- * @param  {Object}     styles   Optional style property map.
- * @return {Object}              Style property of the element.
- */
-Cute.style = function (element, styles) {
-  var style = (element || 0).style || 0
-  Cute.each(styles, function (value, key) {
-    style[key] = value
-  })
-  return style
-}
-
-/**
  * Get or set the width and height of an element.
  *
  * @param  {DOMElement} element  Element to measure or resize.
@@ -49,25 +49,29 @@ Cute.style = function (element, styles) {
  */
 Cute.size = function (element, size) {
   element = element || 0
-  var width = element.offsetWidth || size[0]
-  var height = element.offsetHeight || size[1]
-  Cute.style(element, {width: width, height: height})
-  return [width, height]
+  if (size) {
+    Cute.style(element, {width: size[0], height: size[1]})
+  } else {
+    size = [element.offsetWidth || 0, element.offsetHeight || 0]
+  }
+  return size
 }
 
 /**
  * Get or set the left and top of an element.
  *
- * @param  {DOMElement} element  Element to measure or resize.
- * @param  {Array}      size     Optional left and top.
- * @return {Array}               Left and top.
+ * @param  {DOMElement} element   Element to measure or resize.
+ * @param  {Array}      position  Optional left and top.
+ * @return {Array}                Left and top.
  */
-Cute.move = function (element, size) {
+Cute.position = function (element, position) {
   element = element || 0
-  var left = element.offsetLeft || size[0]
-  var top = element.offsetTop || size[1]
-  Cute.style(element, {left: left, top: top})
-  return [left, top]
+  if (position) {
+    Cute.style(element, {left: position[0], top: position[1]})
+  } else {
+    position = [element.offsetLeft || 0, element.offsetTop || 0]
+  }
+  return position
 }
 
 /**
@@ -77,7 +81,7 @@ Cute.move = function (element, size) {
  */
 Cute.viewport = function () {
   function dim (key) {
-    return Math.max(document.documentElement['client' + key], window['inner' + key] || 0)
+    return Math.max(document.documentElement['client' + key] || 0, window['inner' + key] || 0)
   }
   return [dim('Width'), dim('Height')]
 }

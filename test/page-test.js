@@ -9,7 +9,6 @@ var port = 65284
 http.createServer(function (request, response) {
   response.setHeader('Content-type', 'text/javascript')
   response.end('window.ok = true')
-  alert('ok')
 }).listen(port)
 
 describe('Cute', function (done) {

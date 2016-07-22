@@ -13,7 +13,7 @@ Cute.cookie = function (name, value, options) {
     map = Cute.cookie.map = {}
     var parts = document.cookie.split(/; |=/)
     for (var i = 0, l = parts.length; i < l; i++) {
-      map[Cute.unescape(parts[i])] = Cute.unescape(parts[++i])
+      map[Cute.decode(parts[i])] = Cute.decode(parts[++i])
     }
   }
 
@@ -30,14 +30,14 @@ Cute.cookie = function (name, value, options) {
     // If a value is provided, set the cookie to that value.
     } else {
       options = options || {}
-      var pair = Cute.escape(name) + '=' + Cute.unescape(value)
+      var pair = Cute.encode(name) + '=' + Cute.encode(value)
 
       var path = options.path
       var domain = options.domain
       var secure = options.secure
 
       // If the value is null, expire it as of one millisecond ago.
-      var maxAge = (value === null) ? -1 : options.maxAge
+      var maxAge = Cute.isNull(value) ? -1 : options.maxAge
       var expires = maxAge ? new Date(Date.now() + maxAge) : 0
 
       document.cookie = pair +

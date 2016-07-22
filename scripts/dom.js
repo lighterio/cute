@@ -219,7 +219,7 @@ Cute.addText = function (element, text, beforeSibling) {
  * @return {String}               The value of the attribute.
  */
 Cute.attr = function (element, name, value) {
-  if (value === null) {
+  if (Cute.isNull(value)) {
     element.removeAttribute(name)
   } else if (Cute.isUndefined(value)) {
     value = element.getAttribute(name)

@@ -8,7 +8,9 @@ describe('Cute', function () {
   describe('.ready', function () {
     it('runs a function when the DOM is loaded', function (done) {
       dom('<p></p>', function () {
+        document.readyState = 'waiting'
         Cute.ready(document, done)
+        document.readyState = 'complete'
         Cute.emit(document, 'DOMContentLoaded')
       })
     })
