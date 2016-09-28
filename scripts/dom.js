@@ -325,42 +325,6 @@ Cute.one = function (parent, selector, fn) {
 }
 
 /**
- * Push new HTML into one or more selected elements.
- *
- * @param  {String} html     A string of HTML.
- * @param  {String} selector An optional selector (default: "body").
- */
-/*
-Cute.pushHtml = function (html, selector) {
-  var content = html
-  selector = selector || 'body'
-
-  if (selector === 'body') {
-    content = (/<body\b.*?>(.*?)<\/body>/i.exec(html) || 0)[0] || html
-  }
-
-  // Set the HTML of an element.
-  return Cute.all(selector, function (element) {
-    Cute.start('virtual')
-    var virtualDom = Cute.create('m', content)
-    Cute.end('virtual')
-    Cute.start('diff')
-    Cute.diffDom(element, virtualDom)
-    Cute.end('diff')
-    Cute.isReady(element, 1)
-
-    Cute.timer(function () {
-      Cute.all(virtualDom, 'script', function (script) {
-        script = Cute.html(script)
-        Cute.execute(script)
-      })
-      Cute.all('script', Cute.remove)
-    })
-  })[0]
-}
-*/
-
-/**
  * Update a DOM node based on the contents of another.
  *
  * @param  {DOMElement} domNode     The DOM node to merge into.
