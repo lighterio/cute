@@ -1,3 +1,4 @@
+var fs = require('fs')
 var chug = require('chug')
 var figlet = require('figlet')
 var pkg = require('./package')
@@ -23,7 +24,8 @@ figlet.text('Cute v' + pkg.version, {font: 'Small'}, function (e, art) {
         ' * Source:\n' +
         ' *   ' + urls.join('\n *   ') + '\n' +
         ' */\n\n' +
-        'var Cute = {version: \'' + pkg.version + '\'}\n\n' +
+        'var Cute = {}\n' +
+        'Cute.version = \'' + pkg.version + '\'\n\n' +
         '/* istanbul ignore next */\n' +
         '// +env:commonjs\n' +
         'if (typeof exports === \'object\') {\n' +
@@ -37,6 +39,7 @@ figlet.text('Cute v' + pkg.version, {font: 'Small'}, function (e, art) {
         '  });\n' +
         '}\n' +
         '// -env:amd\n' +
+        '// +env:window\n' +
         'else {\n' +
         '  this.Cute = Cute\n' +
         '}\n' +
@@ -44,7 +47,10 @@ figlet.text('Cute v' + pkg.version, {font: 'Small'}, function (e, art) {
         asset.getContent())
     })
     .replace(/\/\/ (\+|-)/g, '//$1')
+    .wrap()
+    .minify()
     .each(function (asset) {
+      fs.writeFileSync(dir + '/cute.js', asset.getContent())
       asset
         .replace(/ +\n/g, '\n')
         .write(dir, 'cute.js')

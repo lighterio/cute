@@ -3,7 +3,7 @@
 [![Version](https://img.shields.io/npm/v/cute.svg)](//www.npmjs.com/package/cute)
 [![Downloads](https://img.shields.io/npm/dm/cute.svg)](//www.npmjs.com/package/cute)
 [![Build](https://img.shields.io/travis/lighterio/cute.svg)](//travis-ci.org/lighterio/cute)
-[![Coverage](https://img.shields.io/coveralls/lighterio/cute/master.svg)](//coveralls.io/r/lighterio/cute)
+[![Coverage](https://img.shields.io/codecov/c/github/lighterio/cute/master.svg)](//codecov.io/gh/lighterio/cute)
 [![Support](https://img.shields.io/gittip/zerious.png)](https://www.gittip.com/lighterio/)
 
 

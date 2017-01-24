@@ -20,18 +20,19 @@
  *   https://github.com/lighterio/cute/blob/master/scripts/i18n.js
  *   https://github.com/lighterio/cute/blob/master/scripts/json.js
  *   https://github.com/lighterio/cute/blob/master/scripts/logging.js
- *   https://github.com/lighterio/cute/blob/master/scripts/move.js
  *   https://github.com/lighterio/cute/blob/master/scripts/numbers.js
  *   https://github.com/lighterio/cute/blob/master/scripts/page.js
  *   https://github.com/lighterio/cute/blob/master/scripts/ready.js
  *   https://github.com/lighterio/cute/blob/master/scripts/regexp.js
  *   https://github.com/lighterio/cute/blob/master/scripts/storage.js
  *   https://github.com/lighterio/cute/blob/master/scripts/strings.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/style.js
  *   https://github.com/lighterio/cute/blob/master/scripts/timing.js
  *   https://github.com/lighterio/cute/blob/master/scripts/types.js
  */
 
-var Cute = {version: '0.0.1'}
+var Cute = {}
+Cute.version = '0.0.1'
 
 /* istanbul ignore next */
 //+env:commonjs
@@ -46,19 +47,18 @@ else if (typeof define === 'function' && define.amd) {
   });
 }
 //-env:amd
+//+env:window
 else {
   this.Cute = Cute
 }
 //-env:window
-
-/* global Cute window XMLHttpRequest */
 
 /**
  * Get an XMLHttpRequest object (or ActiveX object in old IE).
  *
  * @return {XMLHttpRequest}  The request object.
  */
-Cute.xhr = function () {
+Cute._xhr = function () {
   return new XMLHttpRequest()
 }
 
@@ -68,7 +68,7 @@ Cute.xhr = function () {
  * @return {XMLHttpRequestUpload}  The request upload object.
  */
 Cute.upload = function () {
-  return Cute.xhr().upload
+  return Cute._xhr().upload
 }
 
 /**
@@ -84,7 +84,7 @@ Cute.get = function (url, data, fn) {
     fn = data
     data = 0
   }
-  var request = Cute.xhr()
+  var request = Cute._xhr()
   request.onreadystatechange = function (event) {
     if (request.readyState === 4) {
       var status = request.status
@@ -98,14 +98,12 @@ Cute.get = function (url, data, fn) {
   if (data) {
     request.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
     if (Cute.isObject(data)) {
-      data = 'json=' + Cute.escape(Cute.stringify(data))
+      data = 'json=' + Cute.encode(Cute.stringify(data))
     }
   }
   request.send(data || null)
   return request
 }
-
-/* global Cute */
 
 /**
  * Get 100 consistent colors for charting.
@@ -136,8 +134,6 @@ Cute.colors = function () {
   }
   return colors
 }
-
-/* global Cute */
 
 /**
  * Iterate over a string, array or object.
@@ -192,10 +188,11 @@ Cute.decorate = function (object, decorations) {
 }
 
 /**
- * Return a property if it is defined, otherwise set and return a default if provided.
+ * Get the value of an object property, and optionally set it to a default
+ * value if it's not defined.
  *
  * @param  {Object} object        An object to get/set a property on.
- * @param  {String} property      A property name.
+ * @param  {String} property      The property name.
  * @param  {Any}    defaultValue  An optional default value for the property.
  * @return {Any}                  The resulting property value.
  */
@@ -245,8 +242,6 @@ Cute.merge = function (array) {
   return array
 }
 
-/* global Cute */
-
 /**
  * Read cookies, and optionally get or set one.
  *
@@ -262,7 +257,7 @@ Cute.cookie = function (name, value, options) {
     map = Cute.cookie.map = {}
     var parts = document.cookie.split(/; |=/)
     for (var i = 0, l = parts.length; i < l; i++) {
-      map[Cute.unescape(parts[i])] = Cute.unescape(parts[++i])
+      map[Cute.decode(parts[i])] = Cute.decode(parts[++i])
     }
   }
 
@@ -279,14 +274,14 @@ Cute.cookie = function (name, value, options) {
     // If a value is provided, set the cookie to that value.
     } else {
       options = options || {}
-      var pair = Cute.escape(name) + '=' + Cute.unescape(value)
+      var pair = Cute.encode(name) + '=' + Cute.encode(value)
 
       var path = options.path
       var domain = options.domain
       var secure = options.secure
 
       // If the value is null, expire it as of one millisecond ago.
-      var maxAge = (value === null) ? -1 : options.maxAge
+      var maxAge = Cute.isNull(value) ? -1 : options.maxAge
       var expires = maxAge ? new Date(Date.now() + maxAge) : 0
 
       document.cookie = pair +
@@ -300,8 +295,6 @@ Cute.cookie = function (name, value, options) {
   }
   return value
 }
-
-/* global Cute */
 
 /**
  * Calculate an MD5 hash for a string (useful for things like Gravatars).
@@ -472,8 +465,6 @@ Cute.md5 = function (str) {
   }
 }
 
-/* global Cute */
-
 /**
  * Returns a Date object.
  *
@@ -578,8 +569,6 @@ Cute.formatTime = function (date) {
   }
   return string
 }
-
-/* global Cute */
 
 /**
  * Get an element by its ID (if the argument is an ID).
@@ -802,7 +791,7 @@ Cute.addText = function (element, text, beforeSibling) {
  * @return {String}               The value of the attribute.
  */
 Cute.attr = function (element, name, value) {
-  if (value === null) {
+  if (Cute.isNull(value)) {
     element.removeAttribute(name)
   } else if (Cute.isUndefined(value)) {
     value = element.getAttribute(name)
@@ -908,42 +897,6 @@ Cute.one = function (parent, selector, fn) {
 }
 
 /**
- * Push new HTML into one or more selected elements.
- *
- * @param  {String} html     A string of HTML.
- * @param  {String} selector An optional selector (default: "body").
- */
-/*
-Cute.pushHtml = function (html, selector) {
-  var content = html
-  selector = selector || 'body'
-
-  if (selector === 'body') {
-    content = (/<body\b.*?>(.*?)<\/body>/i.exec(html) || 0)[0] || html
-  }
-
-  // Set the HTML of an element.
-  return Cute.all(selector, function (element) {
-    Cute.start('virtual')
-    var virtualDom = Cute.create('m', content)
-    Cute.end('virtual')
-    Cute.start('diff')
-    Cute.diffDom(element, virtualDom)
-    Cute.end('diff')
-    Cute.isReady(element, 1)
-
-    Cute.timer(function () {
-      Cute.all(virtualDom, 'script', function (script) {
-        script = Cute.html(script)
-        Cute.execute(script)
-      })
-      Cute.all('script', Cute.remove)
-    })
-  })[0]
-}
-*/
-
-/**
  * Update a DOM node based on the contents of another.
  *
  * @param  {DOMElement} domNode     The DOM node to merge into.
@@ -993,8 +946,6 @@ Cute.update = function (domNode, newNode) {
   })
 }
 
-/* global Cute */
-
 /**
  * Event Handlers
  * @type {Object}
@@ -1004,7 +955,7 @@ Cute._handlers = {}
 /**
  * Listen for one or more events, optionally on a given element.
  *
- * @param  {String|DOMElement} target    An optional selector or element.
+ * @param  {String|DOMElement}  target    An optional selector or element.
  * @param  {String|Array}       types     A list of events to listen for.
  * @param  {Function}           listener  A callback function.
  */
@@ -1020,13 +971,12 @@ Cute.on = function (target, types, listener) {
     var handlers = Cute._handlers[type]
     if (!handlers) {
       handlers = Cute._handlers[type] = []
-      /* istanbul ignore next */
       if (element.addEventListener) {
-        element.addEventListener(type, Cute.propagate)
+        element.addEventListener(type, Cute._propagate)
       } else if (element.attachEvent) {
-        element.attachEvent('on' + type, Cute.propagate)
+        element.attachEvent('on' + type, Cute._propagate)
       } else {
-        element['on' + type] = Cute.propagate
+        element['on' + type] = Cute._propagate
       }
     }
     handlers.push({t: target, f: listener})
@@ -1075,7 +1025,7 @@ Cute.once = function (target, types, listener) {
  * @param  {Object}      data    Optional data to report with the event.
  */
 Cute.emit = function (target, type, data) {
-  Cute.propagate({
+  Cute._propagate({
     type: type,
     target: target,
     data: data
@@ -1092,7 +1042,7 @@ Cute.emit = function (target, type, data) {
  *                            data: Object    // Optional event data.
  *                          }
  */
-Cute.propagate = function (event) {
+Cute._propagate = function (event) {
   // Get the window-level event if an event isn't passed.
   event = event || window.event
 
@@ -1173,8 +1123,6 @@ Cute.focus = function (element) {
   Cute.apply(element, 'focus')
 }
 
-/* global Cute */
-
 /**
  * Get or set the value of a form element.
  *
@@ -1227,8 +1175,6 @@ Cute.value = function (input, newValue) {
   return setNew ? newValue : value
 }
 
-/* global Cute */
-
 /**
  * Empty handler.
  * @type {Function}
@@ -1262,8 +1208,6 @@ Cute.attempt = function (object, methodName, args) {
   }
 }
 
-/* global Cute */
-
 /**
  * Push, replace or pop a history item.
  *
@@ -1279,8 +1223,6 @@ Cute.go = function (href, inPlace) {
   Cute.attempt(history, method, [undefined, undefined, href])
   return history
 }
-
-/* global Cute */
 
 /**
  * The values in this file can be overridden externally.
@@ -1307,135 +1249,85 @@ Cute.i18n = {
   fahrenheit: 1
 }
 
-/* global Cute */
-
 /**
- * Create a circular-safe JSON (or JSON-like) string.
+ * Creates a JSON string.
  *
- * @param  {Any}    data   Data to stringify.
- * @param  {String} quote  Double quote or single quote.
- * @param  {Array}  stack
- * @return {String}
+ * @param  {Any}    data  Data to stringify.
+ * @return {String}       A JSON string.
  */
-Cute.stringify = function (data, quote, stack) {
-  quote = quote || '"'
-  if (Cute.isString(data)) {
-    data = quote + data.replace(/\n\r"'/g, function (c) {
-      return c === '\n' ? '\\n'
-        : c === '\r' ? '\\r'
-        : c === quote ? '\\' + c
-        : c === '"' ? '&quot;' : "'"
-    }) + quote
+Cute.stringify = function (data, _stack) {
+  if (Cute.isDate(data) ||
+    data && Cute.isFunction(data.toJSON) ||
+    Cute.isString(data)) {
+    data = JSON.stringify(data)
   } else if (Cute.isFunction(data) || Cute.isUndefined(data)) {
-    return stack ? null : undefined
+    return _stack ? 'null' : undefined
   } else if (data && Cute.isObject(data) && !(data instanceof Boolean) && !(data instanceof Number)) {
-    stack = stack || []
+    _stack = _stack || []
     var isCircular
-    Cute.each(stack, function (item) {
+    Cute.each(_stack, function (item) {
       if (item === data) {
         isCircular = 1
       }
     })
     if (isCircular) {
-      return null
+      return '"[Circular ' + (_stack.length) + ']"'
     }
-    stack.push(data)
+    _stack.push(data)
+    var isArray = Cute.isArray(data)
     var parts = []
-    var before, after
-    if (Cute.isArray(data)) {
-      before = '['
-      after = ']'
-      Cute.each(data, function (value) {
-        parts.push(Cute.stringify(value, quote, stack))
-      })
-    } else {
-      before = '{'
-      after = '}'
-      Cute.each(data, function (value, key) {
-        parts.push(Cute.stringify(key, quote) + ':' + Cute.stringify(value, quote, stack))
-      })
-    }
-    stack.pop()
-    data = before + parts.join(',') + after
+    Cute.each(data, function (value, key) {
+      value = Cute.stringify(value, _stack)
+      parts.push(isArray ? value : Cute.stringify(key) + ':' + value)
+    })
+    _stack.pop()
+    data = (isArray ? '[' : '{') + parts.join(',') + (isArray ? ']' : '}')
   } else {
-    data = '' + data
+    data = Cute.string(data)
   }
   return data
 }
 
 /**
- * Create a JSON-ish string.
+ * Create a JSON string with its double quotes escaped.
+ *
+ * @param  {Any}    data  Data to stringify.
+ * @return {String}       A JSON string with escaped quotes.
  */
 Cute.attrify = function (data) {
-  return Cute.stringify(data, "'")
+  return Cute.stringify(data).replace(/"/g, '&quot;')
 }
 
 /**
- * Parse JavaScript and return a value.
+ * Parse JSON (or JavaScript) and return a value.
+ *
+ * @param  {String} js           JSON (or JavaScript).
+ * @param  {Any}    alternative  Fallback value if an error occurs.
+ * @return {Any}                 Value of the JSON/JS or fallback.
  */
-Cute.parse = function (value, alternative) {
+Cute.parse = function (js, alternative) {
   try {
     /* eslint-disable */
-    eval('eval.J=' + value)
+    eval('eval.J=' + js)
+    js = eval.J
     /* eslint-enable */
-    value = eval.J
   } catch (ignore) {
     //+env:debug
-    Cute.error('[Cute] Could not parse JS: ' + value)
+    Cute.error('[Cute] Could not parse JS: ' + js)
     //-env:debug
-    value = alternative
+    js = alternative
   }
-  return value
+  return js
 }
 
 /**
- * Execute JavaScript.
+ * Run some JavaScript.
+ *
+ * @param  {String} js  JavaScript code to run.
  */
-Cute.execute = function (text) {
-  Cute.parse('0;' + text)
+Cute.run = function (js) {
+  Cute.parse('0;' + js)
 }
-
-/**
- * Parse a value and return a boolean no matter what.
- */
-Cute.parseBoolean = function (value, alternative) {
-  value = Cute.parse(value)
-  return Cute.isBoolean(value) ? value : (alternative || false)
-}
-
-/**
- * Parse a value and return a number no matter what.
- */
-Cute.parseNumber = function (value, alternative) {
-  value = Cute.parse(value)
-  return Cute.isNumber(value) ? value : (alternative || 0)
-}
-
-/**
- * Parse a value and return a string no matter what.
- */
-Cute.parseString = function (value, alternative) {
-  value = Cute.parse(value)
-  return Cute.isString(value) ? value : ('' + alternative)
-}
-
-/**
- * Parse a value and return an object no matter what.
- */
-Cute.parseObject = function (value, alternative) {
-  value = Cute.parse(value)
-  return Cute.isObject(value) ? value : (alternative || {})
-}
-
-/**
- * Parse a value and return an Array no matter what.
- */
-Cute.parseArray = function (value, alternative) {
-  value = Cute.parse(value)
-  return Cute.isObject(value) ? value : (alternative || [])
-}
-
-/* global Cute */
 
 // When not in debug mode, make the logging functions do nothing.
 Cute.error = Cute.no
@@ -1483,110 +1375,46 @@ Cute.trace = function () {
 
 //-env:debug
 
-/* global Cute */
-
-/**
- * Scroll the top of the page to a specified Y position.
- *
- * @param  {Integer} top  A specified Y position, in pixels.
- */
-Cute.scrollTop = function (top) {
-  document.body.scrollTop = (document.documentElement || 0).scrollTop = top
-}
-
-/**
- * Scroll the top of the page to a specified named anchor.
- *
- * @param  {String} name  The name of an HTML anchor.
- * @return {String}
- */
-Cute.scrollToAnchor = function (name) {
-  var offset = 0
-  var element
-  Cute.all('a', function (anchor) {
-    if (anchor.name === name) {
-      element = anchor
-    }
-  })
-  while (element) {
-    offset += element.offsetTop || 0
-    element = element.offsetParent || 0
-  }
-  Cute.scrollTop(offset - (document._menuOffset || 0))
-}
-
-/**
- * Set the units to be used for positioning.
- *
- * @param {String} unit  CSS positioning unit (px/em/rem).
- */
-Cute.setUnit = function (unit) {
-  Cute.setUnit._unit = unit
-}
-
-/**
- * Get the width and height of an element.
- *
- * @param  {DOMElement} element  Element to measure.
- */
-Cute.size = function (element) {
-  element = element || 0
-  return [element.offsetWidth, element.offsetHeight]
-}
-
-/**
- * Move, and potentially re-size, an element.
- *
- * @param  {DOMElement} element  Element to move.
- * @param  {Number}      left     New left position for the element.
- * @param  {Number}      top      New top position for the element.
- * @param  {Number}      width    New width for the element.
- * @param  {Number}      height   New height for the element.
- * @param  {String}      unit     An optional unit (px/em/rem).
- */
-Cute.moveElement = function (element, left, top, width, height, unit) {
-  unit = unit || Cute.setUnit._unit || ''
-}
-
-/**
- * Get the width and height of the viewport as an array.
- *
- * @return {Array} [width, height]
- */
-Cute.getViewport = function () {
-  function dim (key) {
-    return Math.max(document.documentElement['client' + key], window['inner' + key] || 0)
-  }
-  return [dim('Width'), dim('Height')]
-}
-
-/* global Cute */
-
 /**
  * If the argument is numeric, return a number, otherwise return zero.
  *
- * @param  {Object} number  An object to convert to a number, if necessary.
- * @return {Number}         The number, or zero.
+ * @param  {Any}    value  A value to convert to a number, if necessary.
+ * @return {Number}        The number, or zero.
  */
-Cute.ensureNumber = function (number) {
-  return isNaN(number *= 1) ? 0 : number
+Cute.number = function (value) {
+  return isNaN(value *= 1) ? 0 : (value || 0)
 }
 
 /**
- * Left-pad a number with zeros if it's shorter than the desired length.
+ * Repeat a string a specified number of times.
  *
- * @param  {Number} number  A number to pad.
- * @param  {Number} length  A length to pad to.
- * @return {String}         The zero-padded number.
+ * @param  {String} string  A string to repeat.
+ * @param  {Number} times   A number of times to repeat the string.
+ * @return {String}         The resulting string.
  */
-Cute.zeroFill = function (number, length) {
-  number = '' + number
-  // Repurpose the lenth variable to count how much padding we need.
-  length = Math.max(length - number.length, 0)
-  return (new Array(length + 1)).join('0') + number
+Cute.repeat = function (string, times) {
+  return (new Array(times + 1)).join(string)
 }
 
-/* global Cute */
+/**
+ * Pad a number with zeros or a string with spaces.
+ *
+ * @param  {Number|String} value   A value to pad.
+ * @param  {Number}        length  A length to pad to.
+ * @return {String}                The padded value.
+ */
+Cute.pad = function (value, length) {
+  // Repurpose the length variable to count how much padding we need.
+  length = Math.max(length - Cute.string(value).length, 0)
+
+  // Pad based on type.
+  if (Cute.isNumber(value)) {
+    value = Cute.repeat('0', length) + value
+  } else {
+    value = value + Cute.repeat(' ', length)
+  }
+  return value
+}
 
 /**
  * Get the <head> element from the document.
@@ -1618,7 +1446,7 @@ Cute.js = function (src, fn) {
   if (fn) {
     Cute.ready(script, fn)
   }
-  script.async = 1
+  script.async = true
   script.src = src
 }
 
@@ -1629,7 +1457,8 @@ Cute.js = function (src, fn) {
  */
 Cute.css = function (css) {
   var head = Cute.head()
-  var style = Cute.add(head, 'style?type=text/css', css)
+  var style = Cute.add(head, 'style')
+  Cute.text(style, css)
   var sheet = style.styleSheet
   if (sheet) {
     sheet.cssText = css
@@ -1648,8 +1477,6 @@ Cute.zoom = function (css) {
   })
 }
 
-/* global Cute */
-
 /**
  * Execute a function when the page loads or new content is added.
  *
@@ -1662,25 +1489,25 @@ Cute.ready = function (object, listener) {
   }
 
   // If the object is alreay ready, run the function now.
-  if (object._isReady) {
+  if (Cute.isReady(object)) {
     listener(object)
-  }
-
-  // Create a function that replaces itself so it will only run once.
-  var fn = function () {
-    if (Cute.isReady(object)) {
-      Cute.isReady(object, 1)
-      listener(object)
-      listener = Cute.no
+  } else {
+    // Create a function that replaces itself so it will only run once.
+    var fn = function () {
+      if (Cute.isReady(object)) {
+        Cute.isReady(object, 1)
+        listener(object)
+        listener = Cute.no
+      }
     }
+
+    // Bind using multiple methods for a variety of browsers.
+    Cute.on(object, 'readystatechange DOMContentLoaded', fn)
+    Cute.on(object === document ? window : object, 'load', fn)
+
+    // Bind to the Cute-triggered ready event.
+    Cute.on(object, '_ready', fn)
   }
-
-  // Bind using multiple methods for a variety of browsers.
-  Cute.on(object, 'readystatechange,DOMContentLoaded', fn)
-  Cute.on(object === document ? window : object, 'load', fn)
-
-  // Bind to the Cute-triggered ready event.
-  Cute.on(object, '_ready', fn)
 }
 
 /**
@@ -1693,16 +1520,14 @@ Cute.ready = function (object, listener) {
 Cute.isReady = function (object, setReady) {
   // Declare an object to be ready, and run events that have been bound to it.
   if (setReady && !object._ready) {
-    object._ready = true
-    Cute.emit('_ready', object)
+    object._ready = 1
+    Cute.emit(object, '_ready')
   }
   // AJAX requests have readyState 4 when loaded.
   // All documents will reach readyState=="complete".
   // In IE, scripts can reach readyState=="loaded" or readyState=="complete".
   return object._ready || /(4|complete|scriptloaded)$/.test('' + object.tagName + object.readyState)
 }
-
-/* global Cute */
 
 /**
  * Get the contents of a specified type of tag within a string of HTML.
@@ -1731,8 +1556,6 @@ Cute.tagContents = function (html, tagName, fn) {
 
 Cute.tagPatterns = {}
 
-/* global Cute */
-
 /**
  * Get or set an item in local storage.
  *
@@ -1740,22 +1563,32 @@ Cute.tagPatterns = {}
  * @param  {Any}    value  A value to be stringified and stored.
  * @return {Any}           The object that was fetched and deserialized
  */
-Cute.persist = function (key, value) {
+Cute.item = function (key, value) {
   var storage = window.localStorage
-  if (storage) {
-    if (Cute.isUndefined(value)) {
-      value = Cute.parse(storage.getItem(key))
-    } else {
-      storage.setItem(key, Cute.stringify(value))
-    }
+
+  // If no value is passed in, get a value.
+  if (Cute.isUndefined(value)) {
+    value = storage.getItem(key)
+    value = Cute.parse(value, value)
+
+  // A null value indicates that we want the actual value to be removed.
+  } else if (Cute.isNull(value)) {
+    storage.removeItem(key)
+    value = undefined
+
+  // If a non-null value is passed in, store it.
+  } else {
+    storage.setItem(key, Cute.stringify(value))
   }
   return value
 }
 
-/* global Cute */
-
 /**
  * Return true if the string contains the given substring.
+ *
+ * @param  {String}  string     A string to search within.
+ * @param  {String}  substring  A substring to search for.
+ * @return {Boolean}            True if the string contains the substring.
  */
 Cute.contains = function (string, substring) {
   return Cute.string(string).indexOf(substring) > -1
@@ -1763,13 +1596,32 @@ Cute.contains = function (string, substring) {
 
 /**
  * Return true if the string starts with the given substring.
+ *
+ * @param  {String}  string     A string to search within.
+ * @param  {String}  beginning  A substring to search for.
+ * @return {Boolean}            True if the string starts with the substring.
  */
-Cute.startsWith = function (string, substring) {
-  return Cute.string(string).indexOf(substring) === 0; // eslint-disable-line
+Cute.startsWith = function (string, beginning) {
+  return Cute.string(string).indexOf(beginning) === 0
+}
+
+/**
+ * Returns true if the string end with the given substring.
+ *
+ * @param  {String}  string  A string to search within.
+ * @param  {String}  ending  A substring to search for.
+ * @return {Boolean}         True if the string ends with the substring.
+ */
+Cute.endsWith = function (string, ending) {
+  string = Cute.string(string)
+  return string.indexOf(ending) === (string.length - ending.length)
 }
 
 /**
  * Trim the whitespace from a string.
+ *
+ * @param  {String} string  A string to trim.
+ * @return {String}         The trimmed string.
  */
 Cute.trim = function (string) {
   return Cute.string(string).replace(/^\s+|\s+$/g, '')
@@ -1777,87 +1629,193 @@ Cute.trim = function (string) {
 
 /**
  * Split a string by commas.
+ *
+ * @param  {String} string  A string to split.
+ * @return {Array}          The comma-delimited contents of the string.
  */
 Cute.split = function (string) {
   return Cute.string(string).split(',')
 }
 
 /**
- * Return a lowercase string.
+ * Convert a string to lower case.
+ *
+ * @param  {String} string  A string to convert to lower case.
+ * @return {String}         The lowercase string.
  */
 Cute.lower = function (string) {
   return Cute.string(string).toLowerCase()
 }
 
 /**
- * Return an uppercase string.
+ * Convert a string to an upper case.
+ *
+ * @param  {String} string  A string to convert to upper case.
+ * @return {String}         The uppercase string.
  */
 Cute.upper = function (string) {
   return Cute.string(string).toUpperCase()
 }
 
 /**
- * Return an escaped value for URLs.
+ * Measure the length of a string.
+ *
+ * @param  {String} string  A string to measure.
+ * @return {Number}         The string length.
  */
-Cute.escape = function (value) {
-  return encodeURIComponent(Cute.string(value))
+Cute.length = function (string) {
+  return Cute.string(string).length
 }
 
 /**
- * Return an unescaped value from an escaped URL.
+ * Return an encoded string for URLs.
+ *
+ * @param  {String} string  A string to escape.
+ * @return {String}         The escaped string.
  */
-Cute.unescape = function (value) {
-  return decodeURIComponent(Cute.string(value))
+Cute.encode = function (string) {
+  return encodeURIComponent(Cute.string(string))
 }
 
-/* global Cute */
+/**
+ * Return the decoded version of an encoded URL component.
+ *
+ * @param  {String} string  A string to decode.
+ * @return {String}         The decoded string.
+ */
+Cute.decode = function (string) {
+  return decodeURIComponent(Cute.string(string))
+}
+
+/**
+ * Set style properties on a given element.
+ *
+ * @param  {DOMElement} element  Element to set style properties on.
+ * @param  {Object}     map      Optional style property map.
+ * @return {Object}              Style property of the element.
+ */
+Cute.style = function (element, map) {
+  var style = Cute.prop(element, 'style', 0)
+  Cute.each(map, function (value, key) {
+    style[key] = value
+  })
+  return style
+}
+
+/**
+ * Scroll a page to a position or element.
+ *
+ * @param  {Integer|String|Object} to         A name, ID, element or Top/Left.
+ * @param  {String}                direction  Default: "Top".
+ */
+Cute.scroll = function (to, direction) {
+  direction = direction || 'Top'
+  if (Cute.isString(to)) {
+    to = Cute.one('a[name=' + to + '],#' + to)
+  }
+  if (to && Cute.isObject(to)) {
+    var element = to
+    to = 0
+    while (element) {
+      to += element['offset' + direction] || 0
+      element = element.offsetParent
+    }
+  }
+  var body = Cute.body()
+  var key = 'scroll' + direction
+  if (Cute.isNumber(to)) {
+    body[key] = document.documentElement[key] = to
+  }
+  return body[key]
+}
+
+/**
+ * Get or set the width and height of an element.
+ *
+ * @param  {DOMElement} element  Element to measure or resize.
+ * @param  {Array}      size     Optional width and height.
+ * @return {Array}               Width and height.
+ */
+Cute.size = function (element, size) {
+  element = element || 0
+  if (size) {
+    Cute.style(element, {width: size[0], height: size[1]})
+  } else {
+    size = [element.offsetWidth || 0, element.offsetHeight || 0]
+  }
+  return size
+}
+
+/**
+ * Get or set the left and top of an element.
+ *
+ * @param  {DOMElement} element   Element to measure or resize.
+ * @param  {Array}      position  Optional left and top.
+ * @return {Array}                Left and top.
+ */
+Cute.position = function (element, position) {
+  element = element || 0
+  if (position) {
+    Cute.style(element, {left: position[0], top: position[1]})
+  } else {
+    position = [element.offsetLeft || 0, element.offsetTop || 0]
+  }
+  return position
+}
+
+/**
+ * Get the width and height of the viewport as an array.
+ *
+ * @return {Array} [width, height]
+ */
+Cute.viewport = function () {
+  function dim (key) {
+    return Math.max(document.documentElement['client' + key] || 0, window['inner' + key] || 0)
+  }
+  return [dim('Width'), dim('Height')]
+}
 
 /**
  * Set or clear a timeout or interval. If set, save it for possible clearing.
- * The timer can either be added to the setTimer method itself, or it can
- * be added to an object provided (such as an DOMElement).
  *
- * @param {Object|String} objectOrString  An object to bind a timer to, or a name to call it.
- * @param {Function}      fn              A function to run if the timer is reached.
- * @param {Integer}       delay           An optional delay in milliseconds.
+ * @param {Object}   object  An object to bind a timer to.
+ * @param (String)   name    A name for the timer.
+ * @param {Function} fn      A function to run if the timer is reached.
+ * @param {Integer}  delay   An optional delay in milliseconds.
+ * @param {Boolean}  recur   Whether to occur regularly (i.e. setInterval).
  */
-Cute.timer = function (objectOrString, fn, delay, isInterval) {
-  var useString = Cute.isString(objectOrString)
-  var object = useString ? Cute.timer : objectOrString
-  var key = useString ? objectOrString : '_timeout'
-  clearTimeout(object[key])
+Cute.wait = function (object, name, fn, delay, recur) {
+  var map = Cute.prop(object, '_wait', {})
+  clearTimeout(map[name])
   if (fn) {
     if (Cute.isUndefined(delay)) {
       delay = 9
     }
-    object[key] = (isInterval ? setInterval : setTimeout)(fn, delay)
+    map[name] = (recur ? setInterval : setTimeout)(fn, delay)
   }
 }
 
-Cute.times = {}
+Cute._times = {}
 
-Cute.now = function () {
-  var perf = window.performance
-  return perf && perf.now ? perf.now() : Date.now()
+Cute.t = function () {
+  return (window.performance || Date).now()
 }
 
 Cute.start = function (label) {
-  Cute.times[label] = Cute.now()
+  Cute._times[label] = Cute.t()
 }
 
 Cute.end = function (label) {
-  Cute.times[label] = Cute.now() - Cute.times[label]
+  Cute._times[label] = Cute.t() - Cute._times[label]
 }
 
-Cute.beamTimes = function (label) {
+Cute.logTimes = function () {
   var times = []
-  Cute.each(Cute.times, function (value, key) {
+  Cute.each(Cute._times, function (value, key) {
     times.push(key + ' ' + value.toFixed(3) + 'ms')
   })
-  Beams.log(times.join(', '))
+  Cute.log(times.join(', '))
 }
-
-/* global Cute */
 
 /**
  * Check whether a value is undefined.

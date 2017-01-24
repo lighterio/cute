@@ -7,7 +7,7 @@ Cute._handlers = {}
 /**
  * Listen for one or more events, optionally on a given element.
  *
- * @param  {String|DOMElement} target    An optional selector or element.
+ * @param  {String|DOMElement}  target    An optional selector or element.
  * @param  {String|Array}       types     A list of events to listen for.
  * @param  {Function}           listener  A callback function.
  */

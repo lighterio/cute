@@ -5,7 +5,7 @@
   "dependencies": {},
   "devDependencies": {
     "chug": "^0.4.1",
-    "exam": "^1.4.1",
+    "exam": "^1.4.5",
     "figlet": "1.0.9",
     "jsdom": "7.2.2"
   },
@@ -43,7 +43,6 @@
     "test": "./node_modules/exam/exam.js",
     "cover": "./node_modules/exam/exam-cover.js",
     "report": "open coverage/lcov-report/index.html",
-    "coveralls": "./node_modules/exam/exam-coveralls.js",
     "bench": "./node_modules/exam/exam.js test/bench"
   },
   "repository": "https://github.com/lighterio/cute.git",
@@ -53,7 +52,7 @@
   "contributors": [
     "Sam Eubank <sameubank@gmail.com>"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "standard": {
     "globals": [
       "Cute",
