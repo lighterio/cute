@@ -1,6 +1,6 @@
 {
   "name": "cute",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Minifier-friendly JavaScript built for speed and power.",
   "dependencies": {},
   "devDependencies": {
