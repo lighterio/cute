@@ -43,7 +43,9 @@ Cute.get = function (url, data, fn) {
   request.open(method, url, true)
   if (data) {
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-    data = Cute.stringify(data)
+    if (!Cute.isString(data)) {
+      data = Cute.stringify(data)
+    }
   }
   request.send(data || null)
   return request
