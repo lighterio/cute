@@ -5,7 +5,7 @@ var pkg = require('./package')
 var dir = __dirname
 
 figlet.text('Cute v' + pkg.version, {font: 'Small'}, function (e, art) {
-  var pattern = /^.*\/(projects|workspace|node_modules|lighterio)\/([\d\w-_]+)\//i
+  var pattern = /^.*\/(projects|modules|workspace|node_modules|lighterio)\/([\d\w-_]+)\//i
   var url = 'https://github.com/lighterio/$2/blob/master/'
   var urls = []
 
@@ -51,8 +51,8 @@ figlet.text('Cute v' + pkg.version, {font: 'Small'}, function (e, art) {
     .minify()
     .each(function (asset) {
       fs.writeFileSync(dir + '/cute.js', asset.getContent())
-      asset
-        .replace(/ +\n/g, '\n')
-        .write(dir, 'cute.js')
+      // asset
+      //   .replace(/ +\n/g, '\n')
+      //   .write(dir, 'cute.js')
     })
 })

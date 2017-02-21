@@ -2,7 +2,7 @@
  * Set or clear a timeout or interval. If set, save it for possible clearing.
  *
  * @param {Object}   object  An object to bind a timer to.
- * @param (String)   name    A name for the timer.
+ * @param {String}   name    A name for the timer.
  * @param {Function} fn      A function to run if the timer is reached.
  * @param {Integer}  delay   An optional delay in milliseconds.
  * @param {Boolean}  recur   Whether to occur regularly (i.e. setInterval).

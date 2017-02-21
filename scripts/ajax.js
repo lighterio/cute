@@ -34,17 +34,15 @@ Cute.get = function (url, data, fn) {
     if (request.readyState === 4) {
       var status = request.status
       var text = request.responseText
-      var data = Cute.parse(text, 0)
+      var data = Cute.parse(text, data)
       fn(data, status)
     }
   }
   var method = data ? 'POST' : 'GET'
   request.open(method, url, true)
   if (data) {
-    request.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
-    if (Cute.isObject(data)) {
-      data = 'json=' + Cute.encode(Cute.stringify(data))
-    }
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+    data = Cute.stringify(data)
   }
   request.send(data || null)
   return request

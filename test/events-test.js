@@ -117,7 +117,8 @@ describe('Cute', function () {
       it('stops an event from propagating', function () {
         var calls = 0
         var link = Cute.id('yes')
-        var handle = function (link, type, event) {
+        var handle = function (link, event, type) {
+          is(type, 'click')
           Cute.stop(event)
           calls++
         }

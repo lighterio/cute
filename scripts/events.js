@@ -116,7 +116,7 @@ Cute._propagate = function (event) {
           ? Cute.matches(element, target)
           : (element === target)
         if (isMatch) {
-          fn(eventTarget, type, event)
+          fn(event.data || eventTarget, event, type)
         }
         return !event.stop
       }

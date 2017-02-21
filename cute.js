@@ -1,8 +1,8 @@
-/**   ___     _              __   __   _
- *   / __|  _| |_ ___  __ __/  \ /  \ / |
- *  | (_| || |  _/ -_) \ V / () | () || |
- *   \___\_,_|\__\___|  \_/ \__(_)__(_)_|
- *
+/**   ___     _              __   __   ___
+ *   / __|  _| |_ ___  __ __/  \ /  \ |_  )
+ *  | (_| || |  _/ -_) \ V / () | () | / /
+ *   \___\_,_|\__\___|  \_/ \__(_)__(_)___|
+ * 
  * http://lighter.io/cute
  *
  * Source:
@@ -32,7 +32,7 @@
  */
 
 var Cute = {}
-Cute.version = '0.0.1'
+Cute.version = '0.0.2'
 
 /* istanbul ignore next */
 //+env:commonjs
@@ -89,17 +89,15 @@ Cute.get = function (url, data, fn) {
     if (request.readyState === 4) {
       var status = request.status
       var text = request.responseText
-      var data = Cute.parse(text, 0)
+      var data = Cute.parse(text, data)
       fn(data, status)
     }
   }
   var method = data ? 'POST' : 'GET'
   request.open(method, url, true)
   if (data) {
-    request.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
-    if (Cute.isObject(data)) {
-      data = 'json=' + Cute.encode(Cute.stringify(data))
-    }
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+    data = Cute.stringify(data)
   }
   request.send(data || null)
   return request
@@ -1064,7 +1062,7 @@ Cute._propagate = function (event) {
           ? Cute.matches(element, target)
           : (element === target)
         if (isMatch) {
-          fn(eventTarget, type, event)
+          fn(event.data || eventTarget, event, type)
         }
         return !event.stop
       }
@@ -1779,7 +1777,7 @@ Cute.viewport = function () {
  * Set or clear a timeout or interval. If set, save it for possible clearing.
  *
  * @param {Object}   object  An object to bind a timer to.
- * @param (String)   name    A name for the timer.
+ * @param {String}   name    A name for the timer.
  * @param {Function} fn      A function to run if the timer is reached.
  * @param {Integer}  delay   An optional delay in milliseconds.
  * @param {Boolean}  recur   Whether to occur regularly (i.e. setInterval).
