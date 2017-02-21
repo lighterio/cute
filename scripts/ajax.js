@@ -20,7 +20,8 @@ Cute.upload = function () {
  * Make an AJAX request, and handle it with success or failure.
  *
  * @param  {String}   url   A URL from which to request a response.
- * @param  {String}   data  An optional query, which if provided, makes the request a POST.
+ * @param  {String}   data  An optional query, which if provided, makes a POST
+ *                          request, or if `null` makes a DELETE request.
  * @param  {Function} fn    An optional function which takes (data, status) arguments.
  */
 Cute.get = function (url, data, fn) {
@@ -38,7 +39,7 @@ Cute.get = function (url, data, fn) {
       fn(data, status)
     }
   }
-  var method = data ? 'POST' : 'GET'
+  var method = data ? 'POST' : Cute.isNull(data) ? 'DELETE' : 'GET'
   request.open(method, url, true)
   if (data) {
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')

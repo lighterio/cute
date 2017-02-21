@@ -213,7 +213,7 @@ Cute.addText = function (element, text, beforeSibling) {
 /**
  * Get, set, or delete an attribute of an element.
  *
- * @param  {DOMElement} element  An element.
+ * @param  {DOMElement}  element  An element.
  * @param  {String}      name     An attribute name.
  * @param  {String}      value    A value to set the attribute to.
  * @return {String}               The value of the attribute.

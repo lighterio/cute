@@ -1,7 +1,7 @@
 /**
  * Get or set the value of a form element.
  *
- * @param  {DOMElement}  input     A form element.
+ * @param  {DOMElement}  input      A form element.
  * @param  {String|Array} newValue  An optional new value for the element.
  * @return {String|Array}           The current or new value.
  */

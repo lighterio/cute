@@ -1,7 +1,7 @@
-/**   ___     _              __   __   ___
- *   / __|  _| |_ ___  __ __/  \ /  \ |_  )
- *  | (_| || |  _/ -_) \ V / () | () | / /
- *   \___\_,_|\__\___|  \_/ \__(_)__(_)___|
+/**   ___     _              __   __   ____
+ *   / __|  _| |_ ___  __ __/  \ /  \ |__ /
+ *  | (_| || |  _/ -_) \ V / () | () | |_ \
+ *   \___\_,_|\__\___|  \_/ \__(_)__(_)___/
  * 
  * http://lighter.io/cute
  *
@@ -32,7 +32,7 @@
  */
 
 var Cute = {}
-Cute.version = '0.0.2'
+Cute.version = '0.0.3'
 
 /* istanbul ignore next */
 //+env:commonjs
@@ -75,7 +75,8 @@ Cute.upload = function () {
  * Make an AJAX request, and handle it with success or failure.
  *
  * @param  {String}   url   A URL from which to request a response.
- * @param  {String}   data  An optional query, which if provided, makes the request a POST.
+ * @param  {String}   data  An optional query, which if provided, makes a POST
+ *                          request, or if `null` makes a DELETE request.
  * @param  {Function} fn    An optional function which takes (data, status) arguments.
  */
 Cute.get = function (url, data, fn) {
@@ -93,7 +94,7 @@ Cute.get = function (url, data, fn) {
       fn(data, status)
     }
   }
-  var method = data ? 'POST' : 'GET'
+  var method = data ? 'POST' : Cute.isNull(data) ? 'DELETE' : 'GET'
   request.open(method, url, true)
   if (data) {
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
@@ -783,7 +784,7 @@ Cute.addText = function (element, text, beforeSibling) {
 /**
  * Get, set, or delete an attribute of an element.
  *
- * @param  {DOMElement} element  An element.
+ * @param  {DOMElement}  element  An element.
  * @param  {String}      name     An attribute name.
  * @param  {String}      value    A value to set the attribute to.
  * @return {String}               The value of the attribute.
@@ -1124,7 +1125,7 @@ Cute.focus = function (element) {
 /**
  * Get or set the value of a form element.
  *
- * @param  {DOMElement}  input     A form element.
+ * @param  {DOMElement}  input      A form element.
  * @param  {String|Array} newValue  An optional new value for the element.
  * @return {String|Array}           The current or new value.
  */
