@@ -1,7 +1,7 @@
-/**   ___     _              __   __   ____
- *   / __|  _| |_ ___  __ __/  \ /  \ |__ /
- *  | (_| || |  _/ -_) \ V / () | () | |_ \
- *   \___\_,_|\__\___|  \_/ \__(_)__(_)___/
+/**   ___     _              __   __  _ _
+ *   / __|  _| |_ ___  __ __/  \ /  \| | |
+ *  | (_| || |  _/ -_) \ V / () | () |_  _|
+ *   \___\_,_|\__\___|  \_/ \__(_)__(_)|_|
  * 
  * http://lighter.io/cute
  *
@@ -18,6 +18,7 @@
  *   https://github.com/lighterio/cute/blob/master/scripts/functions.js
  *   https://github.com/lighterio/cute/blob/master/scripts/history.js
  *   https://github.com/lighterio/cute/blob/master/scripts/i18n.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/io.js
  *   https://github.com/lighterio/cute/blob/master/scripts/json.js
  *   https://github.com/lighterio/cute/blob/master/scripts/logging.js
  *   https://github.com/lighterio/cute/blob/master/scripts/numbers.js
@@ -32,7 +33,7 @@
  */
 
 var Cute = {}
-Cute.version = '0.0.3'
+Cute.version = '0.0.4'
 
 /* istanbul ignore next */
 //+env:commonjs
@@ -98,7 +99,9 @@ Cute.get = function (url, data, fn) {
   request.open(method, url, true)
   if (data) {
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-    data = Cute.stringify(data)
+    if (!Cute.isString(data)) {
+      data = Cute.stringify(data)
+    }
   }
   request.send(data || null)
   return request
@@ -1246,6 +1249,139 @@ Cute.i18n = {
 
   // Whether to use Fahrenheit.
   fahrenheit: 1
+}
+
+// The ios server listens for GET and POST requests at /IO.
+Cute._io = 'io:'
+Cute._ioBase = '/IO?id='
+Cute._ioUrl = Cute._ioBase
+Cute._ioId = 0
+
+// On disconnect, start retrying once a second, and back off to once a minute.
+Cute._ioRetryMin = 1e3
+Cute._ioRetryMax = 6e4
+Cute._ioRetryBackoff = 2
+Cute._ioRetryTimeout = Cute._ioRetryMin
+
+// Until we connect, queue emissions.
+Cute._ioQueue = []
+
+// Keep a count of emissions so the server can de-duplicate.
+Cute._ioNumber = 0
+
+/**
+ * Beam data up or down.
+ *
+ * @param  {Object}          name      The name of the data to send or receive.
+ * @param  {Function|Object} fnOrData  The data handler or the data.
+ */
+Cute.io = function (name, fnOrData) {
+  // Lazily initialize.
+  if (!Cute._ioNumber) {
+    Cute._ioInit()
+  }
+  if (Cute.isFunction(fnOrData)) {
+    Cute.on(window, Cute._io + name, fnOrData)
+  } else if (name) {
+    var data = fnOrData
+    //+evn:debug
+    Cute.log('[Beams] Emitting "' + name + '": ' + Cute.stringify(data) + '.')
+    //-evn:debug
+    Cute._ioQueue.push([++Cute._ioNumber, name, data])
+    Cute._ioFlush()
+  }
+}
+
+Cute._ioFlush = function () {
+  if (Cute._ioQueue.length) {
+    var queue = Cute._ioQueue
+    Cute._ioQueue = []
+    if (Cute._ioId) {
+      send()
+    }
+  }
+  // Try to emit data to the server.
+  function send () {
+    Cute.get(Cute._ioUrl + '&up', queue, function (data, status) {
+      if (status === 200) {
+        Cute._ioRetryTimeout = Cute._ioRetryMin
+      } else {
+        Cute._ioRetryTimeout = Math.min(Cute._ioRetryTimeout * Cute._ioRetryBackoff, Cute._ioRetryMax)
+        setTimeout(send, Cute._ioRetryTimeout)
+      }
+    })
+  }
+}
+
+/**
+ * Lazily initialize.
+ */
+Cute._ioInit = function () {
+  Cute._ioNumber = 1
+
+  // When we connect, set the client ID.
+  Cute.io('connect', function (data) {
+    Cute._ioId = data.id
+    Cute._ioUrl = Cute._ioBase + Cute._ioId
+    //+evn:debug
+    Cute.log('[Beams] Set endpoint URL to "' + Cute._ioUrl + '".')
+    //-evn:debug
+    Cute._ioFlush()
+  })
+
+  // Allow the server to tell clients to refresh themselves.
+  Cute.io('refresh', reload)
+
+  // When the server shuts down, wait for it to come back, then refresh.
+  Cute.io('exit', function () {
+    Cute.io('ok', reload)
+  })
+
+  // When the page unloads, tell the server to remove this client.
+  Cute.on(window, 'beforeunload', function () {
+    Cute.io('unload')
+  })
+
+  function reload () {
+    location.reload()
+  }
+
+  Cute._ioPoll()
+}
+
+/**
+ * Poll for new messages.
+ */
+Cute._ioPoll = function () {
+  //+evn:debug
+  Cute.log('[Beams] Polling for messages at "' + Cute._ioUrl + '".')
+  //-evn:debug
+  Cute.get(Cute._ioUrl + '&down', function (messages, status) {
+    var delay = 0
+    if (status === 200) {
+      // Reset to the minimum retry delay.
+      Cute._ioRetryTimeout = Cute._ioRetryMin
+
+      // Trigger events for all messages received from the server.
+      Cute.each(messages, function (pair) {
+        Cute.emit(window, Cute._io + pair[0], pair[1])
+      })
+    } else {
+      //+evn:debug
+      Cute.error('[Beams] Failed to connect to "' + Cute._ioUrl + '".')
+      //-evn:debug
+
+      // Signal that a io error occurred.
+      Cute.emit(Cute._io + 'error')
+
+      // Try again later.
+      delay = Cute._ioRetryTimeout * Cute._ioRetryBackoff
+      if (delay > Cute._ioRetryMax) {
+        delay = Cute._ioRetryMax
+      }
+    }
+    Cute.wait(Cute._ioPoll, Cute._io, Cute._ioPoll, delay)
+  })
 }
 
 /**

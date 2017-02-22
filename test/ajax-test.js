@@ -1,6 +1,6 @@
 'use strict'
 
-var is = global.is || require('exam-is')
+var is = global.is || require('exam/lib/is')
 var jsdom = require('jsdom')
 var Cute = require('../cute.test')
 var http = require('http')
@@ -64,7 +64,6 @@ function domTests (window) {
 
     it('can post JSON', function (done) {
       Cute.get(host + '/post.json', {data: true}, function (json, status) {
-        // TODO: Figure out why the response isn't parsing.
         is(json.method, 'POST')
         is(status, 200)
         done()
@@ -74,6 +73,14 @@ function domTests (window) {
     it('can post a query string', function (done) {
       Cute.get(host + '/post.json', 'data=true', function (json, status) {
         is(json.method, 'POST')
+        is(status, 200)
+        done()
+      })
+    })
+
+    it('can delete', function (done) {
+      Cute.get(host + '/post.json', null, function (json, status) {
+        is(json.method, 'DELETE')
         is(status, 200)
         done()
       })

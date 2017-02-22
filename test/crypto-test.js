@@ -1,7 +1,7 @@
 'use strict'
 
 var bench = global.bench || require('exam/lib/bench')
-var is = global.is || require('exam-is')
+var is = global.is || require('exam/lib/is')
 var crypto = require('crypto')
 var Cute = require('../cute.test')
 
