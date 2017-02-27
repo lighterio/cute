@@ -4,6 +4,7 @@
   "description": "Minifier-friendly JavaScript built for speed and power.",
   "dependencies": {},
   "devDependencies": {
+    "acorn": "^4.0.11",
     "chug": "^0.4.1",
     "exam": "^1.4.5",
     "figlet": "1.0.9",
