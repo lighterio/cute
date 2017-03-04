@@ -55,7 +55,7 @@ function domTests (window) {
 
   describe('.get', function () {
     it('gets JSON', function (done) {
-      Cute.get(host + '/ok.json', function (json, status) {
+      Cute.request(host + '/ok.json', function (json, status) {
         is(json.method, 'GET')
         is(status, 200)
         done()
@@ -63,7 +63,7 @@ function domTests (window) {
     })
 
     it('can post JSON', function (done) {
-      Cute.get(host + '/post.json', {data: true}, function (json, status) {
+      Cute.request(host + '/post.json', {data: true}, function (json, status) {
         is(json.method, 'POST')
         is(status, 200)
         done()
@@ -71,7 +71,7 @@ function domTests (window) {
     })
 
     it('can post a query string', function (done) {
-      Cute.get(host + '/post.json', 'data=true', function (json, status) {
+      Cute.request(host + '/post.json', 'data=true', function (json, status) {
         is(json.method, 'POST')
         is(status, 200)
         done()
@@ -79,7 +79,7 @@ function domTests (window) {
     })
 
     it('can delete', function (done) {
-      Cute.get(host + '/post.json', null, function (json, status) {
+      Cute.request(host + '/post.json', null, function (json, status) {
         is(json.method, 'DELETE')
         is(status, 200)
         done()
@@ -87,7 +87,7 @@ function domTests (window) {
     })
 
     it('can get an error', function (done) {
-      Cute.get(host + '/error.json', function (json, status) {
+      Cute.request(host + '/error.json', function (json, status) {
         is(json.method, 'GET')
         is(status, 500)
         done()

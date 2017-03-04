@@ -1,12 +1,12 @@
 {
   "name": "cute",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Minifier-friendly JavaScript built for speed and power.",
   "dependencies": {},
   "devDependencies": {
     "acorn": "^4.0.11",
     "chug": "^0.4.1",
-    "exam": "^1.4.5",
+    "exam": "^2.0.0",
     "figlet": "1.0.9",
     "jsdom": "7.2.2"
   },

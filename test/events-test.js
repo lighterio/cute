@@ -63,7 +63,7 @@ describe('Cute', function () {
         Cute.on(c, 'load', f)
         delete Cute._handlers.load
 
-        is.same(a.addEventListener.value, [{0: 'load', 1: Cute._propagate}])
+        is.same(a.addEventListener.value, [{0: 'load', 1: Cute._propagate, 2: true}])
         is.same(b.attachEvent.value, [{0: 'onload', 1: Cute._propagate}])
         is(c.onload, Cute._propagate)
       })

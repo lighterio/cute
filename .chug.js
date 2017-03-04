@@ -51,8 +51,5 @@ figlet.text('Cute v' + pkg.version, {font: 'Small'}, function (e, art) {
     .minify()
     .each(function (asset) {
       fs.writeFileSync(dir + '/cute.js', asset.getContent())
-      // asset
-      //   .replace(/ +\n/g, '\n')
-      //   .write(dir, 'cute.js')
     })
 })

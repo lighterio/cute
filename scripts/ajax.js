@@ -24,7 +24,7 @@ Cute.upload = function () {
  *                          request, or if `null` makes a DELETE request.
  * @param  {Function} fn    An optional function which takes (data, status) arguments.
  */
-Cute.get = function (url, data, fn) {
+Cute.request = function (url, data, fn) {
   // If the optional data argument is omitted, zero it.
   if (Cute.isFunction(data)) {
     fn = data

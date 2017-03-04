@@ -24,7 +24,7 @@ Cute.on = function (target, types, listener) {
     if (!handlers) {
       handlers = Cute._handlers[type] = []
       if (element.addEventListener) {
-        element.addEventListener(type, Cute._propagate)
+        element.addEventListener(type, Cute._propagate, true)
       } else if (element.attachEvent) {
         element.attachEvent('on' + type, Cute._propagate)
       } else {
