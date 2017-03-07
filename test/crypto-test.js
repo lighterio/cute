@@ -3,7 +3,7 @@
 var bench = global.bench || require('exam/lib/bench')
 var is = global.is || require('exam/lib/is')
 var crypto = require('crypto')
-var Cute = require('../cute.test')
+var Cute = require('../require')
 
 describe('Cute', function () {
   var json = JSON.stringify(JSON.stringify(this.fn.toString()))

@@ -1,7 +1,7 @@
 'use strict'
 
 var is = global.is || require('exam/lib/is')
-var Cute = require('../cute.test')
+var Cute = require('../require')
 
 var key = 'greeting'
 var hello = 'Hello!'

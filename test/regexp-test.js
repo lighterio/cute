@@ -1,7 +1,7 @@
 'use strict'
 
 var is = global.is || require('exam/lib/is')
-var Cute = require('../cute.test')
+var Cute = require('../require')
 
 describe('Cute', function () {
   describe('.tagContents', function () {

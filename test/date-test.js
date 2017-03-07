@@ -3,7 +3,7 @@
 var is = global.is || require('exam/lib/is')
 var mock = global.mock || require('exam-mock')
 var unmock = mock.unmock
-var Cute = require('../cute.test')
+var Cute = require('../require')
 var offset = (new Date(0)).getTimezoneOffset() * 6e4
 
 describe('Cute', function () {

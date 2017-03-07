@@ -2,7 +2,7 @@
 
 var is = global.is || require('exam/lib/is')
 var jsdom = require('jsdom')
-var Cute = require('../cute.test')
+var Cute = require('../require')
 var http = require('http')
 var port = 15478
 var host = 'http://127.0.0.1:' + port

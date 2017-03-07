@@ -3,7 +3,7 @@
 var is = global.is || require('exam/lib/is')
 var mock = global.mock || require('exam-mock')
 var unmock = mock.unmock
-var Cute = require('../cute.test')
+var Cute = require('../require')
 
 describe('Cute', function () {
   describe('.cookie', function () {
