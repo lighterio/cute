@@ -2,10 +2,11 @@
   "name": "cute",
   "version": "0.0.5",
   "description": "Minifier-friendly JavaScript built for speed and power.",
-  "dependencies": {},
+  "dependencies": {
+    "lighter-colors": "^1.0.0",
+    "uglify-js": "^2.8.7"
+  },
   "devDependencies": {
-    "acorn": "^4.0.11",
-    "chug": "^0.4.1",
     "exam": "^2.0.0",
     "figlet": "1.0.9",
     "jsdom": "7.2.2"
@@ -35,12 +36,15 @@
     "ux",
     "lodash"
   ],
-  "main": "cute.js",
+  "main": "lib.js",
+  "bin": {
+    "cute": "cli.js"
+  },
   "engines": {
     "node": ">=0.8.28"
   },
   "scripts": {
-    "build": "node .chug.js",
+    "build": "./cli.js",
     "test": "./node_modules/exam/exam.js",
     "cover": "./node_modules/exam/exam-cover.js",
     "report": "open coverage/lcov-report/index.html",

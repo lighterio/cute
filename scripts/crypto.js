@@ -6,7 +6,7 @@
  */
 Cute.md5 = function (str) {
   // Encode as UTF-8.
-  str = decodeURIComponent(encodeURIComponent(str))
+  str = Cute.decode(Cute.encode(str))
 
   // Build an array of little-endian words.
   var arr = new Array(str.length >> 2)

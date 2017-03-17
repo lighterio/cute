@@ -47,13 +47,13 @@ Cute.formatDate = function (date, isLong, includeTime) {
   var day = date.getDate()
   var year = date.getFullYear()
   if (isLong) {
-    month = Cute.i18n.months[month]
+    month = Cute.months[month]
   } else {
     month++
     year = ('' + year).substr(2)
   }
   var string
-  if (!Cute.i18n.monthDay) {
+  if (!Cute.useMonthDayYear) {
     string = month
     month = day
     day = string
@@ -65,7 +65,7 @@ Cute.formatDate = function (date, isLong, includeTime) {
   }
   if (includeTime) {
     if (isLong) {
-      string += ' ' + Cute.i18n.at
+      string += ' ' + Cute.dateTimeSeparator
     }
     string += ' ' + Cute.formatTime(date)
   }
@@ -84,7 +84,7 @@ Cute.formatTime = function (date) {
   var minute = +date.getMinutes()
   var isAm = 1
   minute = minute > 9 ? minute : '0' + minute
-  if (Cute.i18n.twelveHour) {
+  if (Cute.useTwelveHour) {
     if (hour > 11) {
       isAm = 0
       if (hour > 12) {
@@ -97,8 +97,22 @@ Cute.formatTime = function (date) {
     hour = hour > 9 ? hour : '0' + hour
   }
   var string = hour + ':' + minute
-  if (Cute.i18n.twelveHour) {
+  if (Cute.useTwelveHour) {
     string += (isAm ? 'am' : 'pm')
   }
   return string
 }
+
+Cute.months = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+]
+
+// A word for separating date & time in long format.
+Cute.dateTimeSeparator = 'at'
+
+// Whether to use American-style MM/DD/YY.
+Cute.useMonthDayYear = 1
+
+// Whether to use 12-hour instead of 24-hour times.
+Cute.useTwelveHour = 1

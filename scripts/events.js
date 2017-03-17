@@ -33,6 +33,7 @@ Cute.on = function (target, types, listener) {
     }
     handlers.push({t: target, f: listener})
   })
+  return listener
 }
 
 /**

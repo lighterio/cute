@@ -81,11 +81,9 @@ describe('Cute', function () {
     })
 
     it('can return a DD/MM/YY formatted date', function () {
-      mock(Cute.i18n, {
-        monthDay: 0
-      })
+      mock(Cute, {useMonthDayYear: 0})
       is(Cute.formatDate(date, false), '25/6/16')
-      unmock(Cute.i18n)
+      unmock(Cute)
     })
   })
 
@@ -104,15 +102,13 @@ describe('Cute', function () {
     })
 
     it('can return a 24-hour formatted time', function () {
-      mock(Cute.i18n, {
-        twelveHour: 0
-      })
+      mock(Cute, {useTwelveHour: 0})
       is(Cute.formatTime('6/25/16 1:45 am'), '01:45')
       is(Cute.formatTime('6/25/16 8:32 pm'), '20:32')
       is(Cute.formatTime('6/25/16 12:00 am'), '00:00')
       is(Cute.formatTime('6/25/16 12:00 pm'), '12:00')
       is(Cute.formatTime('6/25/16 11:59 pm'), '23:59')
-      unmock(Cute.i18n)
+      unmock(Cute)
     })
   })
 })

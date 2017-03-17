@@ -132,7 +132,7 @@ Cute.add = function (parent, elementOrString, beforeSibling) {
   if (Cute.isString(parent)) {
     beforeSibling = elementOrString
     elementOrString = parent
-    parent = document.body
+    parent = Cute.body()
   }
   var element = Cute.create(elementOrString)
   // If the beforeSibling value is a number, get the (future) sibling at that index.

@@ -1,9 +1,8 @@
-/**   ___     _              __   __   ___
- *   / __|  _| |_ ___  __ __/  \ /  \ | __|
- *  | (_| || |  _/ -_) \ V / () | () ||__ \
- *   \___\_,_|\__\___|  \_/ \__(_)__(_)___/
+/**          _          __   __   ___
+ *   __ _  _| |_ ___   /  \ /  \ | __|
+ *  / _| || |  _/ -_) | () | () ||__ \
+ *  \__|\_,_|\__\___|  \__(_)__(_)___/
  * 
- * http://lighter.io/cute
  *
  * Source:
  *   https://github.com/lighterio/cute/blob/master/scripts/ajax.js
@@ -17,7 +16,6 @@
  *   https://github.com/lighterio/cute/blob/master/scripts/forms.js
  *   https://github.com/lighterio/cute/blob/master/scripts/functions.js
  *   https://github.com/lighterio/cute/blob/master/scripts/history.js
- *   https://github.com/lighterio/cute/blob/master/scripts/i18n.js
  *   https://github.com/lighterio/cute/blob/master/scripts/json.js
  *   https://github.com/lighterio/cute/blob/master/scripts/logging.js
  *   https://github.com/lighterio/cute/blob/master/scripts/numbers.js
@@ -28,30 +26,21 @@
  *   https://github.com/lighterio/cute/blob/master/scripts/strings.js
  *   https://github.com/lighterio/cute/blob/master/scripts/style.js
  *   https://github.com/lighterio/cute/blob/master/scripts/timing.js
+ *   https://github.com/lighterio/cute/blob/master/scripts/type.js
  *   https://github.com/lighterio/cute/blob/master/scripts/types.js
  */
 
 var Cute = {}
-Cute.version = '0.0.5'
 
-/* istanbul ignore next */
-//+env:commonjs
+// +env:any
 if (typeof exports === 'object') {
   module.exports = Cute
-}
-//-env:commonjs
-//+env:amd
-else if (typeof define === 'function' && define.amd) {
-  define(function () {
-    return Cute
-  });
-}
-//-env:amd
-//+env:window
-else {
+} else if (typeof define === 'function' && define.amd) {
+  define(function () {return Cute});
+} else {
   this.Cute = Cute
 }
-//-env:window
+// -env:any
 
 /**
  * Get an XMLHttpRequest object (or ActiveX object in old IE).
@@ -305,7 +294,7 @@ Cute.cookie = function (name, value, options) {
  */
 Cute.md5 = function (str) {
   // Encode as UTF-8.
-  str = decodeURIComponent(encodeURIComponent(str))
+  str = Cute.decode(Cute.encode(str))
 
   // Build an array of little-endian words.
   var arr = new Array(str.length >> 2)
@@ -515,13 +504,13 @@ Cute.formatDate = function (date, isLong, includeTime) {
   var day = date.getDate()
   var year = date.getFullYear()
   if (isLong) {
-    month = Cute.i18n.months[month]
+    month = Cute.months[month]
   } else {
     month++
     year = ('' + year).substr(2)
   }
   var string
-  if (!Cute.i18n.monthDay) {
+  if (!Cute.useMonthDayYear) {
     string = month
     month = day
     day = string
@@ -533,7 +522,7 @@ Cute.formatDate = function (date, isLong, includeTime) {
   }
   if (includeTime) {
     if (isLong) {
-      string += ' ' + Cute.i18n.at
+      string += ' ' + Cute.dateTimeSeparator
     }
     string += ' ' + Cute.formatTime(date)
   }
@@ -552,7 +541,7 @@ Cute.formatTime = function (date) {
   var minute = +date.getMinutes()
   var isAm = 1
   minute = minute > 9 ? minute : '0' + minute
-  if (Cute.i18n.twelveHour) {
+  if (Cute.useTwelveHour) {
     if (hour > 11) {
       isAm = 0
       if (hour > 12) {
@@ -565,11 +554,25 @@ Cute.formatTime = function (date) {
     hour = hour > 9 ? hour : '0' + hour
   }
   var string = hour + ':' + minute
-  if (Cute.i18n.twelveHour) {
+  if (Cute.useTwelveHour) {
     string += (isAm ? 'am' : 'pm')
   }
   return string
 }
+
+Cute.months = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+]
+
+// A word for separating date & time in long format.
+Cute.dateTimeSeparator = 'at'
+
+// Whether to use American-style MM/DD/YY.
+Cute.useMonthDayYear = 1
+
+// Whether to use 12-hour instead of 24-hour times.
+Cute.useTwelveHour = 1
 
 /**
  * Get an element by its ID (if the argument is an ID).
@@ -705,7 +708,7 @@ Cute.add = function (parent, elementOrString, beforeSibling) {
   if (Cute.isString(parent)) {
     beforeSibling = elementOrString
     elementOrString = parent
-    parent = document.body
+    parent = Cute.body()
   }
   var element = Cute.create(elementOrString)
   // If the beforeSibling value is a number, get the (future) sibling at that index.
@@ -982,6 +985,7 @@ Cute.on = function (target, types, listener) {
     }
     handlers.push({t: target, f: listener})
   })
+  return listener
 }
 
 /**
@@ -1226,31 +1230,6 @@ Cute.go = function (href, inPlace) {
 }
 
 /**
- * The values in this file can be overridden externally.
- * The default locale is US. Sorry, World.
- */
-
-Cute.i18n = {
-  // Names of months.
-  months: [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ],
-
-  // A word for separating date & time in long format.
-  at: 'at',
-
-  // Whether to use American-style MM/DD/YY.
-  monthDay: 1,
-
-  // Whether to use 12-hour instead of 24-hour times.
-  twelveHour: 1,
-
-  // Whether to use Fahrenheit.
-  fahrenheit: 1
-}
-
-/**
  * Creates a JSON string.
  *
  * @param  {Any}    data  Data to stringify.
@@ -1313,9 +1292,9 @@ Cute.parse = function (js, alternative) {
     js = eval.J
     /* eslint-enable */
   } catch (ignore) {
-    //+env:debug
+    // +env:debug
     Cute.error('[Cute] Could not parse JS: ' + js)
-    //-env:debug
+    // -env:debug
     js = alternative
   }
   return js
@@ -1337,7 +1316,7 @@ Cute.info = Cute.no
 Cute.log = Cute.no
 Cute.trace = Cute.no
 
-//+env:debug
+// +env:debug
 
 /**
  * Log values to the console, if it's available.
@@ -1374,7 +1353,7 @@ Cute.trace = function () {
   Cute.apply(window.console, 'trace', arguments)
 }
 
-//-env:debug
+// -env:debug
 
 /**
  * If the argument is numeric, return a number, otherwise return zero.
@@ -1816,6 +1795,27 @@ Cute.logTimes = function () {
     times.push(key + ' ' + value.toFixed(3) + 'ms')
   })
   Cute.log(times.join(', '))
+}
+
+/**
+ * Decorate a Type constructor.
+ *
+ * @param  {Function}  sup   Optional super constructor.
+ * @param  {Function}  con   Constructor to decorate.
+ * @param  {Object}    pros  Prototype properties.
+ * @return {Function}        The constructor.
+ */
+Cute.type = function (sup, con, pros) {
+  if (!pros) {
+    pros = con
+    con = sup
+    sup = Object
+  }
+  var pro = con.prototype
+  Cute.decorate(pro, sup.prototype)
+  Cute.decorate(pro, pros)
+  pro._super = sup
+  return con
 }
 
 /**
